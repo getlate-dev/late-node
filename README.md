@@ -1,15 +1,19 @@
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://getlate.dev/logo-dark.svg">
-  <source media="(prefers-color-scheme: light)" srcset="https://getlate.dev/logo-light.svg">
-  <img alt="Late" src="https://getlate.dev/logo-light.svg" width="120">
-</picture>
+<p align="center">
+  <a href="https://getlate.dev">
+    <img src="https://getlate.dev/images/icon_light.svg" alt="Late" width="60">
+  </a>
+</p>
 
-# Late Node.js SDK
+<h1 align="center">Late Node.js SDK</h1>
 
-[![npm version](https://img.shields.io/npm/v/@getlatedev/node.svg)](https://www.npmjs.com/package/@getlatedev/node)
-[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+<p align="center">
+  <a href="https://www.npmjs.com/package/@getlatedev/node"><img src="https://img.shields.io/npm/v/@getlatedev/node.svg" alt="npm version"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg" alt="License"></a>
+</p>
 
-**One API to post everywhere. 13 platforms, zero headaches.**
+<p align="center">
+  <strong>One API to post everywhere. 13 platforms, zero headaches.</strong>
+</p>
 
 The official Node.js SDK for the [Late API](https://getlate.dev) — schedule and publish social media posts across Instagram, TikTok, YouTube, LinkedIn, X/Twitter, Facebook, Pinterest, Threads, Bluesky, Reddit, Snapchat, Telegram, and Google Business Profile with a single integration.
 
