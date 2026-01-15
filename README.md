@@ -1,9 +1,23 @@
-# Late Node.js Library
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://getlate.dev/logo-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://getlate.dev/logo-light.svg">
+  <img alt="Late" src="https://getlate.dev/logo-light.svg" width="120">
+</picture>
 
-[![npm version](https://img.shields.io/npm/v/late.svg)](https://www.npmjs.com/package/late)
+# Late Node.js SDK
+
+[![npm version](https://img.shields.io/npm/v/@getlatedev/node.svg)](https://www.npmjs.com/package/@getlatedev/node)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
-The official Node.js library for the [Late API](https://getlate.dev) - schedule social media posts across Instagram, TikTok, YouTube, LinkedIn, X/Twitter, Facebook, Pinterest, Threads, and more.
+**One API to post everywhere. 13 platforms, zero headaches.**
+
+The official Node.js SDK for the [Late API](https://getlate.dev) — schedule and publish social media posts across Instagram, TikTok, YouTube, LinkedIn, X/Twitter, Facebook, Pinterest, Threads, Bluesky, Reddit, Snapchat, Telegram, and Google Business Profile with a single integration.
+
+## Why Late?
+
+- **Single Integration** — Connect once, post to 13 platforms
+- **Zero Maintenance** — We handle OAuth, rate limits, media processing, and API changes
+- **Production Ready** — 99.97% uptime SLA, used by thousands of apps
 
 ## Installation
 
@@ -11,46 +25,36 @@ The official Node.js library for the [Late API](https://getlate.dev) - schedule 
 npm install @getlatedev/node
 ```
 
-## Usage
+## Quick Start
 
 ```typescript
 import Late from '@getlatedev/node';
 
-const late = new Late({
-  apiKey: process.env['LATE_API_KEY'], // This is the default and can be omitted
+const late = new Late(); // Uses LATE_API_KEY env var
+
+// Publish to multiple platforms with one call
+const { data: post } = await late.posts.create({
+  body: {
+    content: 'Hello world from Late!',
+    platforms: [
+      { platform: 'twitter', accountId: 'acc_xxx' },
+      { platform: 'linkedin', accountId: 'acc_yyy' },
+      { platform: 'instagram', accountId: 'acc_zzz' },
+    ],
+    publishNow: true,
+  },
 });
 
-async function main() {
-  // Create and publish a post
-  const post = await late.posts.create({
-    body: {
-      content: 'Hello from the Late SDK! 🚀',
-      platforms: [
-        { platform: 'twitter', accountId: 'acc_xxx' },
-        { platform: 'linkedin', accountId: 'acc_yyy' },
-      ],
-      publishNow: true,
-    },
-  });
-
-  console.log(post.data);
-}
-
-main();
+console.log(`Published to ${post.platforms.length} platforms!`);
 ```
 
 ## Configuration
 
-The client can be configured with the following options:
-
 ```typescript
 const late = new Late({
   apiKey: 'sk_...', // Defaults to process.env['LATE_API_KEY']
-  baseURL: 'https://getlate.dev/api', // Default
-  timeout: 60000, // Request timeout in ms
-  defaultHeaders: {
-    'X-Custom-Header': 'value',
-  },
+  baseURL: 'https://getlate.dev/api',
+  timeout: 60000,
 });
 ```
 
@@ -59,31 +63,33 @@ const late = new Late({
 ### Schedule a Post
 
 ```typescript
-const post = await late.posts.create({
+const { data: post } = await late.posts.create({
   body: {
-    content: 'Scheduled post from the SDK',
+    content: 'This post will go live tomorrow at 10am',
     platforms: [{ platform: 'instagram', accountId: 'acc_xxx' }],
-    scheduledFor: new Date('2025-02-01T10:00:00Z').toISOString(),
+    scheduledFor: '2025-02-01T10:00:00Z',
   },
 });
 ```
 
-### Multi-Platform with Platform-Specific Content
+### Platform-Specific Content
+
+Customize content per platform while posting to all at once:
 
 ```typescript
-const post = await late.posts.create({
+const { data: post } = await late.posts.create({
   body: {
-    content: 'Default content for all platforms',
+    content: 'Default content',
     platforms: [
       {
         platform: 'twitter',
         accountId: 'acc_twitter',
-        platformSpecificContent: 'Shorter content for X #hashtags',
+        platformSpecificContent: 'Short & punchy for X',
       },
       {
         platform: 'linkedin',
         accountId: 'acc_linkedin',
-        platformSpecificContent: 'Professional content for LinkedIn',
+        platformSpecificContent: 'Professional tone for LinkedIn with more detail about our announcement.',
       },
     ],
     publishNow: true,
@@ -91,45 +97,30 @@ const post = await late.posts.create({
 });
 ```
 
-### List Posts
-
-```typescript
-const { data } = await late.posts.list({
-  query: {
-    status: 'scheduled',
-    limit: 20,
-  },
-});
-
-for (const post of data.posts) {
-  console.log(post.content, post.scheduledFor);
-}
-```
-
 ### Upload Media
 
 ```typescript
-// 1. Get presigned URL
+// 1. Get presigned upload URL
 const { data: presign } = await late.media.getPresignedUrl({
-  body: {
-    filename: 'image.jpg',
-    contentType: 'image/jpeg',
-  },
+  body: { filename: 'video.mp4', contentType: 'video/mp4' },
 });
 
-// 2. Upload file
+// 2. Upload your file
 await fetch(presign.uploadUrl, {
   method: 'PUT',
-  body: imageBuffer,
-  headers: { 'Content-Type': 'image/jpeg' },
+  body: videoBuffer,
+  headers: { 'Content-Type': 'video/mp4' },
 });
 
 // 3. Create post with media
-await late.posts.create({
+const { data: post } = await late.posts.create({
   body: {
-    content: 'Post with image',
+    content: 'Check out this video!',
     mediaUrls: [presign.publicUrl],
-    platforms: [{ platform: 'instagram', accountId: 'acc_xxx' }],
+    platforms: [
+      { platform: 'tiktok', accountId: 'acc_xxx' },
+      { platform: 'youtube', accountId: 'acc_yyy', youtubeTitle: 'My Video' },
+    ],
     publishNow: true,
   },
 });
@@ -138,12 +129,13 @@ await late.posts.create({
 ### Get Analytics
 
 ```typescript
-const { data: analytics } = await late.analytics.get({
+const { data } = await late.analytics.get({
   query: { postId: 'post_xxx' },
 });
 
-console.log('Impressions:', analytics.analytics.impressions);
-console.log('Engagement:', analytics.analytics.engagementRate);
+console.log('Views:', data.analytics.views);
+console.log('Likes:', data.analytics.likes);
+console.log('Engagement Rate:', data.analytics.engagementRate);
 ```
 
 ### List Connected Accounts
@@ -156,76 +148,82 @@ for (const account of data.accounts) {
 }
 ```
 
-### Configure Webhooks
-
-```typescript
-await late.webhooks.updateSettings({
-  body: {
-    url: 'https://your-app.com/webhooks/late',
-    events: ['post.published', 'post.failed', 'account.disconnected'],
-    secret: 'your-webhook-secret',
-  },
-});
-```
-
 ## Error Handling
 
 ```typescript
 import Late, { LateApiError, RateLimitError, ValidationError } from '@getlatedev/node';
 
-const late = new Late();
-
 try {
-  await late.posts.create({ body: { ... } });
+  await late.posts.create({ body: { /* ... */ } });
 } catch (error) {
   if (error instanceof RateLimitError) {
-    console.log(`Rate limited. Retry in ${error.getSecondsUntilReset()} seconds`);
+    console.log(`Rate limited. Retry in ${error.getSecondsUntilReset()}s`);
   } else if (error instanceof ValidationError) {
-    console.log('Validation errors:', error.fields);
+    console.log('Invalid request:', error.fields);
   } else if (error instanceof LateApiError) {
-    console.log(`API error ${error.statusCode}: ${error.message}`);
+    console.log(`Error ${error.statusCode}: ${error.message}`);
   }
 }
 ```
 
-## API Reference
+## Available Methods
 
 ### Posts
-
-| Method | Description |
-|--------|-------------|
-| `posts.list(params)` | List posts |
-| `posts.create(params)` | Create a post |
-| `posts.get(params)` | Get a post |
-| `posts.update(params)` | Update a post |
-| `posts.delete(params)` | Delete a post |
-| `posts.retry(params)` | Retry a failed post |
-| `posts.bulkUpload(params)` | Upload multiple posts |
+- `posts.list()` — List all posts
+- `posts.create()` — Create and schedule a post
+- `posts.get()` — Get a specific post
+- `posts.update()` — Update a scheduled post
+- `posts.delete()` — Delete a post
+- `posts.retry()` — Retry a failed post
 
 ### Accounts
-
-| Method | Description |
-|--------|-------------|
-| `accounts.list()` | List connected accounts |
-| `accounts.update(params)` | Update an account |
-| `accounts.delete(params)` | Disconnect an account |
-| `accounts.getFollowerStats()` | Get follower statistics |
-| `accounts.getAllHealth()` | Get health for all accounts |
+- `accounts.list()` — List connected social accounts
+- `accounts.getFollowerStats()` — Get follower growth data
+- `accounts.getAllHealth()` — Check connection status
 
 ### Analytics
+- `analytics.get()` — Get post performance metrics
+- `analytics.getYouTubeDailyViews()` — YouTube-specific analytics
 
-| Method | Description |
-|--------|-------------|
-| `analytics.get(params)` | Get post analytics |
-| `analytics.getYouTubeDailyViews(params)` | Get YouTube daily views |
-| `analytics.getLinkedInAggregate(params)` | Get LinkedIn org analytics |
+### Media
+- `media.getPresignedUrl()` — Get upload URL for media files
 
-See the [API documentation](https://getlate.dev/docs/api) for all available methods.
+### Webhooks
+- `webhooks.getSettings()` — Get webhook configuration
+- `webhooks.updateSettings()` — Configure webhooks
+- `webhooks.test()` — Send a test webhook
+
+See the [full API documentation](https://getlate.dev/docs/api) for all available methods.
+
+## Supported Platforms
+
+| Platform | Post Types |
+|----------|-----------|
+| Instagram | Reels, Carousels, Stories, Feed Posts |
+| TikTok | Videos, Photos, Carousels |
+| YouTube | Videos, Shorts |
+| LinkedIn | Posts, Articles, Documents |
+| X (Twitter) | Tweets, Threads |
+| Facebook | Posts, Reels, Stories |
+| Threads | Posts |
+| Pinterest | Pins |
+| Bluesky | Posts |
+| Reddit | Posts |
+| Snapchat | Stories |
+| Telegram | Channel Posts |
+| Google Business | Posts |
 
 ## Requirements
 
-- Node.js 18 or later
-- An API key from [Late](https://getlate.dev)
+- Node.js 18+
+- [Late API key](https://getlate.dev) (free tier available)
+
+## Links
+
+- [Documentation](https://getlate.dev/docs)
+- [API Reference](https://getlate.dev/docs/api)
+- [Dashboard](https://getlate.dev/dashboard)
+- [Status](https://status.getlate.dev)
 
 ## License
 
