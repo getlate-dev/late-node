@@ -1,114 +1,96 @@
 import {
   client,
-  // Posts
-  getV1Posts,
-  postV1Posts,
-  getV1PostsByPostId,
-  putV1PostsByPostId,
-  deleteV1PostsByPostId,
-  postV1PostsByPostIdRetry,
-  postV1PostsBulkUpload,
-  getV1PostsByPostIdLogs,
-  // Accounts
-  getV1Accounts,
-  putV1AccountsByAccountId,
-  deleteV1AccountsByAccountId,
-  getV1AccountsFollowerStats,
-  getV1AccountsHealth,
-  getV1AccountsByAccountIdHealth,
-  // Profiles
-  getV1Profiles,
-  postV1Profiles,
-  getV1ProfilesByProfileId,
-  putV1ProfilesByProfileId,
-  deleteV1ProfilesByProfileId,
-  // Analytics
-  getV1Analytics,
-  getV1AnalyticsYoutubeDailyViews,
-  getV1AccountsByAccountIdLinkedinAggregateAnalytics,
-  getV1AccountsByAccountIdLinkedinPostAnalytics,
-  // Account Groups
-  getV1AccountGroups,
-  postV1AccountGroups,
-  putV1AccountGroupsByGroupId,
-  deleteV1AccountGroupsByGroupId,
-  // Queue
-  getV1QueueSlots,
-  postV1QueueSlots,
-  putV1QueueSlots,
-  deleteV1QueueSlots,
-  getV1QueuePreview,
-  getV1QueueNextSlot,
-  // Webhooks
-  getV1WebhooksSettings,
-  postV1WebhooksSettings,
-  putV1WebhooksSettings,
-  deleteV1WebhooksSettings,
-  postV1WebhooksTest,
-  getV1WebhooksLogs,
-  // API Keys
-  getV1ApiKeys,
-  postV1ApiKeys,
-  deleteV1ApiKeysByKeyId,
-  // Media
-  postV1MediaPresign,
-  // Tools
-  getV1ToolsYoutubeDownload,
-  getV1ToolsYoutubeTranscript,
-  getV1ToolsInstagramDownload,
-  postV1ToolsInstagramHashtagChecker,
-  getV1ToolsTiktokDownload,
-  getV1ToolsTwitterDownload,
-  getV1ToolsFacebookDownload,
-  getV1ToolsLinkedinDownload,
-  getV1ToolsBlueskyDownload,
-  // Users
-  getV1Users,
-  getV1UsersByUserId,
-  // Usage
-  getV1UsageStats,
-  // Logs
-  getV1Logs,
-  getV1LogsByLogId,
-  // Connect
-  getV1ConnectByPlatform,
-  postV1ConnectByPlatform,
-  getV1ConnectFacebookSelectPage,
-  postV1ConnectFacebookSelectPage,
-  getV1ConnectGooglebusinessLocations,
-  postV1ConnectGooglebusinessSelectLocation,
-  getV1ConnectLinkedinOrganizations,
-  postV1ConnectLinkedinSelectOrganization,
-  getV1ConnectPinterestSelectBoard,
-  postV1ConnectPinterestSelectBoard,
-  getV1ConnectSnapchatSelectProfile,
-  postV1ConnectSnapchatSelectProfile,
-  postV1ConnectBlueskyCredentials,
-  getV1ConnectTelegram,
-  postV1ConnectTelegram,
-  patchV1ConnectTelegram,
-  // Reddit
-  getV1RedditSearch,
-  getV1RedditFeed,
-  // Invites
-  postV1InviteTokens,
-  getV1PlatformInvites,
-  postV1PlatformInvites,
-  deleteV1PlatformInvites,
-  // Account-specific endpoints
-  putV1AccountsByAccountIdFacebookPage,
-  getV1AccountsByAccountIdLinkedinOrganizations,
-  putV1AccountsByAccountIdLinkedinOrganization,
-  getV1AccountsByAccountIdLinkedinMentions,
-  getV1AccountsByAccountIdPinterestBoards,
-  putV1AccountsByAccountIdPinterestBoards,
-  getV1AccountsByAccountIdRedditSubreddits,
-  putV1AccountsByAccountIdRedditSubreddits,
-  getV1AccountsByAccountIdGmbReviews,
+  bulkUploadPosts,
+  checkInstagramHashtags,
+  completeTelegramConnect,
+  connectBlueskyCredentials,
+  createAccountGroup,
+  createApiKey,
+  createInviteToken,
+  createPlatformInvite,
+  createPost,
+  createProfile,
+  createQueueSlot,
+  createWebhookSettings,
+  deleteAccount,
+  deleteAccountGroup,
+  deleteApiKey,
+  deletePlatformInvite,
+  deletePost,
+  deleteProfile,
+  deleteQueueSlot,
+  deleteWebhookSettings,
+  downloadBlueskyMedia,
+  downloadFacebookVideo,
+  downloadInstagramMedia,
+  downloadLinkedInVideo,
+  downloadTikTokVideo,
+  downloadTwitterMedia,
+  downloadYouTubeVideo,
+  getAccountHealth,
+  getAllAccountsHealth,
+  getAnalytics,
+  getConnectUrl,
+  getFollowerStats,
+  getGoogleBusinessReviews,
+  getLinkedInAggregateAnalytics,
+  getLinkedInMentions,
+  getLinkedInOrganizations,
+  getLinkedInPostAnalytics,
+  getLog,
+  getMediaPresignedUrl,
+  getNextQueueSlot,
+  getPinterestBoards,
+  getPost,
+  getPostLogs,
+  getProfile,
+  getRedditFeed,
+  getRedditSubreddits,
+  getTelegramConnectStatus,
+  getUsageStats,
+  getUser,
+  getWebhookLogs,
+  getWebhookSettings,
+  getYouTubeDailyViews,
+  getYouTubeTranscript,
+  handleOAuthCallback,
+  initiateTelegramConnect,
+  listAccountGroups,
+  listAccounts,
+  listApiKeys,
+  listFacebookPages,
+  listGoogleBusinessLocations,
+  listLinkedInOrganizations,
+  listLogs,
+  listPinterestBoardsForSelection,
+  listPlatformInvites,
+  listPosts,
+  listProfiles,
+  listQueueSlots,
+  listSnapchatProfiles,
+  listUsers,
+  previewQueue,
+  retryPost,
+  searchReddit,
+  selectFacebookPage,
+  selectGoogleBusinessLocation,
+  selectLinkedInOrganization,
+  selectPinterestBoard,
+  selectSnapchatProfile,
+  testWebhook,
+  updateAccount,
+  updateAccountGroup,
+  updateFacebookPage,
+  updateLinkedInOrganization,
+  updatePinterestBoards,
+  updatePost,
+  updateProfile,
+  updateQueueSlot,
+  updateRedditSubreddits,
+  updateWebhookSettings,
 } from './generated/sdk.gen';
 
 import { LateApiError, parseApiError } from './errors';
-
 export interface ClientOptions {
   /**
    * API key for authentication. Defaults to process.env['LATE_API_KEY'].
@@ -132,7 +114,6 @@ export interface ClientOptions {
    */
   defaultHeaders?: Record<string, string>;
 }
-
 /**
  * API Client for the Late API.
  *
@@ -172,201 +153,201 @@ export class Late {
   baseURL: string;
 
   /**
-   * Posts API - Create, schedule, and manage social media posts
+   * Tools API - Media download and utilities
    */
-  posts = {
-    list: getV1Posts,
-    create: postV1Posts,
-    get: getV1PostsByPostId,
-    update: putV1PostsByPostId,
-    delete: deleteV1PostsByPostId,
-    retry: postV1PostsByPostIdRetry,
-    bulkUpload: postV1PostsBulkUpload,
-    getLogs: getV1PostsByPostIdLogs,
-  };
-
-  /**
-   * Accounts API - Manage connected social media accounts
-   */
-  accounts = {
-    list: getV1Accounts,
-    update: putV1AccountsByAccountId,
-    delete: deleteV1AccountsByAccountId,
-    getFollowerStats: getV1AccountsFollowerStats,
-    getAllHealth: getV1AccountsHealth,
-    getHealth: getV1AccountsByAccountIdHealth,
-    updateFacebookPage: putV1AccountsByAccountIdFacebookPage,
-    getLinkedInOrganizations: getV1AccountsByAccountIdLinkedinOrganizations,
-    updateLinkedInOrganization: putV1AccountsByAccountIdLinkedinOrganization,
-    getLinkedInMentions: getV1AccountsByAccountIdLinkedinMentions,
-    getPinterestBoards: getV1AccountsByAccountIdPinterestBoards,
-    updatePinterestBoards: putV1AccountsByAccountIdPinterestBoards,
-    getRedditSubreddits: getV1AccountsByAccountIdRedditSubreddits,
-    updateRedditSubreddits: putV1AccountsByAccountIdRedditSubreddits,
-    getGoogleBusinessReviews: getV1AccountsByAccountIdGmbReviews,
-  };
-
-  /**
-   * Profiles API - Manage workspace profiles
-   */
-  profiles = {
-    list: getV1Profiles,
-    create: postV1Profiles,
-    get: getV1ProfilesByProfileId,
-    update: putV1ProfilesByProfileId,
-    delete: deleteV1ProfilesByProfileId,
+  tools = {
+    downloadYouTubeVideo: downloadYouTubeVideo,
+    getYouTubeTranscript: getYouTubeTranscript,
+    downloadInstagramMedia: downloadInstagramMedia,
+    checkInstagramHashtags: checkInstagramHashtags,
+    downloadTikTokVideo: downloadTikTokVideo,
+    downloadTwitterMedia: downloadTwitterMedia,
+    downloadFacebookVideo: downloadFacebookVideo,
+    downloadLinkedInVideo: downloadLinkedInVideo,
+    downloadBlueskyMedia: downloadBlueskyMedia,
   };
 
   /**
    * Analytics API - Get performance metrics
    */
   analytics = {
-    get: getV1Analytics,
-    getYouTubeDailyViews: getV1AnalyticsYoutubeDailyViews,
-    getLinkedInAggregate: getV1AccountsByAccountIdLinkedinAggregateAnalytics,
-    getLinkedInPostAnalytics: getV1AccountsByAccountIdLinkedinPostAnalytics,
+    getAnalytics: getAnalytics,
+    getYouTubeDailyViews: getYouTubeDailyViews,
+    getLinkedInAggregateAnalytics: getLinkedInAggregateAnalytics,
+    getLinkedInPostAnalytics: getLinkedInPostAnalytics,
   };
 
   /**
    * Account Groups API - Organize accounts into groups
    */
   accountGroups = {
-    list: getV1AccountGroups,
-    create: postV1AccountGroups,
-    update: putV1AccountGroupsByGroupId,
-    delete: deleteV1AccountGroupsByGroupId,
-  };
-
-  /**
-   * Queue API - Manage posting queue
-   */
-  queue = {
-    listSlots: getV1QueueSlots,
-    createSlot: postV1QueueSlots,
-    updateSlot: putV1QueueSlots,
-    deleteSlot: deleteV1QueueSlots,
-    preview: getV1QueuePreview,
-    getNextSlot: getV1QueueNextSlot,
-  };
-
-  /**
-   * Webhooks API - Configure event webhooks
-   */
-  webhooks = {
-    getSettings: getV1WebhooksSettings,
-    createSettings: postV1WebhooksSettings,
-    updateSettings: putV1WebhooksSettings,
-    deleteSettings: deleteV1WebhooksSettings,
-    test: postV1WebhooksTest,
-    getLogs: getV1WebhooksLogs,
-  };
-
-  /**
-   * API Keys API - Manage API keys
-   */
-  apiKeys = {
-    list: getV1ApiKeys,
-    create: postV1ApiKeys,
-    delete: deleteV1ApiKeysByKeyId,
+    listAccountGroups: listAccountGroups,
+    createAccountGroup: createAccountGroup,
+    updateAccountGroup: updateAccountGroup,
+    deleteAccountGroup: deleteAccountGroup,
   };
 
   /**
    * Media API - Upload and manage media files
    */
   media = {
-    getPresignedUrl: postV1MediaPresign,
-  };
-
-  /**
-   * Tools API - Media download and utilities
-   */
-  tools = {
-    downloadYouTube: getV1ToolsYoutubeDownload,
-    getYouTubeTranscript: getV1ToolsYoutubeTranscript,
-    downloadInstagram: getV1ToolsInstagramDownload,
-    checkInstagramHashtags: postV1ToolsInstagramHashtagChecker,
-    downloadTikTok: getV1ToolsTiktokDownload,
-    downloadTwitter: getV1ToolsTwitterDownload,
-    downloadFacebook: getV1ToolsFacebookDownload,
-    downloadLinkedIn: getV1ToolsLinkedinDownload,
-    downloadBluesky: getV1ToolsBlueskyDownload,
-  };
-
-  /**
-   * Users API - User management
-   */
-  users = {
-    list: getV1Users,
-    get: getV1UsersByUserId,
-  };
-
-  /**
-   * Usage API - Get usage statistics
-   */
-  usage = {
-    getStats: getV1UsageStats,
-  };
-
-  /**
-   * Logs API - Publishing logs
-   */
-  logs = {
-    list: getV1Logs,
-    get: getV1LogsByLogId,
-  };
-
-  /**
-   * Connect API - OAuth connection flows
-   */
-  connect = {
-    getUrl: getV1ConnectByPlatform,
-    handleCallback: postV1ConnectByPlatform,
-    facebook: {
-      listPages: getV1ConnectFacebookSelectPage,
-      selectPage: postV1ConnectFacebookSelectPage,
-    },
-    googleBusiness: {
-      listLocations: getV1ConnectGooglebusinessLocations,
-      selectLocation: postV1ConnectGooglebusinessSelectLocation,
-    },
-    linkedIn: {
-      listOrganizations: getV1ConnectLinkedinOrganizations,
-      selectOrganization: postV1ConnectLinkedinSelectOrganization,
-    },
-    pinterest: {
-      listBoards: getV1ConnectPinterestSelectBoard,
-      selectBoard: postV1ConnectPinterestSelectBoard,
-    },
-    snapchat: {
-      listProfiles: getV1ConnectSnapchatSelectProfile,
-      selectProfile: postV1ConnectSnapchatSelectProfile,
-    },
-    bluesky: {
-      connectCredentials: postV1ConnectBlueskyCredentials,
-    },
-    telegram: {
-      getStatus: getV1ConnectTelegram,
-      initiate: postV1ConnectTelegram,
-      complete: patchV1ConnectTelegram,
-    },
+    getMediaPresignedUrl: getMediaPresignedUrl,
   };
 
   /**
    * Reddit API - Search and feed
    */
   reddit = {
-    search: getV1RedditSearch,
-    getFeed: getV1RedditFeed,
+    searchReddit: searchReddit,
+    getRedditFeed: getRedditFeed,
+  };
+
+  /**
+   * Usage API - Get usage statistics
+   */
+  usage = {
+    getUsageStats: getUsageStats,
+  };
+
+  /**
+   * Posts API - Create, schedule, and manage social media posts
+   */
+  posts = {
+    listPosts: listPosts,
+    createPost: createPost,
+    getPost: getPost,
+    updatePost: updatePost,
+    deletePost: deletePost,
+    bulkUploadPosts: bulkUploadPosts,
+    retryPost: retryPost,
+  };
+
+  /**
+   * Users API - User management
+   */
+  users = {
+    listUsers: listUsers,
+    getUser: getUser,
+  };
+
+  /**
+   * Profiles API - Manage workspace profiles
+   */
+  profiles = {
+    listProfiles: listProfiles,
+    createProfile: createProfile,
+    getProfile: getProfile,
+    updateProfile: updateProfile,
+    deleteProfile: deleteProfile,
+  };
+
+  /**
+   * Accounts API - Manage connected social media accounts
+   */
+  accounts = {
+    listAccounts: listAccounts,
+    getFollowerStats: getFollowerStats,
+    updateAccount: updateAccount,
+    deleteAccount: deleteAccount,
+    getAllAccountsHealth: getAllAccountsHealth,
+    getAccountHealth: getAccountHealth,
+    getGoogleBusinessReviews: getGoogleBusinessReviews,
+    getLinkedInMentions: getLinkedInMentions,
+  };
+
+  /**
+   * API Keys API - Manage API keys
+   */
+  apiKeys = {
+    listApiKeys: listApiKeys,
+    createApiKey: createApiKey,
+    deleteApiKey: deleteApiKey,
   };
 
   /**
    * Invites API - Team invitations
    */
   invites = {
-    createToken: postV1InviteTokens,
-    list: getV1PlatformInvites,
-    create: postV1PlatformInvites,
-    delete: deleteV1PlatformInvites,
+    createInviteToken: createInviteToken,
+    listPlatformInvites: listPlatformInvites,
+    createPlatformInvite: createPlatformInvite,
+    deletePlatformInvite: deletePlatformInvite,
+  };
+
+  /**
+   * Connect API - OAuth connection flows
+   */
+  connect = {
+    getConnectUrl: getConnectUrl,
+    handleOAuthCallback: handleOAuthCallback,
+    updateFacebookPage: updateFacebookPage,
+    getLinkedInOrganizations: getLinkedInOrganizations,
+    updateLinkedInOrganization: updateLinkedInOrganization,
+    getPinterestBoards: getPinterestBoards,
+    updatePinterestBoards: updatePinterestBoards,
+    getRedditSubreddits: getRedditSubreddits,
+    updateRedditSubreddits: updateRedditSubreddits,
+    facebook: {
+      listFacebookPages: listFacebookPages,
+      selectFacebookPage: selectFacebookPage,
+    },
+    googleBusiness: {
+      listGoogleBusinessLocations: listGoogleBusinessLocations,
+      selectGoogleBusinessLocation: selectGoogleBusinessLocation,
+    },
+    linkedin: {
+      listLinkedInOrganizations: listLinkedInOrganizations,
+      selectLinkedInOrganization: selectLinkedInOrganization,
+    },
+    pinterest: {
+      listPinterestBoardsForSelection: listPinterestBoardsForSelection,
+      selectPinterestBoard: selectPinterestBoard,
+    },
+    snapchat: {
+      listSnapchatProfiles: listSnapchatProfiles,
+      selectSnapchatProfile: selectSnapchatProfile,
+    },
+    bluesky: {
+      connectBlueskyCredentials: connectBlueskyCredentials,
+    },
+    telegram: {
+      getTelegramConnectStatus: getTelegramConnectStatus,
+      initiateTelegramConnect: initiateTelegramConnect,
+      completeTelegramConnect: completeTelegramConnect,
+    },
+  };
+
+  /**
+   * Queue API - Manage posting queue
+   */
+  queue = {
+    listQueueSlots: listQueueSlots,
+    createQueueSlot: createQueueSlot,
+    updateQueueSlot: updateQueueSlot,
+    deleteQueueSlot: deleteQueueSlot,
+    previewQueue: previewQueue,
+    getNextQueueSlot: getNextQueueSlot,
+  };
+
+  /**
+   * Webhooks API - Configure event webhooks
+   */
+  webhooks = {
+    getWebhookSettings: getWebhookSettings,
+    createWebhookSettings: createWebhookSettings,
+    updateWebhookSettings: updateWebhookSettings,
+    deleteWebhookSettings: deleteWebhookSettings,
+    testWebhook: testWebhook,
+    getWebhookLogs: getWebhookLogs,
+  };
+
+  /**
+   * Logs API - Publishing logs
+   */
+  logs = {
+    listLogs: listLogs,
+    getLog: getLog,
+    getPostLogs: getPostLogs,
   };
 
   /**

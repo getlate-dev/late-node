@@ -25,7 +25,8 @@
     "LICENSE"
   ],
   "scripts": {
-    "generate": "openapi-ts -i openapi.yaml -o src/generated -c @hey-api/client-fetch",
+    "generate": "openapi-ts -i openapi.yaml -o src/generated -c @hey-api/client-fetch && npm run generate:client",
+    "generate:client": "npx ts-node scripts/generate-client.ts",
     "build": "tsup src/index.ts --format cjs,esm --dts --clean",
     "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
     "lint": "eslint src --ext .ts",
@@ -72,8 +73,10 @@
     "@hey-api/openapi-ts": "^0.61.0",
     "@types/node": "^20.11.0",
     "eslint": "^8.56.0",
+    "ts-node": "^10.9.2",
     "tsup": "^8.0.1",
     "typescript": "^5.3.3",
-    "vitest": "^1.2.0"
+    "vitest": "^1.2.0",
+    "yaml": "^2.3.4"
   }
 }

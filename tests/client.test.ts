@@ -54,14 +54,14 @@ describe('Late Client', () => {
   it('should have posts methods', () => {
     const client = new Late({ apiKey: 'test_key' });
 
-    expect(client.posts.list).toBeTypeOf('function');
-    expect(client.posts.create).toBeTypeOf('function');
-    expect(client.posts.get).toBeTypeOf('function');
-    expect(client.posts.update).toBeTypeOf('function');
-    expect(client.posts.delete).toBeTypeOf('function');
-    expect(client.posts.retry).toBeTypeOf('function');
-    expect(client.posts.bulkUpload).toBeTypeOf('function');
-    expect(client.posts.getLogs).toBeTypeOf('function');
+    // Method names come from operationIds in OpenAPI spec
+    expect(client.posts.listPosts).toBeTypeOf('function');
+    expect(client.posts.createPost).toBeTypeOf('function');
+    expect(client.posts.getPost).toBeTypeOf('function');
+    expect(client.posts.updatePost).toBeTypeOf('function');
+    expect(client.posts.deletePost).toBeTypeOf('function');
+    expect(client.posts.retryPost).toBeTypeOf('function');
+    expect(client.posts.bulkUploadPosts).toBeTypeOf('function');
   });
 });
 
