@@ -31,7 +31,7 @@ import Late from '@getlatedev/node';
 const late = new Late(); // Uses LATE_API_KEY env var
 
 // Publish to multiple platforms with one call
-const { data: post } = await late.posts.create({
+const { data: post } = await late.posts.createPost({
   body: {
     content: 'Hello world from Late!',
     platforms: [
@@ -61,7 +61,7 @@ const late = new Late({
 ### Schedule a Post
 
 ```typescript
-const { data: post } = await late.posts.create({
+const { data: post } = await late.posts.createPost({
   body: {
     content: 'This post will go live tomorrow at 10am',
     platforms: [{ platform: 'instagram', accountId: 'acc_xxx' }],
@@ -75,7 +75,7 @@ const { data: post } = await late.posts.create({
 Customize content per platform while posting to all at once:
 
 ```typescript
-const { data: post } = await late.posts.create({
+const { data: post } = await late.posts.createPost({
   body: {
     content: 'Default content',
     platforms: [
@@ -99,7 +99,7 @@ const { data: post } = await late.posts.create({
 
 ```typescript
 // 1. Get presigned upload URL
-const { data: presign } = await late.media.getPresignedUrl({
+const { data: presign } = await late.media.getMediaPresignedUrl({
   body: { filename: 'video.mp4', contentType: 'video/mp4' },
 });
 
@@ -111,7 +111,7 @@ await fetch(presign.uploadUrl, {
 });
 
 // 3. Create post with media
-const { data: post } = await late.posts.create({
+const { data: post } = await late.posts.createPost({
   body: {
     content: 'Check out this video!',
     mediaUrls: [presign.publicUrl],
@@ -127,7 +127,7 @@ const { data: post } = await late.posts.create({
 ### Get Analytics
 
 ```typescript
-const { data } = await late.analytics.get({
+const { data } = await late.analytics.getAnalytics({
   query: { postId: 'post_xxx' },
 });
 
@@ -139,7 +139,7 @@ console.log('Engagement Rate:', data.analytics.engagementRate);
 ### List Connected Accounts
 
 ```typescript
-const { data } = await late.accounts.list();
+const { data } = await late.accounts.listAccounts();
 
 for (const account of data.accounts) {
   console.log(`${account.platform}: @${account.username}`);
@@ -152,7 +152,7 @@ for (const account of data.accounts) {
 import Late, { LateApiError, RateLimitError, ValidationError } from '@getlatedev/node';
 
 try {
-  await late.posts.create({ body: { /* ... */ } });
+  await late.posts.createPost({ body: { /* ... */ } });
 } catch (error) {
   if (error instanceof RateLimitError) {
     console.log(`Rate limited. Retry in ${error.getSecondsUntilReset()}s`);
@@ -169,145 +169,147 @@ try {
 ### Posts
 | Method | Description |
 |--------|-------------|
-| `posts.list()` | List all posts |
-| `posts.create()` | Create and schedule a post |
-| `posts.get()` | Get a specific post |
-| `posts.update()` | Update a scheduled post |
-| `posts.delete()` | Delete a post |
-| `posts.retry()` | Retry a failed post |
-| `posts.bulkUpload()` | Upload multiple posts at once |
-| `posts.getLogs()` | Get publishing logs for a post |
+| `posts.listPosts()` | List all posts |
+| `posts.createPost()` | Create and schedule a post |
+| `posts.getPost()` | Get a specific post |
+| `posts.updatePost()` | Update a scheduled post |
+| `posts.deletePost()` | Delete a post |
+| `posts.retryPost()` | Retry a failed post |
+| `posts.bulkUploadPosts()` | Upload multiple posts at once |
 
 ### Accounts
 | Method | Description |
 |--------|-------------|
-| `accounts.list()` | List connected social accounts |
-| `accounts.update()` | Update account settings |
-| `accounts.delete()` | Disconnect an account |
+| `accounts.listAccounts()` | List connected social accounts |
+| `accounts.updateAccount()` | Update account settings |
+| `accounts.deleteAccount()` | Disconnect an account |
 | `accounts.getFollowerStats()` | Get follower growth data |
-| `accounts.getAllHealth()` | Check health of all accounts |
-| `accounts.getHealth()` | Check health of a specific account |
+| `accounts.getAllAccountsHealth()` | Check health of all accounts |
+| `accounts.getAccountHealth()` | Check health of a specific account |
+| `accounts.getGoogleBusinessReviews()` | Get Google Business reviews |
+| `accounts.getLinkedInMentions()` | Get LinkedIn mentions |
 
 ### Profiles
 | Method | Description |
 |--------|-------------|
-| `profiles.list()` | List workspace profiles |
-| `profiles.create()` | Create a new profile |
-| `profiles.get()` | Get a specific profile |
-| `profiles.update()` | Update a profile |
-| `profiles.delete()` | Delete a profile |
+| `profiles.listProfiles()` | List workspace profiles |
+| `profiles.createProfile()` | Create a new profile |
+| `profiles.getProfile()` | Get a specific profile |
+| `profiles.updateProfile()` | Update a profile |
+| `profiles.deleteProfile()` | Delete a profile |
 
 ### Analytics
 | Method | Description |
 |--------|-------------|
-| `analytics.get()` | Get post performance metrics |
+| `analytics.getAnalytics()` | Get post performance metrics |
 | `analytics.getYouTubeDailyViews()` | Get YouTube daily view breakdown |
-| `analytics.getLinkedInAggregate()` | Get LinkedIn organization analytics |
+| `analytics.getLinkedInAggregateAnalytics()` | Get LinkedIn organization analytics |
 | `analytics.getLinkedInPostAnalytics()` | Get LinkedIn post-level analytics |
 
 ### Account Groups
 | Method | Description |
 |--------|-------------|
-| `accountGroups.list()` | List account groups |
-| `accountGroups.create()` | Create an account group |
-| `accountGroups.update()` | Update an account group |
-| `accountGroups.delete()` | Delete an account group |
+| `accountGroups.listAccountGroups()` | List account groups |
+| `accountGroups.createAccountGroup()` | Create an account group |
+| `accountGroups.updateAccountGroup()` | Update an account group |
+| `accountGroups.deleteAccountGroup()` | Delete an account group |
 
 ### Queue
 | Method | Description |
 |--------|-------------|
-| `queue.listSlots()` | List queue time slots |
-| `queue.createSlot()` | Create a queue slot |
-| `queue.updateSlot()` | Update a queue slot |
-| `queue.deleteSlot()` | Delete a queue slot |
-| `queue.preview()` | Preview upcoming queued posts |
-| `queue.getNextSlot()` | Get next available slot |
+| `queue.listQueueSlots()` | List queue time slots |
+| `queue.createQueueSlot()` | Create a queue slot |
+| `queue.updateQueueSlot()` | Update a queue slot |
+| `queue.deleteQueueSlot()` | Delete a queue slot |
+| `queue.previewQueue()` | Preview upcoming queued posts |
+| `queue.getNextQueueSlot()` | Get next available slot |
 
 ### Webhooks
 | Method | Description |
 |--------|-------------|
-| `webhooks.getSettings()` | Get webhook configuration |
-| `webhooks.createSettings()` | Create webhook settings |
-| `webhooks.updateSettings()` | Update webhook settings |
-| `webhooks.deleteSettings()` | Delete webhook settings |
-| `webhooks.test()` | Send a test webhook |
-| `webhooks.getLogs()` | Get webhook delivery logs |
+| `webhooks.getWebhookSettings()` | Get webhook configuration |
+| `webhooks.createWebhookSettings()` | Create webhook settings |
+| `webhooks.updateWebhookSettings()` | Update webhook settings |
+| `webhooks.deleteWebhookSettings()` | Delete webhook settings |
+| `webhooks.testWebhook()` | Send a test webhook |
+| `webhooks.getWebhookLogs()` | Get webhook delivery logs |
 
 ### API Keys
 | Method | Description |
 |--------|-------------|
-| `apiKeys.list()` | List API keys |
-| `apiKeys.create()` | Create a new API key |
-| `apiKeys.delete()` | Delete an API key |
+| `apiKeys.listApiKeys()` | List API keys |
+| `apiKeys.createApiKey()` | Create a new API key |
+| `apiKeys.deleteApiKey()` | Delete an API key |
 
 ### Media
 | Method | Description |
 |--------|-------------|
-| `media.getPresignedUrl()` | Get presigned URL for file upload |
+| `media.getMediaPresignedUrl()` | Get presigned URL for file upload |
 
 ### Tools
 | Method | Description |
 |--------|-------------|
-| `tools.downloadYouTube()` | Download YouTube video |
+| `tools.downloadYouTubeVideo()` | Download YouTube video |
 | `tools.getYouTubeTranscript()` | Get YouTube video transcript |
-| `tools.downloadInstagram()` | Download Instagram media |
+| `tools.downloadInstagramMedia()` | Download Instagram media |
 | `tools.checkInstagramHashtags()` | Check if hashtags are banned |
-| `tools.downloadTikTok()` | Download TikTok video |
-| `tools.downloadTwitter()` | Download Twitter/X media |
-| `tools.downloadFacebook()` | Download Facebook video |
-| `tools.downloadLinkedIn()` | Download LinkedIn video |
-| `tools.downloadBluesky()` | Download Bluesky media |
+| `tools.downloadTikTokVideo()` | Download TikTok video |
+| `tools.downloadTwitterMedia()` | Download Twitter/X media |
+| `tools.downloadFacebookVideo()` | Download Facebook video |
+| `tools.downloadLinkedInVideo()` | Download LinkedIn video |
+| `tools.downloadBlueskyMedia()` | Download Bluesky media |
 
 ### Users
 | Method | Description |
 |--------|-------------|
-| `users.list()` | List team users |
-| `users.get()` | Get a specific user |
+| `users.listUsers()` | List team users |
+| `users.getUser()` | Get a specific user |
 
 ### Usage
 | Method | Description |
 |--------|-------------|
-| `usage.getStats()` | Get API usage statistics |
+| `usage.getUsageStats()` | Get API usage statistics |
 
 ### Logs
 | Method | Description |
 |--------|-------------|
-| `logs.list()` | List publishing logs |
-| `logs.get()` | Get a specific log entry |
+| `logs.listLogs()` | List publishing logs |
+| `logs.getLog()` | Get a specific log entry |
+| `logs.getPostLogs()` | Get logs for a specific post |
 
 ### Connect (OAuth)
 | Method | Description |
 |--------|-------------|
-| `connect.getUrl()` | Get OAuth URL for a platform |
-| `connect.handleCallback()` | Handle OAuth callback |
-| `connect.facebook.listPages()` | List Facebook pages to connect |
-| `connect.facebook.selectPage()` | Select a Facebook page |
-| `connect.googleBusiness.listLocations()` | List Google Business locations |
-| `connect.googleBusiness.selectLocation()` | Select a location |
-| `connect.linkedIn.listOrganizations()` | List LinkedIn organizations |
-| `connect.linkedIn.selectOrganization()` | Select an organization |
-| `connect.pinterest.listBoards()` | List Pinterest boards |
-| `connect.pinterest.selectBoard()` | Select a board |
-| `connect.snapchat.listProfiles()` | List Snapchat profiles |
-| `connect.snapchat.selectProfile()` | Select a profile |
-| `connect.bluesky.connectCredentials()` | Connect with Bluesky credentials |
-| `connect.telegram.getStatus()` | Get Telegram connection status |
-| `connect.telegram.initiate()` | Start Telegram connection |
-| `connect.telegram.complete()` | Complete Telegram connection |
+| `connect.getConnectUrl()` | Get OAuth URL for a platform |
+| `connect.handleOAuthCallback()` | Handle OAuth callback |
+| `connect.facebook.listFacebookPages()` | List Facebook pages to connect |
+| `connect.facebook.selectFacebookPage()` | Select a Facebook page |
+| `connect.googleBusiness.listGoogleBusinessLocations()` | List Google Business locations |
+| `connect.googleBusiness.selectGoogleBusinessLocation()` | Select a location |
+| `connect.linkedin.listLinkedInOrganizations()` | List LinkedIn organizations |
+| `connect.linkedin.selectLinkedInOrganization()` | Select an organization |
+| `connect.pinterest.listPinterestBoardsForSelection()` | List Pinterest boards |
+| `connect.pinterest.selectPinterestBoard()` | Select a board |
+| `connect.snapchat.listSnapchatProfiles()` | List Snapchat profiles |
+| `connect.snapchat.selectSnapchatProfile()` | Select a profile |
+| `connect.bluesky.connectBlueskyCredentials()` | Connect with Bluesky credentials |
+| `connect.telegram.getTelegramConnectStatus()` | Get Telegram connection status |
+| `connect.telegram.initiateTelegramConnect()` | Start Telegram connection |
+| `connect.telegram.completeTelegramConnect()` | Complete Telegram connection |
 
 ### Reddit
 | Method | Description |
 |--------|-------------|
-| `reddit.search()` | Search Reddit |
-| `reddit.getFeed()` | Get Reddit feed |
+| `reddit.searchReddit()` | Search Reddit |
+| `reddit.getRedditFeed()` | Get Reddit feed |
 
 ### Invites
 | Method | Description |
 |--------|-------------|
-| `invites.createToken()` | Create an invite token |
-| `invites.list()` | List platform invites |
-| `invites.create()` | Create a platform invite |
-| `invites.delete()` | Delete a platform invite |
+| `invites.createInviteToken()` | Create an invite token |
+| `invites.listPlatformInvites()` | List platform invites |
+| `invites.createPlatformInvite()` | Create a platform invite |
+| `invites.deletePlatformInvite()` | Delete a platform invite |
 
 ## Requirements
 
