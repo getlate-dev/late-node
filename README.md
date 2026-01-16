@@ -282,6 +282,13 @@ try {
 |--------|-------------|
 | `connect.getConnectUrl()` | Get OAuth URL for a platform |
 | `connect.handleOAuthCallback()` | Handle OAuth callback |
+| `connect.updateFacebookPage()` | Update Facebook page settings |
+| `connect.getLinkedInOrganizations()` | Get LinkedIn organizations |
+| `connect.updateLinkedInOrganization()` | Update LinkedIn organization |
+| `connect.getPinterestBoards()` | Get Pinterest boards |
+| `connect.updatePinterestBoards()` | Update Pinterest boards |
+| `connect.getRedditSubreddits()` | Get Reddit subreddits |
+| `connect.updateRedditSubreddits()` | Update Reddit subreddits |
 | `connect.facebook.listFacebookPages()` | List Facebook pages to connect |
 | `connect.facebook.selectFacebookPage()` | Select a Facebook page |
 | `connect.googleBusiness.listGoogleBusinessLocations()` | List Google Business locations |
