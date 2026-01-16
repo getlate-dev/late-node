@@ -52,6 +52,24 @@ const TAG_TO_RESOURCE: Record<string, string> = {
   'LinkedIn Mentions': 'accounts',
 };
 
+// Map operation IDs to their nested connect sub-resource paths
+const CONNECT_NESTED_METHODS: Record<string, string> = {
+  'listFacebookPages': 'connect.facebook',
+  'selectFacebookPage': 'connect.facebook',
+  'listGoogleBusinessLocations': 'connect.googleBusiness',
+  'selectGoogleBusinessLocation': 'connect.googleBusiness',
+  'listLinkedInOrganizations': 'connect.linkedin',
+  'selectLinkedInOrganization': 'connect.linkedin',
+  'listPinterestBoardsForSelection': 'connect.pinterest',
+  'selectPinterestBoard': 'connect.pinterest',
+  'listSnapchatProfiles': 'connect.snapchat',
+  'selectSnapchatProfile': 'connect.snapchat',
+  'connectBlueskyCredentials': 'connect.bluesky',
+  'getTelegramConnectStatus': 'connect.telegram',
+  'initiateTelegramConnect': 'connect.telegram',
+  'completeTelegramConnect': 'connect.telegram',
+};
+
 interface Endpoint {
   resource: string;
   method: string;
@@ -81,9 +99,14 @@ function extractEndpoints(spec: OpenAPISpec): Endpoint[] {
       const tag = tags[0];
       if (!(tag in TAG_TO_RESOURCE)) continue;
 
-      const resourceName = TAG_TO_RESOURCE[tag];
+      let resourceName = TAG_TO_RESOURCE[tag];
       const operationId = operation.operationId || '';
       if (!operationId) continue;
+
+      // Check if this is a nested connect method
+      if (operationId in CONNECT_NESTED_METHODS) {
+        resourceName = CONNECT_NESTED_METHODS[operationId];
+      }
 
       endpoints.push({
         resource: resourceName,
