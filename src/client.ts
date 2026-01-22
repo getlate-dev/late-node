@@ -7,7 +7,6 @@ import {
   createAccountGroup,
   createApiKey,
   createInviteToken,
-  createPlatformInvite,
   createPost,
   createProfile,
   createQueueSlot,
@@ -15,7 +14,6 @@ import {
   deleteAccount,
   deleteAccountGroup,
   deleteApiKey,
-  deletePlatformInvite,
   deletePost,
   deleteProfile,
   deleteQueueSlot,
@@ -63,7 +61,6 @@ import {
   listLinkedInOrganizations,
   listLogs,
   listPinterestBoardsForSelection,
-  listPlatformInvites,
   listPosts,
   listProfiles,
   listQueueSlots,
@@ -269,9 +266,6 @@ export class Late {
    */
   invites = {
     createInviteToken: createInviteToken,
-    listPlatformInvites: listPlatformInvites,
-    createPlatformInvite: createPlatformInvite,
-    deletePlatformInvite: deletePlatformInvite,
   };
 
   /**

@@ -313,10 +313,7 @@ try {
 ### Invites
 | Method | Description |
 |--------|-------------|
-| `invites.listPlatformInvites()` | List platform connection invites |
 | `invites.createInviteToken()` | Create a team member invite token |
-| `invites.createPlatformInvite()` | Create a platform connection invite |
-| `invites.deletePlatformInvite()` | Revoke a platform connection invite |
 
 ## Requirements
 

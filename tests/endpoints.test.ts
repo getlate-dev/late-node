@@ -263,21 +263,6 @@ describe('Endpoint Methods', () => {
       expect(client.invites.createInviteToken).toBeTypeOf('function');
     });
 
-    it('should have listPlatformInvites method', () => {
-      expect(client.invites.listPlatformInvites).toBeDefined();
-      expect(client.invites.listPlatformInvites).toBeTypeOf('function');
-    });
-
-    it('should have createPlatformInvite method', () => {
-      expect(client.invites.createPlatformInvite).toBeDefined();
-      expect(client.invites.createPlatformInvite).toBeTypeOf('function');
-    });
-
-    it('should have deletePlatformInvite method', () => {
-      expect(client.invites.deletePlatformInvite).toBeDefined();
-      expect(client.invites.deletePlatformInvite).toBeTypeOf('function');
-    });
-
   });
 
   describe('logs', () => {
