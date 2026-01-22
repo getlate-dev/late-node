@@ -287,6 +287,7 @@ try {
 | `connect.listSnapchatProfiles()` | List Snapchat Public Profiles after OAuth (Headless Mode) |
 | `connect.getConnectUrl()` | Start OAuth connection for a platform |
 | `connect.getLinkedInOrganizations()` | Get available LinkedIn organizations for a connected account |
+| `connect.getPendingOAuthData()` | Fetch pending OAuth selection data (Headless Mode) |
 | `connect.getPinterestBoards()` | List Pinterest boards for a connected account |
 | `connect.getRedditSubreddits()` | List Reddit subreddits for a connected account |
 | `connect.getTelegramConnectStatus()` | Generate Telegram access code |

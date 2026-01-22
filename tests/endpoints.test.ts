@@ -129,6 +129,11 @@ describe('Endpoint Methods', () => {
       expect(client.connect.handleOAuthCallback).toBeTypeOf('function');
     });
 
+    it('should have getPendingOAuthData method', () => {
+      expect(client.connect.getPendingOAuthData).toBeDefined();
+      expect(client.connect.getPendingOAuthData).toBeTypeOf('function');
+    });
+
     it('should have updateFacebookPage method', () => {
       expect(client.connect.updateFacebookPage).toBeDefined();
       expect(client.connect.updateFacebookPage).toBeTypeOf('function');

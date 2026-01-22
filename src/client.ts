@@ -38,6 +38,7 @@ import {
   getLog,
   getMediaPresignedUrl,
   getNextQueueSlot,
+  getPendingOAuthData,
   getPinterestBoards,
   getPost,
   getPostLogs,
@@ -274,6 +275,7 @@ export class Late {
   connect = {
     getConnectUrl: getConnectUrl,
     handleOAuthCallback: handleOAuthCallback,
+    getPendingOAuthData: getPendingOAuthData,
     updateFacebookPage: updateFacebookPage,
     getLinkedInOrganizations: getLinkedInOrganizations,
     updateLinkedInOrganization: updateLinkedInOrganization,
