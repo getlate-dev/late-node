@@ -134,6 +134,11 @@ describe('Endpoint Methods', () => {
       expect(client.connect.getPendingOAuthData).toBeTypeOf('function');
     });
 
+    it('should have getFacebookPages method', () => {
+      expect(client.connect.getFacebookPages).toBeDefined();
+      expect(client.connect.getFacebookPages).toBeTypeOf('function');
+    });
+
     it('should have updateFacebookPage method', () => {
       expect(client.connect.updateFacebookPage).toBeDefined();
       expect(client.connect.updateFacebookPage).toBeTypeOf('function');
@@ -157,6 +162,16 @@ describe('Endpoint Methods', () => {
     it('should have updatePinterestBoards method', () => {
       expect(client.connect.updatePinterestBoards).toBeDefined();
       expect(client.connect.updatePinterestBoards).toBeTypeOf('function');
+    });
+
+    it('should have getGmbLocations method', () => {
+      expect(client.connect.getGmbLocations).toBeDefined();
+      expect(client.connect.getGmbLocations).toBeTypeOf('function');
+    });
+
+    it('should have updateGmbLocation method', () => {
+      expect(client.connect.updateGmbLocation).toBeDefined();
+      expect(client.connect.updateGmbLocation).toBeTypeOf('function');
     });
 
     it('should have getRedditSubreddits method', () => {

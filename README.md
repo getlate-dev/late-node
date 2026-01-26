@@ -286,12 +286,15 @@ try {
 | `connect.listPinterestBoardsForSelection()` | List Pinterest Boards after OAuth (Headless Mode) |
 | `connect.listSnapchatProfiles()` | List Snapchat Public Profiles after OAuth (Headless Mode) |
 | `connect.getConnectUrl()` | Start OAuth connection for a platform |
+| `connect.getFacebookPages()` | List available Facebook pages for a connected account |
+| `connect.getGmbLocations()` | List available Google Business Profile locations for a connected account |
 | `connect.getLinkedInOrganizations()` | Get available LinkedIn organizations for a connected account |
 | `connect.getPendingOAuthData()` | Fetch pending OAuth selection data (Headless Mode) |
 | `connect.getPinterestBoards()` | List Pinterest boards for a connected account |
 | `connect.getRedditSubreddits()` | List Reddit subreddits for a connected account |
 | `connect.getTelegramConnectStatus()` | Generate Telegram access code |
 | `connect.updateFacebookPage()` | Update selected Facebook page for a connected account |
+| `connect.updateGmbLocation()` | Update selected Google Business Profile location for a connected account |
 | `connect.updateLinkedInOrganization()` | Switch LinkedIn account type (personal/organization) |
 | `connect.updatePinterestBoards()` | Set default Pinterest board on the connection |
 | `connect.updateRedditSubreddits()` | Set default subreddit on the connection |
