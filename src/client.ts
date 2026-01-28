@@ -90,6 +90,7 @@ import {
   selectPinterestBoard,
   selectSnapchatProfile,
   sendInboxMessage,
+  sendPrivateReplyToComment,
   testWebhook,
   unhideInboxComment,
   unlikeInboxComment,
@@ -391,6 +392,7 @@ export class Late {
     unhideInboxComment: unhideInboxComment,
     likeInboxComment: likeInboxComment,
     unlikeInboxComment: unlikeInboxComment,
+    sendPrivateReplyToComment: sendPrivateReplyToComment,
   };
 
   /**
