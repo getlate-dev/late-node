@@ -1,6 +1,6 @@
 {
   "name": "@getlatedev/node",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "The official Node.js library for the Late API",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
