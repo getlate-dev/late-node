@@ -4,10 +4,6 @@ node_modules/
 # Build output
 dist/
 
-# Generated files (keep .gitkeep)
-src/generated/*
-!src/generated/.gitkeep
-
 # OpenAPI spec (fetched during build)
 openapi.yaml
 
