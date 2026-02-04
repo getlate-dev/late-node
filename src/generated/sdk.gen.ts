@@ -1484,7 +1484,7 @@ export const getPostLogs = <ThrowOnError extends boolean = false>(options: Optio
  * Fetch conversations (DMs) from all connected messaging accounts in a single API call.
  * Supports filtering by profile and platform. Results are aggregated and deduplicated.
  *
- * **Supported platforms:** Facebook, Instagram, Bluesky, Reddit, Telegram
+ * **Supported platforms:** Facebook, Instagram, Twitter/X, Bluesky, Reddit, Telegram
  *
  */
 export const listInboxConversations = <ThrowOnError extends boolean = false>(options?: OptionsLegacyParser<ListInboxConversationsData, ThrowOnError>) => {
@@ -1552,7 +1552,7 @@ export const sendInboxMessage = <ThrowOnError extends boolean = false>(options: 
  * Fetch posts with their comment counts from all connected accounts.
  * Aggregates data from multiple accounts in a single API call.
  *
- * **Supported platforms:** Facebook, Instagram, Bluesky, YouTube, LinkedIn, Reddit, TikTok (write-only)
+ * **Supported platforms:** Facebook, Instagram, Twitter/X, Bluesky, Threads, YouTube, LinkedIn, Reddit, TikTok (write-only)
  *
  */
 export const listInboxComments = <ThrowOnError extends boolean = false>(options?: OptionsLegacyParser<ListInboxCommentsData, ThrowOnError>) => {
@@ -1626,7 +1626,7 @@ export const unhideInboxComment = <ThrowOnError extends boolean = false>(options
  * Like a comment
  * Like or upvote a comment on a post.
  *
- * **Supported platforms:** Facebook, Bluesky, Reddit
+ * **Supported platforms:** Facebook, Twitter/X, Bluesky, Reddit
  *
  * For Bluesky, the `cid` (content identifier) is required in the request body.
  *
@@ -1642,7 +1642,7 @@ export const likeInboxComment = <ThrowOnError extends boolean = false>(options: 
  * Unlike a comment
  * Remove a like from a comment.
  *
- * **Supported platforms:** Facebook, Bluesky, Reddit
+ * **Supported platforms:** Facebook, Twitter/X, Bluesky, Reddit
  *
  * For Bluesky, the `likeUri` query parameter is required.
  *

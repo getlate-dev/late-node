@@ -4523,7 +4523,7 @@ export type ListInboxConversationsData = {
         /**
          * Filter by platform
          */
-        platform?: 'facebook' | 'instagram' | 'bluesky' | 'reddit' | 'telegram';
+        platform?: 'facebook' | 'instagram' | 'twitter' | 'bluesky' | 'reddit' | 'telegram';
         /**
          * Filter by profile ID
          */
@@ -4775,7 +4775,7 @@ export type ListInboxCommentsData = {
         /**
          * Filter by platform
          */
-        platform?: 'facebook' | 'instagram' | 'youtube' | 'linkedin' | 'reddit' | 'bluesky' | 'tiktok';
+        platform?: 'facebook' | 'instagram' | 'twitter' | 'bluesky' | 'threads' | 'youtube' | 'linkedin' | 'reddit' | 'tiktok';
         /**
          * Filter by profile ID
          */
