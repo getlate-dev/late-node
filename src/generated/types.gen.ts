@@ -3312,6 +3312,369 @@ export type UpdateGoogleBusinessFoodMenusError = (ErrorResponse | {
     error?: string;
 });
 
+export type GetGoogleBusinessLocationDetailsData = {
+    path: {
+        /**
+         * The Late account ID (from /v1/accounts)
+         */
+        accountId: string;
+    };
+    query?: {
+        /**
+         * Comma-separated fields to return. Defaults to common fields.
+         * Available: name, title, phoneNumbers, categories, storefrontAddress, websiteUri,
+         * regularHours, specialHours, serviceArea, profile, openInfo, metadata, moreHours
+         *
+         */
+        readMask?: string;
+    };
+};
+
+export type GetGoogleBusinessLocationDetailsResponse = ({
+    success?: boolean;
+    accountId?: string;
+    locationId?: string;
+    /**
+     * Business name
+     */
+    title?: string;
+    regularHours?: {
+        periods?: Array<{
+            openDay?: 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY';
+            /**
+             * Opening time in HH:MM format
+             */
+            openTime?: string;
+            closeDay?: string;
+            closeTime?: string;
+        }>;
+    };
+    specialHours?: {
+        specialHourPeriods?: Array<{
+            startDate?: {
+                year?: number;
+                month?: number;
+                day?: number;
+            };
+            endDate?: {
+                year?: number;
+                month?: number;
+                day?: number;
+            };
+            openTime?: string;
+            closeTime?: string;
+            closed?: boolean;
+        }>;
+    };
+    profile?: {
+        /**
+         * Business description
+         */
+        description?: string;
+    };
+    websiteUri?: string;
+    phoneNumbers?: {
+        primaryPhone?: string;
+        additionalPhones?: Array<(string)>;
+    };
+});
+
+export type GetGoogleBusinessLocationDetailsError = (ErrorResponse | {
+    error?: string;
+});
+
+export type UpdateGoogleBusinessLocationDetailsData = {
+    body: {
+        /**
+         * Required. Comma-separated fields to update (e.g. 'regularHours', 'specialHours', 'profile.description')
+         */
+        updateMask: string;
+        regularHours?: {
+            periods?: Array<{
+                openDay?: string;
+                openTime?: string;
+                closeDay?: string;
+                closeTime?: string;
+            }>;
+        };
+        specialHours?: {
+            specialHourPeriods?: Array<{
+                startDate?: {
+                    year?: number;
+                    month?: number;
+                    day?: number;
+                };
+                endDate?: {
+                    year?: number;
+                    month?: number;
+                    day?: number;
+                };
+                openTime?: string;
+                closeTime?: string;
+                closed?: boolean;
+            }>;
+        };
+        profile?: {
+            description?: string;
+        };
+        websiteUri?: string;
+        phoneNumbers?: {
+            primaryPhone?: string;
+            additionalPhones?: Array<(string)>;
+        };
+    };
+    path: {
+        /**
+         * The Late account ID (from /v1/accounts)
+         */
+        accountId: string;
+    };
+};
+
+export type UpdateGoogleBusinessLocationDetailsResponse = ({
+    success?: boolean;
+    accountId?: string;
+    locationId?: string;
+});
+
+export type UpdateGoogleBusinessLocationDetailsError = (ErrorResponse | {
+    error?: string;
+});
+
+export type ListGoogleBusinessMediaData = {
+    path: {
+        accountId: string;
+    };
+    query?: {
+        /**
+         * Number of items to return (max 100)
+         */
+        pageSize?: number;
+        /**
+         * Pagination token from previous response
+         */
+        pageToken?: string;
+    };
+};
+
+export type ListGoogleBusinessMediaResponse = ({
+    success?: boolean;
+    accountId?: string;
+    locationId?: string;
+    mediaItems?: Array<{
+        /**
+         * Resource name
+         */
+        name?: string;
+        mediaFormat?: 'PHOTO' | 'VIDEO';
+        sourceUrl?: string;
+        /**
+         * Google-hosted URL
+         */
+        googleUrl?: string;
+        thumbnailUrl?: string;
+        description?: string;
+        createTime?: string;
+        locationAssociation?: {
+            category?: string;
+        };
+    }>;
+    nextPageToken?: string;
+    totalMediaItemsCount?: number;
+});
+
+export type ListGoogleBusinessMediaError = (ErrorResponse);
+
+export type CreateGoogleBusinessMediaData = {
+    body: {
+        /**
+         * Publicly accessible image URL
+         */
+        sourceUrl: string;
+        mediaFormat?: 'PHOTO' | 'VIDEO';
+        /**
+         * Photo description
+         */
+        description?: string;
+        /**
+         * Where the photo appears on the listing
+         */
+        category?: 'COVER' | 'PROFILE' | 'LOGO' | 'EXTERIOR' | 'INTERIOR' | 'FOOD_AND_DRINK' | 'MENU' | 'PRODUCT' | 'TEAMS' | 'ADDITIONAL';
+    };
+    path: {
+        accountId: string;
+    };
+};
+
+export type CreateGoogleBusinessMediaResponse = ({
+    success?: boolean;
+    name?: string;
+    mediaFormat?: string;
+    googleUrl?: string;
+});
+
+export type CreateGoogleBusinessMediaError = (ErrorResponse);
+
+export type DeleteGoogleBusinessMediaData = {
+    path: {
+        accountId: string;
+    };
+    query: {
+        /**
+         * The media item ID to delete
+         */
+        mediaId: string;
+    };
+};
+
+export type DeleteGoogleBusinessMediaResponse = ({
+    success?: boolean;
+    deleted?: boolean;
+    mediaId?: string;
+});
+
+export type DeleteGoogleBusinessMediaError = (ErrorResponse);
+
+export type GetGoogleBusinessAttributesData = {
+    path: {
+        accountId: string;
+    };
+};
+
+export type GetGoogleBusinessAttributesResponse = ({
+    success?: boolean;
+    accountId?: string;
+    locationId?: string;
+    attributes?: Array<{
+        /**
+         * Attribute identifier (e.g. has_delivery)
+         */
+        name?: string;
+        /**
+         * Value type (BOOL, ENUM, URL, REPEATED_ENUM)
+         */
+        valueType?: string;
+        values?: Array<unknown>;
+        repeatedEnumValue?: {
+            setValues?: Array<(string)>;
+            unsetValues?: Array<(string)>;
+        };
+    }>;
+});
+
+export type GetGoogleBusinessAttributesError = (ErrorResponse);
+
+export type UpdateGoogleBusinessAttributesData = {
+    body: {
+        attributes: Array<{
+            name?: string;
+            values?: Array<unknown>;
+            repeatedEnumValue?: {
+                setValues?: Array<(string)>;
+                unsetValues?: Array<(string)>;
+            };
+        }>;
+        /**
+         * Comma-separated attribute names to update (e.g. 'has_delivery,has_takeout')
+         */
+        attributeMask: string;
+    };
+    path: {
+        accountId: string;
+    };
+};
+
+export type UpdateGoogleBusinessAttributesResponse = ({
+    success?: boolean;
+    accountId?: string;
+    locationId?: string;
+    attributes?: Array<{
+        [key: string]: unknown;
+    }>;
+});
+
+export type UpdateGoogleBusinessAttributesError = (ErrorResponse);
+
+export type ListGoogleBusinessPlaceActionsData = {
+    path: {
+        accountId: string;
+    };
+    query?: {
+        pageSize?: number;
+        pageToken?: string;
+    };
+};
+
+export type ListGoogleBusinessPlaceActionsResponse = ({
+    success?: boolean;
+    accountId?: string;
+    locationId?: string;
+    placeActionLinks?: Array<{
+        /**
+         * Resource name
+         */
+        name?: string;
+        /**
+         * Action URL
+         */
+        uri?: string;
+        placeActionType?: string;
+        createTime?: string;
+        updateTime?: string;
+    }>;
+    nextPageToken?: string;
+});
+
+export type ListGoogleBusinessPlaceActionsError = (ErrorResponse);
+
+export type CreateGoogleBusinessPlaceActionData = {
+    body: {
+        /**
+         * The action URL
+         */
+        uri: string;
+        /**
+         * Type of action
+         */
+        placeActionType: 'APPOINTMENT' | 'ONLINE_APPOINTMENT' | 'DINING_RESERVATION' | 'FOOD_ORDERING' | 'FOOD_DELIVERY' | 'FOOD_TAKEOUT' | 'SHOP_ONLINE';
+    };
+    path: {
+        accountId: string;
+    };
+};
+
+export type CreateGoogleBusinessPlaceActionResponse = ({
+    success?: boolean;
+    /**
+     * Resource name of the created link
+     */
+    name?: string;
+    uri?: string;
+    placeActionType?: string;
+});
+
+export type CreateGoogleBusinessPlaceActionError = (ErrorResponse);
+
+export type DeleteGoogleBusinessPlaceActionData = {
+    path: {
+        accountId: string;
+    };
+    query: {
+        /**
+         * The resource name of the place action link (e.g. locations/123/placeActionLinks/456)
+         */
+        name: string;
+    };
+};
+
+export type DeleteGoogleBusinessPlaceActionResponse = ({
+    success?: boolean;
+    deleted?: boolean;
+    name?: string;
+});
+
+export type DeleteGoogleBusinessPlaceActionError = (ErrorResponse);
+
 export type GetPendingOAuthDataData = {
     query: {
         /**

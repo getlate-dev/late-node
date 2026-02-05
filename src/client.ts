@@ -6,6 +6,8 @@ import {
   connectBlueskyCredentials,
   createAccountGroup,
   createApiKey,
+  createGoogleBusinessMedia,
+  createGoogleBusinessPlaceAction,
   createInviteToken,
   createPost,
   createProfile,
@@ -14,6 +16,8 @@ import {
   deleteAccount,
   deleteAccountGroup,
   deleteApiKey,
+  deleteGoogleBusinessMedia,
+  deleteGoogleBusinessPlaceAction,
   deleteInboxComment,
   deleteInboxReviewReply,
   deletePost,
@@ -34,7 +38,9 @@ import {
   getFacebookPages,
   getFollowerStats,
   getGmbLocations,
+  getGoogleBusinessAttributes,
   getGoogleBusinessFoodMenus,
+  getGoogleBusinessLocationDetails,
   getGoogleBusinessReviews,
   getInboxConversation,
   getInboxConversationMessages,
@@ -69,6 +75,8 @@ import {
   listApiKeys,
   listFacebookPages,
   listGoogleBusinessLocations,
+  listGoogleBusinessMedia,
+  listGoogleBusinessPlaceActions,
   listInboxComments,
   listInboxConversations,
   listInboxReviews,
@@ -99,7 +107,9 @@ import {
   updateAccountGroup,
   updateFacebookPage,
   updateGmbLocation,
+  updateGoogleBusinessAttributes,
   updateGoogleBusinessFoodMenus,
+  updateGoogleBusinessLocationDetails,
   updateInboxConversation,
   updateLinkedInOrganization,
   updatePinterestBoards,
@@ -344,6 +354,40 @@ export class Late {
   gmbfoodmenus = {
     getGoogleBusinessFoodMenus: getGoogleBusinessFoodMenus,
     updateGoogleBusinessFoodMenus: updateGoogleBusinessFoodMenus,
+  };
+
+  /**
+   * gmblocationdetails API
+   */
+  gmblocationdetails = {
+    getGoogleBusinessLocationDetails: getGoogleBusinessLocationDetails,
+    updateGoogleBusinessLocationDetails: updateGoogleBusinessLocationDetails,
+  };
+
+  /**
+   * gmbmedia API
+   */
+  gmbmedia = {
+    listGoogleBusinessMedia: listGoogleBusinessMedia,
+    createGoogleBusinessMedia: createGoogleBusinessMedia,
+    deleteGoogleBusinessMedia: deleteGoogleBusinessMedia,
+  };
+
+  /**
+   * gmbattributes API
+   */
+  gmbattributes = {
+    getGoogleBusinessAttributes: getGoogleBusinessAttributes,
+    updateGoogleBusinessAttributes: updateGoogleBusinessAttributes,
+  };
+
+  /**
+   * gmbplaceactions API
+   */
+  gmbplaceactions = {
+    listGoogleBusinessPlaceActions: listGoogleBusinessPlaceActions,
+    createGoogleBusinessPlaceAction: createGoogleBusinessPlaceAction,
+    deleteGoogleBusinessPlaceAction: deleteGoogleBusinessPlaceAction,
   };
 
   /**

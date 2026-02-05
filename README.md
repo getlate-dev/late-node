@@ -327,11 +327,37 @@ try {
 | `comments.unhideInboxComment()` | Unhide a comment |
 | `comments.unlikeInboxComment()` | Unlike a comment |
 
+### GMB Attributes
+| Method | Description |
+|--------|-------------|
+| `gmbAttributes.getGoogleBusinessAttributes()` | Get Google Business Profile location attributes |
+| `gmbAttributes.updateGoogleBusinessAttributes()` | Update Google Business Profile location attributes |
+
 ### GMB Food Menus
 | Method | Description |
 |--------|-------------|
 | `gmbFoodMenus.getGoogleBusinessFoodMenus()` | Get Google Business Profile food menus |
 | `gmbFoodMenus.updateGoogleBusinessFoodMenus()` | Update Google Business Profile food menus |
+
+### GMB Location Details
+| Method | Description |
+|--------|-------------|
+| `gmbLocationDetails.getGoogleBusinessLocationDetails()` | Get Google Business Profile location details |
+| `gmbLocationDetails.updateGoogleBusinessLocationDetails()` | Update Google Business Profile location details |
+
+### GMB Media
+| Method | Description |
+|--------|-------------|
+| `gmbMedia.listGoogleBusinessMedia()` | List Google Business Profile media (photos) |
+| `gmbMedia.createGoogleBusinessMedia()` | Upload a photo to Google Business Profile |
+| `gmbMedia.deleteGoogleBusinessMedia()` | Delete a photo from Google Business Profile |
+
+### GMB Place Actions
+| Method | Description |
+|--------|-------------|
+| `gmbPlaceActions.listGoogleBusinessPlaceActions()` | List place action links (booking, ordering, reservations) |
+| `gmbPlaceActions.createGoogleBusinessPlaceAction()` | Create a place action link (booking, ordering, reservation) |
+| `gmbPlaceActions.deleteGoogleBusinessPlaceAction()` | Delete a place action link |
 
 ### Messages (Inbox)
 | Method | Description |
