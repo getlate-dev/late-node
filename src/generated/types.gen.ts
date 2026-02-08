@@ -665,6 +665,9 @@ export type PlatformTarget = {
      */
     platform?: string;
     accountId?: (string | SocialAccount);
+    /**
+     * Platform-specific text override. When set, this content is used instead of the top-level post content for this platform. Useful for tailoring captions per platform (e.g. keeping tweets under 280 characters).
+     */
     customContent?: string;
     customMedia?: Array<MediaItem>;
     /**
@@ -2302,6 +2305,9 @@ export type CreatePostData = {
         platforms?: Array<{
             platform?: string;
             accountId?: string;
+            /**
+             * Platform-specific text override. When set, this content is used instead of the top-level post content for this platform. Useful for tailoring captions per platform (e.g. keeping tweets under 280 characters).
+             */
             customContent?: string;
             customMedia?: Array<{
                 type?: 'image' | 'video' | 'gif' | 'document';
