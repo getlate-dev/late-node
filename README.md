@@ -273,7 +273,9 @@ try {
 ### Logs
 | Method | Description |
 |--------|-------------|
-| `logs.listLogs()` | Get publishing logs |
+| `logs.listConnectionLogs()` | Get connection logs |
+| `logs.listLogs()` | Get publishing logs (deprecated) |
+| `logs.listPostsLogs()` | Get publishing logs |
 | `logs.getLog()` | Get a single log entry |
 | `logs.getPostLogs()` | Get logs for a specific post |
 

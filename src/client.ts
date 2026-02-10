@@ -73,6 +73,7 @@ import {
   listAccountGroups,
   listAccounts,
   listApiKeys,
+  listConnectionLogs,
   listFacebookPages,
   listGoogleBusinessLocations,
   listGoogleBusinessMedia,
@@ -84,6 +85,7 @@ import {
   listLogs,
   listPinterestBoardsForSelection,
   listPosts,
+  listPostsLogs,
   listProfiles,
   listQueueSlots,
   listSnapchatProfiles,
@@ -420,6 +422,8 @@ export class Late {
   logs = {
     listLogs: listLogs,
     getLog: getLog,
+    listPostsLogs: listPostsLogs,
+    listConnectionLogs: listConnectionLogs,
     getPostLogs: getPostLogs,
   };
 

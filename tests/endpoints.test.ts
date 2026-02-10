@@ -296,6 +296,16 @@ describe('Endpoint Methods', () => {
       expect(client.logs.getLog).toBeTypeOf('function');
     });
 
+    it('should have listPostsLogs method', () => {
+      expect(client.logs.listPostsLogs).toBeDefined();
+      expect(client.logs.listPostsLogs).toBeTypeOf('function');
+    });
+
+    it('should have listConnectionLogs method', () => {
+      expect(client.logs.listConnectionLogs).toBeDefined();
+      expect(client.logs.listConnectionLogs).toBeTypeOf('function');
+    });
+
     it('should have getPostLogs method', () => {
       expect(client.logs.getPostLogs).toBeDefined();
       expect(client.logs.getPostLogs).toBeTypeOf('function');

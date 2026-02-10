@@ -93,9 +93,136 @@ export type ApiKey = {
     key?: string;
 };
 
+/**
+ * Bluesky post settings:
+ * - Supports text posts with up to 4 images per post
+ * - Videos supported (single video per post)
+ * - threadItems creates a reply chain (Bluesky thread)
+ * - Images exceeding Bluesky's 1MB limit are automatically compressed
+ * - Alt text for images is supported via mediaItem properties
+ *
+ */
+export type BlueskyPlatformData = {
+    /**
+     * Sequence of posts in a Bluesky thread (root then replies in order).
+     */
+    threadItems?: Array<{
+        content?: string;
+        mediaItems?: Array<MediaItem>;
+    }>;
+};
+
 export type CaptionResponse = {
     caption?: string;
 };
+
+/**
+ * Connection event log showing account connection/disconnection history
+ */
+export type ConnectionLog = {
+    _id?: string;
+    /**
+     * User who owns the connection (may be null for early OAuth failures)
+     */
+    userId?: string;
+    profileId?: string;
+    /**
+     * The social account ID (present on successful connections and disconnects)
+     */
+    accountId?: string;
+    platform?: 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat';
+    /**
+     * Type of connection event:
+     * - `connect_success` - New account connected successfully
+     * - `connect_failed` - Connection attempt failed
+     * - `disconnect` - Account was disconnected
+     * - `reconnect_success` - Existing account reconnected successfully
+     * - `reconnect_failed` - Reconnection attempt failed
+     *
+     */
+    eventType?: 'connect_success' | 'connect_failed' | 'disconnect' | 'reconnect_success' | 'reconnect_failed';
+    /**
+     * How the connection was initiated
+     */
+    connectionMethod?: 'oauth' | 'credentials' | 'invitation';
+    /**
+     * Error details (present on failed events)
+     */
+    error?: {
+        /**
+         * Error code (e.g., oauth_denied, token_exchange_failed)
+         */
+        code?: string;
+        /**
+         * Human-readable error message
+         */
+        message?: string;
+        /**
+         * Raw error response (truncated to 2000 chars)
+         */
+        rawResponse?: string;
+    };
+    /**
+     * Success details (present on successful events)
+     */
+    success?: {
+        displayName?: string;
+        username?: string;
+        profilePicture?: string;
+        /**
+         * OAuth scopes/permissions granted
+         */
+        permissions?: Array<(string)>;
+        tokenExpiresAt?: string;
+        /**
+         * Account type (personal, business, organization)
+         */
+        accountType?: string;
+    };
+    /**
+     * Additional context about the connection attempt
+     */
+    context?: {
+        isHeadlessMode?: boolean;
+        hasCustomRedirectUrl?: boolean;
+        isReconnection?: boolean;
+        /**
+         * Using bring-your-own-keys
+         */
+        isBYOK?: boolean;
+        invitationToken?: string;
+        connectToken?: string;
+    };
+    /**
+     * How long the operation took in milliseconds
+     */
+    durationMs?: number;
+    /**
+     * Additional metadata
+     */
+    metadata?: {
+        [key: string]: unknown;
+    };
+    createdAt?: string;
+};
+
+export type platform = 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat';
+
+/**
+ * Type of connection event:
+ * - `connect_success` - New account connected successfully
+ * - `connect_failed` - Connection attempt failed
+ * - `disconnect` - Account was disconnected
+ * - `reconnect_success` - Existing account reconnected successfully
+ * - `reconnect_failed` - Reconnection attempt failed
+ *
+ */
+export type eventType = 'connect_success' | 'connect_failed' | 'disconnect' | 'reconnect_success' | 'reconnect_failed';
+
+/**
+ * How the connection was initiated
+ */
+export type connectionMethod = 'oauth' | 'credentials' | 'invitation';
 
 export type DownloadFormat = {
     formatId?: string;
@@ -677,7 +804,7 @@ export type PlatformTarget = {
     /**
      * Platform-specific overrides and options.
      */
-    platformSpecificData?: (TwitterPlatformData | ThreadsPlatformData | FacebookPlatformData | InstagramPlatformData | LinkedInPlatformData | PinterestPlatformData | YouTubePlatformData | GoogleBusinessPlatformData | TikTokPlatformData | TelegramPlatformData | SnapchatPlatformData);
+    platformSpecificData?: (TwitterPlatformData | ThreadsPlatformData | FacebookPlatformData | InstagramPlatformData | LinkedInPlatformData | PinterestPlatformData | YouTubePlatformData | GoogleBusinessPlatformData | TikTokPlatformData | TelegramPlatformData | SnapchatPlatformData | RedditPlatformData | BlueskyPlatformData);
     /**
      * Platform-specific status: pending, publishing, published, failed
      */
@@ -913,8 +1040,6 @@ export type PostLog = {
     createdAt?: string;
 };
 
-export type platform = 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat';
-
 /**
  * Type of action logged:
  * - `publish` - Initial publish attempt
@@ -1085,6 +1210,38 @@ export type QueueUpdateResponse = {
     schedule?: QueueSchedule;
     nextSlots?: Array<(string)>;
     reshuffledCount?: number;
+};
+
+/**
+ * Reddit post settings:
+ * - Posts are either "link" (with URL/media) or "self" (text-only)
+ * - If media is provided, the first media item's URL is used as the link
+ * - Use forceSelf to override and create a text post with the URL in the body
+ * - Subreddit defaults to the account's configured subreddit if omitted
+ * - Use the same accountId multiple times with different subreddit values in platformSpecificData to post to multiple subreddits
+ * - Images are automatically compressed if they exceed Reddit's 20MB limit
+ *
+ */
+export type RedditPlatformData = {
+    /**
+     * Target subreddit name (without "r/" prefix).
+     * Overrides the default subreddit configured on the account connection.
+     * Use GET /api/v1/accounts/{id}/reddit-subreddits to list available subreddits.
+     *
+     */
+    subreddit?: string;
+    /**
+     * Post title. Defaults to the first line of content, truncated to 300 characters.
+     */
+    title?: string;
+    /**
+     * URL for link posts. If provided (and forceSelf is not true), creates a link post instead of a text post.
+     */
+    url?: string;
+    /**
+     * When true, creates a text/self post even when a URL or media is provided.
+     */
+    forceSelf?: boolean;
 };
 
 /**
@@ -2317,7 +2474,7 @@ export type CreatePostData = {
              * Optional per-platform scheduled time override. When omitted, the top-level scheduledFor is used.
              */
             scheduledFor?: string;
-            platformSpecificData?: (TwitterPlatformData | ThreadsPlatformData | FacebookPlatformData | InstagramPlatformData | LinkedInPlatformData | PinterestPlatformData | YouTubePlatformData | TikTokPlatformData | TelegramPlatformData | SnapchatPlatformData);
+            platformSpecificData?: (TwitterPlatformData | ThreadsPlatformData | FacebookPlatformData | InstagramPlatformData | LinkedInPlatformData | PinterestPlatformData | YouTubePlatformData | GoogleBusinessPlatformData | TikTokPlatformData | TelegramPlatformData | SnapchatPlatformData | RedditPlatformData | BlueskyPlatformData);
         }>;
         scheduledFor?: string;
         publishNow?: boolean;
@@ -4994,6 +5151,106 @@ export type GetLogError = ({
     error?: string;
 } | unknown);
 
+export type ListPostsLogsData = {
+    query?: {
+        /**
+         * Filter by action type
+         */
+        action?: 'publish' | 'retry' | 'media_upload' | 'rate_limit_pause' | 'token_refresh' | 'cancelled' | 'all';
+        /**
+         * Number of days to look back (max 7)
+         */
+        days?: number;
+        /**
+         * Maximum number of logs to return (max 100)
+         */
+        limit?: number;
+        /**
+         * Filter by platform
+         */
+        platform?: 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat' | 'all';
+        /**
+         * Number of logs to skip (for pagination)
+         */
+        skip?: number;
+        /**
+         * Filter by log status
+         */
+        status?: 'success' | 'failed' | 'pending' | 'skipped' | 'all';
+    };
+};
+
+export type ListPostsLogsResponse = ({
+    logs?: Array<PostLog>;
+    pagination?: {
+        /**
+         * Total number of logs matching the query
+         */
+        total?: number;
+        limit?: number;
+        skip?: number;
+        /**
+         * Total number of pages
+         */
+        pages?: number;
+        hasMore?: boolean;
+    };
+});
+
+export type ListPostsLogsError = ({
+    error?: string;
+});
+
+export type ListConnectionLogsData = {
+    query?: {
+        /**
+         * Number of days to look back (max 7)
+         */
+        days?: number;
+        /**
+         * Filter by event type
+         */
+        eventType?: 'connect_success' | 'connect_failed' | 'disconnect' | 'reconnect_success' | 'reconnect_failed' | 'all';
+        /**
+         * Maximum number of logs to return (max 100)
+         */
+        limit?: number;
+        /**
+         * Filter by platform
+         */
+        platform?: 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat' | 'all';
+        /**
+         * Number of logs to skip (for pagination)
+         */
+        skip?: number;
+        /**
+         * Filter by status (shorthand for event types)
+         */
+        status?: 'success' | 'failed' | 'all';
+    };
+};
+
+export type ListConnectionLogsResponse = ({
+    logs?: Array<ConnectionLog>;
+    pagination?: {
+        /**
+         * Total number of logs matching the query
+         */
+        total?: number;
+        limit?: number;
+        skip?: number;
+        /**
+         * Total number of pages
+         */
+        pages?: number;
+        hasMore?: boolean;
+    };
+});
+
+export type ListConnectionLogsError = ({
+    error?: string;
+});
+
 export type GetPostLogsData = {
     path: {
         /**
@@ -5363,6 +5620,9 @@ export type ListInboxCommentsError = ({
 
 export type GetInboxPostCommentsData = {
     path: {
+        /**
+         * The post identifier. Accepts a Late post ID (MongoDB ObjectId) which is automatically resolved to the platform-specific post ID, or a platform-specific post ID directly (e.g. tweet ID, Facebook Graph ID, YouTube video ID).
+         */
         postId: string;
     };
     query: {
@@ -5497,6 +5757,9 @@ export type ReplyToInboxPostData = {
         rootCid?: string;
     };
     path: {
+        /**
+         * The post identifier. Accepts a Late post ID or a platform-specific post ID.
+         */
         postId: string;
     };
 };
@@ -5519,6 +5782,9 @@ export type ReplyToInboxPostError = ({
 
 export type DeleteInboxCommentData = {
     path: {
+        /**
+         * The post identifier. Accepts a Late post ID or a platform-specific post ID.
+         */
         postId: string;
     };
     query: {
