@@ -316,6 +316,19 @@ try {
 | `reddit.getRedditFeed()` | Fetch subreddit feed via a connected account |
 | `reddit.searchReddit()` | Search Reddit posts via a connected account |
 
+### Account Settings
+| Method | Description |
+|--------|-------------|
+| `accountSettings.getInstagramIceBreakers()` | Get Instagram ice breakers |
+| `accountSettings.getMessengerMenu()` | Get Facebook persistent menu |
+| `accountSettings.getTelegramCommands()` | Get Telegram bot commands |
+| `accountSettings.deleteInstagramIceBreakers()` | Delete Instagram ice breakers |
+| `accountSettings.deleteMessengerMenu()` | Delete Facebook persistent menu |
+| `accountSettings.deleteTelegramCommands()` | Delete Telegram bot commands |
+| `accountSettings.setInstagramIceBreakers()` | Set Instagram ice breakers |
+| `accountSettings.setMessengerMenu()` | Set Facebook persistent menu |
+| `accountSettings.setTelegramCommands()` | Set Telegram bot commands |
+
 ### Comments (Inbox)
 | Method | Description |
 |--------|-------------|
@@ -368,6 +381,7 @@ try {
 | `messages.getInboxConversation()` | Get conversation details |
 | `messages.getInboxConversationMessages()` | Get messages in a conversation |
 | `messages.updateInboxConversation()` | Update conversation status |
+| `messages.editInboxMessage()` | Edit a message (Telegram only) |
 | `messages.sendInboxMessage()` | Send a message |
 
 ### Reviews (Inbox)

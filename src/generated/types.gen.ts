@@ -1801,6 +1801,27 @@ export type WebhookPayloadMessage = {
         username?: string;
         displayName?: string;
     };
+    /**
+     * Interactive message metadata (present when message is a quick reply tap, postback button tap, or inline keyboard callback)
+     */
+    metadata?: {
+        /**
+         * Payload from a quick reply tap (Meta platforms)
+         */
+        quickReplyPayload?: string;
+        /**
+         * Payload from a postback button tap (Meta platforms)
+         */
+        postbackPayload?: string;
+        /**
+         * Title of the tapped postback button (Meta platforms)
+         */
+        postbackTitle?: string;
+        /**
+         * Callback data from an inline keyboard button tap (Telegram)
+         */
+        callbackData?: string;
+    } | null;
     timestamp?: string;
 };
 
@@ -5503,7 +5524,120 @@ export type SendInboxMessageData = {
         /**
          * Message text
          */
-        message: string;
+        message?: string;
+        /**
+         * Quick reply buttons. Mutually exclusive with buttons. Max 13 items.
+         */
+        quickReplies?: Array<{
+            /**
+             * Button label (max 20 chars)
+             */
+            title: string;
+            /**
+             * Payload sent back on tap
+             */
+            payload: string;
+            /**
+             * Optional icon URL (Meta only)
+             */
+            imageUrl?: string;
+        }>;
+        /**
+         * Action buttons. Mutually exclusive with quickReplies. Max 3 items.
+         */
+        buttons?: Array<{
+            /**
+             * Button type. phone is Facebook only.
+             */
+            type: 'url' | 'postback' | 'phone';
+            /**
+             * Button label (max 20 chars)
+             */
+            title: string;
+            /**
+             * URL for url-type buttons
+             */
+            url?: string;
+            /**
+             * Payload for postback-type buttons
+             */
+            payload?: string;
+            /**
+             * Phone number for phone-type buttons (Facebook only)
+             */
+            phone?: string;
+        }>;
+        /**
+         * Generic template for carousels (Instagram/Facebook only, ignored on Telegram).
+         */
+        template?: {
+            /**
+             * Template type
+             */
+            type?: 'generic';
+            elements?: Array<{
+                /**
+                 * Element title (max 80 chars)
+                 */
+                title: string;
+                /**
+                 * Element subtitle
+                 */
+                subtitle?: string;
+                /**
+                 * Element image URL
+                 */
+                imageUrl?: string;
+                buttons?: Array<{
+                    type?: 'url' | 'postback';
+                    title?: string;
+                    url?: string;
+                    payload?: string;
+                }>;
+            }>;
+        };
+        /**
+         * Telegram-native keyboard markup. Ignored on other platforms.
+         */
+        replyMarkup?: {
+            /**
+             * Keyboard type
+             */
+            type?: 'inline_keyboard' | 'reply_keyboard';
+            /**
+             * Array of rows, each row is an array of buttons
+             */
+            keyboard?: Array<Array<{
+                /**
+                 * Button text
+                 */
+                text?: string;
+                /**
+                 * Callback data (inline_keyboard only
+                 */
+                callbackData?: string;
+                /**
+                 * URL to open (inline_keyboard only)
+                 */
+                url?: string;
+            }>>;
+            /**
+             * Hide keyboard after use (reply_keyboard only)
+             */
+            oneTime?: boolean;
+        };
+        /**
+         * Facebook messaging type. Required when using messageTag.
+         */
+        messagingType?: 'RESPONSE' | 'UPDATE' | 'MESSAGE_TAG';
+        /**
+         * Facebook message tag for messaging outside 24h window. Requires messagingType MESSAGE_TAG. Instagram only supports HUMAN_AGENT.
+         */
+        messageTag?: 'CONFIRMED_EVENT_UPDATE' | 'POST_PURCHASE_UPDATE' | 'ACCOUNT_UPDATE' | 'HUMAN_AGENT';
+        /**
+         * Platform message ID to reply to (Telegram only).
+         */
+        replyTo?: string;
     };
     path: {
         /**
@@ -5541,6 +5675,198 @@ export type SendInboxMessageError = ({
 } | {
     error?: string;
 } | unknown);
+
+export type EditInboxMessageData = {
+    body: {
+        /**
+         * Social account ID
+         */
+        accountId: string;
+        /**
+         * New message text
+         */
+        text?: string;
+        /**
+         * New inline keyboard markup
+         */
+        replyMarkup?: {
+            type?: 'inline_keyboard';
+            keyboard?: Array<Array<{
+                text?: string;
+                callbackData?: string;
+                url?: string;
+            }>>;
+        };
+    };
+    path: {
+        /**
+         * The conversation ID
+         */
+        conversationId: string;
+        /**
+         * The Telegram message ID to edit
+         */
+        messageId: string;
+    };
+};
+
+export type EditInboxMessageResponse = ({
+    success?: boolean;
+    data?: {
+        messageId?: number;
+    };
+});
+
+export type EditInboxMessageError = (unknown | {
+    error?: string;
+});
+
+export type GetMessengerMenuData = {
+    path: {
+        accountId: string;
+    };
+};
+
+export type GetMessengerMenuResponse = ({
+    data?: Array<{
+        [key: string]: unknown;
+    }>;
+});
+
+export type GetMessengerMenuError = (unknown | {
+    error?: string;
+});
+
+export type SetMessengerMenuData = {
+    body: {
+        /**
+         * Persistent menu configuration array (Meta format)
+         */
+        persistent_menu: Array<{
+            [key: string]: unknown;
+        }>;
+    };
+    path: {
+        accountId: string;
+    };
+};
+
+export type SetMessengerMenuResponse = (unknown);
+
+export type SetMessengerMenuError = (unknown | {
+    error?: string;
+});
+
+export type DeleteMessengerMenuData = {
+    path: {
+        accountId: string;
+    };
+};
+
+export type DeleteMessengerMenuResponse = (unknown);
+
+export type DeleteMessengerMenuError = ({
+    error?: string;
+});
+
+export type GetInstagramIceBreakersData = {
+    path: {
+        accountId: string;
+    };
+};
+
+export type GetInstagramIceBreakersResponse = ({
+    data?: Array<{
+        [key: string]: unknown;
+    }>;
+});
+
+export type GetInstagramIceBreakersError = (unknown | {
+    error?: string;
+});
+
+export type SetInstagramIceBreakersData = {
+    body: {
+        ice_breakers: Array<{
+            question: string;
+            payload: string;
+        }>;
+    };
+    path: {
+        accountId: string;
+    };
+};
+
+export type SetInstagramIceBreakersResponse = (unknown);
+
+export type SetInstagramIceBreakersError = (unknown | {
+    error?: string;
+});
+
+export type DeleteInstagramIceBreakersData = {
+    path: {
+        accountId: string;
+    };
+};
+
+export type DeleteInstagramIceBreakersResponse = (unknown);
+
+export type DeleteInstagramIceBreakersError = ({
+    error?: string;
+});
+
+export type GetTelegramCommandsData = {
+    path: {
+        accountId: string;
+    };
+};
+
+export type GetTelegramCommandsResponse = ({
+    data?: Array<{
+        command?: string;
+        description?: string;
+    }>;
+});
+
+export type GetTelegramCommandsError = (unknown | {
+    error?: string;
+});
+
+export type SetTelegramCommandsData = {
+    body: {
+        commands: Array<{
+            /**
+             * Bot command without leading slash
+             */
+            command: string;
+            /**
+             * Command description
+             */
+            description: string;
+        }>;
+    };
+    path: {
+        accountId: string;
+    };
+};
+
+export type SetTelegramCommandsResponse = (unknown);
+
+export type SetTelegramCommandsError = (unknown | {
+    error?: string;
+});
+
+export type DeleteTelegramCommandsData = {
+    path: {
+        accountId: string;
+    };
+};
+
+export type DeleteTelegramCommandsResponse = (unknown);
+
+export type DeleteTelegramCommandsError = ({
+    error?: string;
+});
 
 export type ListInboxCommentsData = {
     query?: {

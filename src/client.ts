@@ -20,9 +20,12 @@ import {
   deleteGoogleBusinessPlaceAction,
   deleteInboxComment,
   deleteInboxReviewReply,
+  deleteInstagramIceBreakers,
+  deleteMessengerMenu,
   deletePost,
   deleteProfile,
   deleteQueueSlot,
+  deleteTelegramCommands,
   deleteWebhookSettings,
   downloadBlueskyMedia,
   downloadFacebookVideo,
@@ -31,6 +34,7 @@ import {
   downloadTikTokVideo,
   downloadTwitterMedia,
   downloadYouTubeVideo,
+  editInboxMessage,
   getAccountHealth,
   getAllAccountsHealth,
   getAnalytics,
@@ -45,12 +49,14 @@ import {
   getInboxConversation,
   getInboxConversationMessages,
   getInboxPostComments,
+  getInstagramIceBreakers,
   getLinkedInAggregateAnalytics,
   getLinkedInMentions,
   getLinkedInOrganizations,
   getLinkedInPostAnalytics,
   getLog,
   getMediaPresignedUrl,
+  getMessengerMenu,
   getNextQueueSlot,
   getPendingOAuthData,
   getPinterestBoards,
@@ -59,6 +65,7 @@ import {
   getProfile,
   getRedditFeed,
   getRedditSubreddits,
+  getTelegramCommands,
   getTelegramConnectStatus,
   getUsageStats,
   getUser,
@@ -102,6 +109,9 @@ import {
   selectSnapchatProfile,
   sendInboxMessage,
   sendPrivateReplyToComment,
+  setInstagramIceBreakers,
+  setMessengerMenu,
+  setTelegramCommands,
   testWebhook,
   unhideInboxComment,
   unlikeInboxComment,
@@ -436,6 +446,22 @@ export class Late {
     updateInboxConversation: updateInboxConversation,
     getInboxConversationMessages: getInboxConversationMessages,
     sendInboxMessage: sendInboxMessage,
+    editInboxMessage: editInboxMessage,
+  };
+
+  /**
+   * accountsettings API
+   */
+  accountsettings = {
+    getMessengerMenu: getMessengerMenu,
+    setMessengerMenu: setMessengerMenu,
+    deleteMessengerMenu: deleteMessengerMenu,
+    getInstagramIceBreakers: getInstagramIceBreakers,
+    setInstagramIceBreakers: setInstagramIceBreakers,
+    deleteInstagramIceBreakers: deleteInstagramIceBreakers,
+    getTelegramCommands: getTelegramCommands,
+    setTelegramCommands: setTelegramCommands,
+    deleteTelegramCommands: deleteTelegramCommands,
   };
 
   /**
