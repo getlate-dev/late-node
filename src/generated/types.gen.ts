@@ -1779,6 +1779,27 @@ export type WebhookPayloadMessage = {
             name?: string;
             username?: string;
             picture?: string;
+            /**
+             * Instagram profile data for the sender. Only present for Instagram conversations.
+             */
+            instagramProfile?: {
+                /**
+                 * Whether the sender follows your Instagram business account
+                 */
+                isFollower?: (boolean) | null;
+                /**
+                 * Whether your Instagram business account follows the sender
+                 */
+                isFollowing?: (boolean) | null;
+                /**
+                 * The sender's follower count on Instagram
+                 */
+                followerCount?: (number) | null;
+                /**
+                 * Whether the sender is a verified Instagram user
+                 */
+                isVerified?: (boolean) | null;
+            } | null;
         };
         sentAt?: string;
         isRead?: boolean;
@@ -5362,6 +5383,31 @@ export type ListInboxConversationsResponse = ({
          * Direct link to open the conversation on the platform (if available)
          */
         url?: (string) | null;
+        /**
+         * Instagram profile data for the participant. Only present for Instagram conversations.
+         */
+        instagramProfile?: {
+            /**
+             * Whether the participant follows your Instagram business account
+             */
+            isFollower?: (boolean) | null;
+            /**
+             * Whether your Instagram business account follows the participant
+             */
+            isFollowing?: (boolean) | null;
+            /**
+             * The participant's follower count on Instagram
+             */
+            followerCount?: (number) | null;
+            /**
+             * Whether the participant is a verified Instagram user
+             */
+            isVerified?: (boolean) | null;
+            /**
+             * When this profile data was last fetched from Instagram
+             */
+            fetchedAt?: (string) | null;
+        } | null;
     }>;
     pagination?: {
         hasMore?: boolean;
@@ -5423,6 +5469,31 @@ export type GetInboxConversationResponse = ({
             id?: string;
             name?: string;
         }>;
+        /**
+         * Instagram profile data for the participant. Only present for Instagram conversations.
+         */
+        instagramProfile?: {
+            /**
+             * Whether the participant follows your Instagram business account
+             */
+            isFollower?: (boolean) | null;
+            /**
+             * Whether your Instagram business account follows the participant
+             */
+            isFollowing?: (boolean) | null;
+            /**
+             * The participant's follower count on Instagram
+             */
+            followerCount?: (number) | null;
+            /**
+             * Whether the participant is a verified Instagram user
+             */
+            isVerified?: (boolean) | null;
+            /**
+             * When this profile data was last fetched from Instagram
+             */
+            fetchedAt?: (string) | null;
+        } | null;
     };
 });
 
