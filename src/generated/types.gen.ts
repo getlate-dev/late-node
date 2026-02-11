@@ -2557,7 +2557,16 @@ export type GetPostError = ({
 
 export type UpdatePostData = {
     body: {
-        [key: string]: unknown;
+        content?: string;
+        scheduledFor?: string;
+        /**
+         * Root-level TikTok settings applied to all TikTok platforms in the request.
+         * This is a convenience shorthand. Settings here are merged into each TikTok
+         * platform's platformSpecificData, with platform-specific settings taking precedence.
+         *
+         */
+        tiktokSettings?: TikTokPlatformData;
+        [key: string]: unknown | string | TikTokPlatformData;
     };
     path: {
         postId: string;
