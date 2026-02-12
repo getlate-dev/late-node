@@ -64,6 +64,7 @@ import {
   getPostLogs,
   getProfile,
   getRedditFeed,
+  getRedditFlairs,
   getRedditSubreddits,
   getTelegramCommands,
   getTelegramConnectStatus,
@@ -330,6 +331,7 @@ export class Late {
     updateGmbLocation: updateGmbLocation,
     getRedditSubreddits: getRedditSubreddits,
     updateRedditSubreddits: updateRedditSubreddits,
+    getRedditFlairs: getRedditFlairs,
     facebook: {
       listFacebookPages: listFacebookPages,
       selectFacebookPage: selectFacebookPage,

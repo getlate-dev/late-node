@@ -1220,6 +1220,7 @@ export type QueueUpdateResponse = {
  * - Subreddit defaults to the account's configured subreddit if omitted
  * - Use the same accountId multiple times with different subreddit values in platformSpecificData to post to multiple subreddits
  * - Images are automatically compressed if they exceed Reddit's 20MB limit
+ * - Some subreddits require a flair; if not provided, the API will attempt to use the first available flair as fallback
  *
  */
 export type RedditPlatformData = {
@@ -1242,6 +1243,12 @@ export type RedditPlatformData = {
      * When true, creates a text/self post even when a URL or media is provided.
      */
     forceSelf?: boolean;
+    /**
+     * Flair ID for the post. Required by some subreddits.
+     * Use GET /api/v1/accounts/{id}/reddit-flairs?subreddit=name to list available flairs.
+     *
+     */
+    flairId?: string;
 };
 
 /**
@@ -4814,6 +4821,43 @@ export type UpdateRedditSubredditsResponse = ({
 });
 
 export type UpdateRedditSubredditsError = (unknown | {
+    error?: string;
+});
+
+export type GetRedditFlairsData = {
+    path: {
+        accountId: string;
+    };
+    query: {
+        /**
+         * Subreddit name (without "r/" prefix) to fetch flairs for
+         */
+        subreddit: string;
+    };
+};
+
+export type GetRedditFlairsResponse = ({
+    flairs?: Array<{
+        /**
+         * Flair ID to pass as flairId in platformSpecificData
+         */
+        id?: string;
+        /**
+         * Flair display text
+         */
+        text?: string;
+        /**
+         * Text color: 'dark' or 'light'
+         */
+        textColor?: string;
+        /**
+         * Background hex color (e.g. '#ff4500')
+         */
+        backgroundColor?: string;
+    }>;
+});
+
+export type GetRedditFlairsError = (unknown | {
     error?: string;
 });
 

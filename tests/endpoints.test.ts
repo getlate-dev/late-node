@@ -184,6 +184,11 @@ describe('Endpoint Methods', () => {
       expect(client.connect.updateRedditSubreddits).toBeTypeOf('function');
     });
 
+    it('should have getRedditFlairs method', () => {
+      expect(client.connect.getRedditFlairs).toBeDefined();
+      expect(client.connect.getRedditFlairs).toBeTypeOf('function');
+    });
+
   });
 
   describe('connect.bluesky', () => {

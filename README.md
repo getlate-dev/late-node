@@ -293,6 +293,7 @@ try {
 | `connect.getLinkedInOrganizations()` | Get available LinkedIn organizations for a connected account |
 | `connect.getPendingOAuthData()` | Fetch pending OAuth selection data (Headless Mode) |
 | `connect.getPinterestBoards()` | List Pinterest boards for a connected account |
+| `connect.getRedditFlairs()` | List available post flairs for a Reddit subreddit |
 | `connect.getRedditSubreddits()` | List Reddit subreddits for a connected account |
 | `connect.getTelegramConnectStatus()` | Generate Telegram access code |
 | `connect.updateFacebookPage()` | Update selected Facebook page for a connected account |
