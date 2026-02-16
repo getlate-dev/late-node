@@ -459,6 +459,7 @@ export const retryPost = <ThrowOnError extends boolean = false>(options: Options
  * - **Snapchat:** No deletion API available. Posts must be deleted manually.
  *
  * **Platform notes:**
+ * - **Threaded posts (Twitter, Threads, Bluesky):** If the post was published as a thread, all items in the thread are deleted (not just the first one). Posts published before this feature was added will only have the first item deleted.
  * - **Telegram:** Messages older than 48 hours may fail to delete (Telegram Bot API limitation).
  * - **YouTube:** This permanently deletes the video from YouTube.
  *
