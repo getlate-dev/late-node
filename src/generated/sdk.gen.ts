@@ -2035,16 +2035,17 @@ export const unlikeInboxComment = <ThrowOnError extends boolean = false>(options
  * Send a private direct message to the author of a comment on your post.
  * This is useful for handling customer inquiries or sensitive matters privately.
  *
- * **Supported platforms:** Instagram only
+ * **Supported platforms:** Instagram, Facebook
  *
  * **Limitations:**
- * - Instagram only allows ONE private reply per comment
+ * - Only ONE private reply per comment (platform API restriction)
  * - Must be sent within 7 days of the comment being posted
  * - Only works for comments on posts owned by the connected account
- * - Message goes to the user's Inbox (if they follow you) or Message Requests (if they don't)
- * - Requires `instagram_business_manage_messages` permission (already included in Late's OAuth)
+ * - Text only (no media attachments)
+ * - Instagram: message goes to the user's Inbox (if they follow you) or Message Requests (if they don't). Requires `instagram_business_manage_messages` permission.
+ * - Facebook: message opens a Messenger conversation with the commenter. Requires `pages_messaging` permission.
  *
- * **Note:** This does not create a conversation thread until the user replies back.
+ * **Note:** Both permissions are already included in Late's OAuth flow. This does not create a conversation thread until the user replies back.
  *
  */
 export const sendPrivateReplyToComment = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<SendPrivateReplyToCommentData, ThrowOnError>) => {

@@ -371,6 +371,7 @@ export type FoodMenuSection = {
  * - Call-to-action buttons drive user engagement
  * - Posts appear on your Google Business Profile and in Google Search/Maps
  * - Use locationId to post to multiple locations from the same account connection
+ * - Language is auto-detected from content; override with languageCode if needed
  *
  */
 export type GoogleBusinessPlatformData = {
@@ -382,6 +383,14 @@ export type GoogleBusinessPlatformData = {
      *
      */
     locationId?: string;
+    /**
+     * BCP 47 language code for the post content (e.g., "en", "de", "es", "fr").
+     * If omitted, the language is automatically detected from the post text.
+     * Setting this explicitly is recommended when auto-detection may not be accurate
+     * (e.g., very short posts, mixed-language content, or transliterated text).
+     *
+     */
+    languageCode?: string;
     /**
      * Optional call-to-action button displayed on the post
      */
@@ -6359,7 +6368,7 @@ export type UnlikeInboxCommentError = (unknown | {
 export type SendPrivateReplyToCommentData = {
     body: {
         /**
-         * The Instagram social account ID
+         * The social account ID (Instagram or Facebook)
          */
         accountId: string;
         /**
@@ -6373,7 +6382,7 @@ export type SendPrivateReplyToCommentData = {
          */
         commentId: string;
         /**
-         * The Instagram media/post ID
+         * The media/post ID (Instagram media ID or Facebook post ID)
          */
         postId: string;
     };
@@ -6389,7 +6398,7 @@ export type SendPrivateReplyToCommentResponse = ({
      * The comment ID that was replied to
      */
     commentId?: string;
-    platform?: string;
+    platform?: 'instagram' | 'facebook';
 });
 
 export type SendPrivateReplyToCommentError = ({
