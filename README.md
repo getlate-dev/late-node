@@ -176,6 +176,7 @@ try {
 | `posts.updatePost()` | Update a post |
 | `posts.deletePost()` | Delete a post |
 | `posts.retryPost()` | Retry publishing a failed or partial post |
+| `posts.unpublishPost()` | Delete a published post from a social media platform |
 
 ### Accounts
 | Method | Description |

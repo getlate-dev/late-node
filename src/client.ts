@@ -116,6 +116,7 @@ import {
   testWebhook,
   unhideInboxComment,
   unlikeInboxComment,
+  unpublishPost,
   updateAccount,
   updateAccountGroup,
   updateFacebookPage,
@@ -263,6 +264,7 @@ export class Late {
     deletePost: deletePost,
     bulkUploadPosts: bulkUploadPosts,
     retryPost: retryPost,
+    unpublishPost: unpublishPost,
   };
 
   /**

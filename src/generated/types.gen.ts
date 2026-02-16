@@ -2706,6 +2706,27 @@ export type RetryPostError = (unknown | {
     };
 });
 
+export type UnpublishPostData = {
+    body: {
+        /**
+         * The platform to delete the post from
+         */
+        platform: 'threads' | 'facebook' | 'twitter' | 'linkedin' | 'youtube' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram';
+    };
+    path: {
+        postId: string;
+    };
+};
+
+export type UnpublishPostResponse = ({
+    success?: boolean;
+    message?: string;
+});
+
+export type UnpublishPostError = (unknown | {
+    error?: string;
+});
+
 export type ListUsersResponse = ({
     currentUserId?: string;
     users?: Array<{

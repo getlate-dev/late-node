@@ -362,6 +362,11 @@ describe('Endpoint Methods', () => {
       expect(client.posts.retryPost).toBeTypeOf('function');
     });
 
+    it('should have unpublishPost method', () => {
+      expect(client.posts.unpublishPost).toBeDefined();
+      expect(client.posts.unpublishPost).toBeTypeOf('function');
+    });
+
   });
 
   describe('profiles', () => {
