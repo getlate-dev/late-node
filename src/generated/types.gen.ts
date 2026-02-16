@@ -6112,6 +6112,11 @@ export type GetInboxPostCommentsData = {
     path: {
         /**
          * The post identifier. Accepts a Late post ID (MongoDB ObjectId) which is automatically resolved to the platform-specific post ID, or a platform-specific post ID directly (e.g. tweet ID, Facebook Graph ID, YouTube video ID).
+         *
+         * **LinkedIn:** For your own posts, the full URN stored in Late (e.g., `urn:li:share:7429218977714745345`) is used automatically.
+         * For third-party posts, pass either the full activity URN (e.g., `urn:li:activity:7422459067685855232`) or the raw numeric activity ID from the LinkedIn URL (automatically wrapped as `urn:li:activity:`).
+         * Note: LinkedIn post URLs use activity IDs (`linkedin.com/feed/update/urn:li:activity:XXXX`).
+         *
          */
         postId: string;
     };
@@ -6249,6 +6254,9 @@ export type ReplyToInboxPostData = {
     path: {
         /**
          * The post identifier. Accepts a Late post ID or a platform-specific post ID.
+         *
+         * **LinkedIn:** For third-party posts, pass the full activity URN (e.g., `urn:li:activity:7422459067685855232`) or the raw numeric activity ID from the URL.
+         *
          */
         postId: string;
     };
@@ -6274,6 +6282,9 @@ export type DeleteInboxCommentData = {
     path: {
         /**
          * The post identifier. Accepts a Late post ID or a platform-specific post ID.
+         *
+         * **LinkedIn:** For third-party posts, pass the full activity URN (e.g., `urn:li:activity:7422459067685855232`) or the raw numeric activity ID from the URL.
+         *
          */
         postId: string;
     };
