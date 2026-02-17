@@ -661,42 +661,14 @@ export type LinkedInPlatformData = {
 
 /**
  * Media referenced in posts. URLs must be publicly reachable over HTTPS by the destination platforms.
- * When using third‑party storage, ensure signed links remain valid until upload completes.
+ * When using third-party storage, ensure signed links remain valid until upload completes.
  *
  * **Uploading Media:**
  * Use `POST /v1/media/presign` to get a presigned URL, then upload your file directly to cloud storage.
  * Supports files up to 5GB. See the `/v1/media/presign` endpoint documentation for details.
  *
  * **Automatic Media Compression:**
- * Late automatically compresses media that exceeds platform limits, so you don't need to worry about file size restrictions. Compression happens server-side during publishing.
- *
- * **Image compression by platform:**
- * - Twitter/X: >5 MB
- * - Instagram: >8 MB
- * - Threads: >8 MB
- * - Facebook: >10 MB
- * - LinkedIn: >8 MB
- * - TikTok: >20 MB
- * - Pinterest: >32 MB
- * - Reddit: >20 MB
- * - Snapchat: >20 MB
- * - Telegram: >10 MB
- * - Bluesky: >1 MB
- * - YouTube (thumbnails): >2 MB
- * - Google Business: >5 MB
- *
- * **Video compression by platform:**
- * - Twitter/X: >512 MB
- * - Instagram Stories: >100 MB
- * - Instagram Reels: >300 MB
- * - Facebook: >4 GB
- * - LinkedIn: >5 GB
- * - TikTok: >4 GB
- * - Pinterest: >2 GB
- * - Snapchat: >500 MB
- * - Telegram: >50 MB
- *
- * Note: Videos larger than 200 MB may not be compressed due to server timeout constraints. For best results, compress very large videos before uploading.
+ * Late automatically compresses images and videos that exceed platform limits. Compression happens server-side during publishing. Videos larger than 200 MB may not be compressed due to server timeout constraints.
  *
  */
 export type MediaItem = {
@@ -1271,27 +1243,11 @@ export type RedditPlatformData = {
 };
 
 /**
- * Snapchat Public Profile API constraints:
+ * Snapchat requires a Public Profile. Media is required for all content types (single item only, auto-encrypted before upload).
  *
- * **General Requirements:**
- * - Snapchat requires a Public Profile to publish content
- * - Media is required for all content types (no text-only posts)
- * - Only one media item per post is supported
- * - Media is automatically encrypted using AES-256-CBC before upload
+ * **Content types:** Story (ephemeral 24h, no caption), Saved Story (permanent, title max 45 chars), Spotlight (video, description max 160 chars).
  *
- * **Content Types:**
- * - **Story** (default): Ephemeral content visible for 24 hours. No caption/text supported.
- * - **Saved Story**: Permanent story on your Public Profile. Uses post content as title (max 45 chars).
- * - **Spotlight**: Video content for Snapchat's entertainment feed. Supports description (max 160 chars) with hashtags.
- *
- * **Media Constraints:**
- * - Images: max 20 MB, JPEG/PNG format
- * - Videos: max 500 MB, MP4 format, 5-60 seconds duration, minimum 540x960px resolution
- * - Aspect ratio: 9:16 recommended
- *
- * **Analytics:**
- * - Views, screenshots, shares, unique viewers, completion rate available
- * - Analytics are fetched per content type (story/saved_story/spotlight)
+ * **Media limits:** Images max 20 MB (JPEG/PNG), videos max 500 MB (MP4, 5-60s, min 540x960px, 9:16 recommended).
  *
  */
 export type SnapchatPlatformData = {
@@ -3161,35 +3117,11 @@ export type GetConnectUrlData = {
          */
         profileId: string;
         /**
-         * Optional: Your custom redirect URL after connection completes.
+         * Your custom redirect URL after connection completes.
          *
-         * **Standard Mode:** Omit `headless=true` to use our hosted page selection UI.
-         * After the user selects a Facebook Page, Late redirects here with:
-         * `?connected=facebook&profileId=X&username=Y`
+         * **Standard Mode:** After the user selects an account, Late redirects here with `?connected={platform}&profileId=X&username=Y`.
          *
-         * **Headless Mode (Facebook, LinkedIn, Pinterest, Google Business Profile & Snapchat):**
-         * Pass `headless=true` as a query parameter on this endpoint (not inside `redirect_url`), e.g.:
-         * `GET /v1/connect/facebook?profileId=PROFILE_ID&redirect_url=https://yourapp.com/callback&headless=true`
-         * `GET /v1/connect/linkedin?profileId=PROFILE_ID&redirect_url=https://yourapp.com/callback&headless=true`
-         * `GET /v1/connect/pinterest?profileId=PROFILE_ID&redirect_url=https://yourapp.com/callback&headless=true`
-         * `GET /v1/connect/googlebusiness?profileId=PROFILE_ID&redirect_url=https://yourapp.com/callback&headless=true`
-         * `GET /v1/connect/snapchat?profileId=PROFILE_ID&redirect_url=https://yourapp.com/callback&headless=true`
-         *
-         * After OAuth, the user is redirected directly to your `redirect_url` with OAuth data:
-         * - **Facebook:** `?profileId=X&tempToken=Y&userProfile=Z&connect_token=CT&platform=facebook&step=select_page`
-         * - **LinkedIn:** `?profileId=X&pendingDataToken=TOKEN&connect_token=CT&platform=linkedin&step=select_organization`
-         * Use `GET /v1/connect/pending-data?token=TOKEN` to fetch tempToken, userProfile, organizations, refreshToken.
-         * - **Pinterest:** `?profileId=X&tempToken=Y&userProfile=Z&connect_token=CT&platform=pinterest&step=select_board`
-         * - **Google Business:** `?profileId=X&tempToken=Y&userProfile=Z&connect_token=CT&platform=googlebusiness&step=select_location`
-         * - **Snapchat:** `?profileId=X&tempToken=Y&userProfile=Z&publicProfiles=PROFILES&connect_token=CT&platform=snapchat&step=select_public_profile`
-         * (publicProfiles contains `id`, `display_name`, `username`, `profile_image_url`, `subscriber_count`)
-         *
-         * Then use the respective endpoints to build your custom UI:
-         * - Facebook: `/v1/connect/facebook/select-page` (GET to fetch, POST to save)
-         * - LinkedIn: `/v1/connect/linkedin/organizations` (GET to fetch logos), `/v1/connect/linkedin/select-organization` (POST to save)
-         * - Pinterest: `/v1/connect/pinterest/select-board` (GET to fetch, POST to save)
-         * - Google Business: `/v1/connect/googlebusiness/locations` (GET) and `/v1/connect/googlebusiness/select-location` (POST)
-         * - Snapchat: `/v1/connect/snapchat/select-profile` (POST to save selected public profile)
+         * **Headless Mode:** Pass `headless=true` as a query parameter on this endpoint. After OAuth, the user is redirected to your URL with OAuth data (`profileId`, `tempToken`, `userProfile`, `connect_token`, `platform`, `step`). See the main endpoint description for details.
          *
          * Example: `https://yourdomain.com/integrations/callback`
          *

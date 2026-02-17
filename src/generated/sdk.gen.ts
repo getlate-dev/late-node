@@ -6,7 +6,7 @@ import type { DownloadYouTubeVideoData, DownloadYouTubeVideoError, DownloadYouTu
 export const client = createClient(createConfig());
 
 /**
- * Download YouTube video or audio
+ * Download YouTube video
  * Download YouTube videos or audio. Returns available formats or direct download URL.
  *
  * **Rate Limits:** Build (50/day), Accelerate (500/day), Unlimited (unlimited)
@@ -20,7 +20,7 @@ export const downloadYouTubeVideo = <ThrowOnError extends boolean = false>(optio
 };
 
 /**
- * Get YouTube video transcript
+ * Get YouTube transcript
  * Extract transcript/captions from a YouTube video.
  *
  * **Rate Limits:** Build (50/day), Accelerate (500/day), Unlimited (unlimited)
@@ -34,7 +34,7 @@ export const getYouTubeTranscript = <ThrowOnError extends boolean = false>(optio
 };
 
 /**
- * Download Instagram reel or post
+ * Download Instagram media
  * Download Instagram reels, posts, or photos.
  *
  * **Rate Limits:** Build (50/day), Accelerate (500/day), Unlimited (unlimited)
@@ -48,7 +48,7 @@ export const downloadInstagramMedia = <ThrowOnError extends boolean = false>(opt
 };
 
 /**
- * Check Instagram hashtags for bans
+ * Check Instagram hashtag bans
  * Check if Instagram hashtags are banned, restricted, or safe to use.
  *
  * **Rate Limits:** Build (50/day), Accelerate (500/day), Unlimited (unlimited)
@@ -76,7 +76,7 @@ export const downloadTikTokVideo = <ThrowOnError extends boolean = false>(option
 };
 
 /**
- * Download Twitter/X video
+ * Download Twitter/X media
  * Download videos from Twitter/X posts.
  *
  * **Rate Limits:** Build (50/day), Accelerate (500/day), Unlimited (unlimited)
@@ -118,7 +118,7 @@ export const downloadLinkedInVideo = <ThrowOnError extends boolean = false>(opti
 };
 
 /**
- * Download Bluesky video
+ * Download Bluesky media
  * Download videos from Bluesky posts.
  *
  * **Rate Limits:** Build (50/day), Accelerate (500/day), Unlimited (unlimited)
@@ -132,43 +132,20 @@ export const downloadBlueskyMedia = <ThrowOnError extends boolean = false>(optio
 };
 
 /**
- * Unified analytics for posts
- * Returns analytics for posts. If postId is provided, returns analytics for a single post.
- * Otherwise returns a paginated list of posts with overview stats.
+ * Get post analytics
+ * Returns analytics for posts. With `postId`, returns a single post's analytics. Without it, returns a paginated list with overview stats.
  *
- * **Important: Understanding Post IDs**
+ * **Post ID types:** This endpoint returns External Post IDs by default. The `postId` parameter accepts both Late Post IDs (from `POST /v1/posts`) and External Post IDs. Late Post IDs are automatically resolved to External Post analytics. Use `latePostId` in responses to link analytics back to your original Late post, or `platformPostUrl` as a stable identifier.
  *
- * This endpoint uses two types of posts:
- * - **Late Posts** - Posts scheduled/created via the Late API (e.g., via `POST /v1/posts`)
- * - **External Posts** - Posts synced from social platforms for analytics tracking
+ * **List response:** Use `isExternal` to identify post origin. `isExternal: true` means synced from platform, `isExternal: false` means queried by Late post ID.
  *
- * When you schedule a post via Late and it gets published, **both** records exist:
- * 1. The original Late Post (returned when you created the post)
- * 2. An External Post (created when we sync analytics from the platform)
+ * For follower stats, use `/v1/accounts/follower-stats` instead.
  *
- * **List endpoint behavior:**
- * - Returns External Post IDs (`_id` field)
- * - Use the `isExternal` field to identify post origin:
- * - `isExternal: true` - Synced from platform (may have been originally scheduled via Late)
- * - `isExternal: false` - Late-scheduled post (shown when querying by Late post ID)
+ * **Platform notes:**
+ * - LinkedIn personal accounts: per-post analytics only for posts published through Late (API restriction).
+ * - Telegram: analytics not available (Bot API limitation).
  *
- * **Single post behavior (`postId` parameter):**
- * - Accepts **both** Late Post IDs and External Post IDs
- * - If you pass a Late Post ID, the API automatically resolves it to the corresponding External Post analytics
- * - Both return the same analytics data for the same underlying social media post
- *
- * **Correlating posts:** Use `latePostId` to link analytics entries back to the original post created via `POST /v1/posts`. This field contains the Late Post ID when the external post originated from Late. Alternatively, use `platformPostUrl` (e.g., `https://www.instagram.com/reel/ABC123/`) as a stable identifier.
- *
- * **Note:** For follower count history and growth metrics, use the dedicated `/v1/accounts/follower-stats` endpoint.
- *
- * **LinkedIn Analytics:**
- * - **Personal Accounts:** Per-post analytics available for posts published through Late. External posts cannot be synced due to LinkedIn API restrictions.
- * - **Organization Accounts:** Full analytics support including external post syncing.
- *
- * **Telegram Analytics:**
- * - **Not available.** The Telegram Bot API does not provide message view counts, forwards, or engagement metrics. This is a Telegram platform limitation, not a Late limitation. View counts are only visible to channel admins in the Telegram app.
- *
- * **Data Freshness:** Analytics data is cached and refreshed at most once per hour. When you call this endpoint, if the cache is older than 60 minutes, a background refresh is triggered and you'll see updated data on subsequent requests. There is no rate limit on API requests.
+ * **Data freshness:** Cached and refreshed at most once per hour. Stale caches trigger a background refresh.
  *
  */
 export const getAnalytics = <ThrowOnError extends boolean = false>(options?: OptionsLegacyParser<GetAnalyticsData, ThrowOnError>) => {
@@ -179,7 +156,7 @@ export const getAnalytics = <ThrowOnError extends boolean = false>(options?: Opt
 };
 
 /**
- * YouTube daily views breakdown
+ * Get YouTube daily views
  * Returns historical daily view counts for a specific YouTube video.
  * Uses YouTube Analytics API v2 to fetch daily breakdowns including views,
  * watch time, and subscriber changes.
@@ -202,7 +179,7 @@ export const getYouTubeDailyViews = <ThrowOnError extends boolean = false>(optio
 };
 
 /**
- * List account groups for the authenticated user
+ * List groups
  */
 export const listAccountGroups = <ThrowOnError extends boolean = false>(options?: OptionsLegacyParser<unknown, ThrowOnError>) => {
     return (options?.client ?? client).get<ListAccountGroupsResponse, ListAccountGroupsError, ThrowOnError>({
@@ -212,7 +189,7 @@ export const listAccountGroups = <ThrowOnError extends boolean = false>(options?
 };
 
 /**
- * Create a new account group
+ * Create group
  */
 export const createAccountGroup = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<CreateAccountGroupData, ThrowOnError>) => {
     return (options?.client ?? client).post<CreateAccountGroupResponse, CreateAccountGroupError, ThrowOnError>({
@@ -222,7 +199,7 @@ export const createAccountGroup = <ThrowOnError extends boolean = false>(options
 };
 
 /**
- * Update an account group
+ * Update group
  */
 export const updateAccountGroup = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<UpdateAccountGroupData, ThrowOnError>) => {
     return (options?.client ?? client).put<UpdateAccountGroupResponse, UpdateAccountGroupError, ThrowOnError>({
@@ -232,7 +209,7 @@ export const updateAccountGroup = <ThrowOnError extends boolean = false>(options
 };
 
 /**
- * Delete an account group
+ * Delete group
  */
 export const deleteAccountGroup = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<DeleteAccountGroupData, ThrowOnError>) => {
     return (options?.client ?? client).delete<DeleteAccountGroupResponse, DeleteAccountGroupError, ThrowOnError>({
@@ -242,46 +219,14 @@ export const deleteAccountGroup = <ThrowOnError extends boolean = false>(options
 };
 
 /**
- * Get a presigned URL for direct file upload (up to 5GB)
- * Get a presigned URL to upload files directly to cloud storage. This is the recommended method for uploading files of any size, especially files larger than ~4MB.
+ * Get presigned upload URL
+ * Get a presigned URL to upload files directly to cloud storage. Supports files up to 5GB.
  *
  * **How it works:**
  * 1. Call this endpoint with the filename and content type
  * 2. Receive an `uploadUrl` (presigned) and `publicUrl`
  * 3. PUT your file directly to the `uploadUrl`
  * 4. Use the `publicUrl` in your posts
- *
- * **Benefits:**
- * - Supports files up to 5GB
- * - Files upload directly to storage (faster, no server bottleneck)
- * - No 413 errors from server body size limits
- *
- * **Example:**
- * ```javascript
- * // Step 1: Get presigned URL
- * const response = await fetch('https://getlate.dev/api/v1/media/presign', {
- * method: 'POST',
- * headers: {
- * 'Authorization': 'Bearer YOUR_API_KEY',
- * 'Content-Type': 'application/json'
- * },
- * body: JSON.stringify({
- * filename: 'my-video.mp4',
- * contentType: 'video/mp4'
- * })
- * });
- * const { uploadUrl, publicUrl } = await response.json();
- *
- * // Step 2: Upload file directly to storage
- * await fetch(uploadUrl, {
- * method: 'PUT',
- * body: file,
- * headers: { 'Content-Type': 'video/mp4' }
- * });
- *
- * // Step 3: Use publicUrl when creating your post
- * // The publicUrl is ready to use immediately after upload completes
- * ```
  *
  */
 export const getMediaPresignedUrl = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetMediaPresignedUrlData, ThrowOnError>) => {
@@ -292,7 +237,7 @@ export const getMediaPresignedUrl = <ThrowOnError extends boolean = false>(optio
 };
 
 /**
- * Search Reddit posts via a connected account
+ * Search posts
  */
 export const searchReddit = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<SearchRedditData, ThrowOnError>) => {
     return (options?.client ?? client).get<SearchRedditResponse, SearchRedditError, ThrowOnError>({
@@ -302,7 +247,7 @@ export const searchReddit = <ThrowOnError extends boolean = false>(options: Opti
 };
 
 /**
- * Fetch subreddit feed via a connected account
+ * Get subreddit feed
  */
 export const getRedditFeed = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetRedditFeedData, ThrowOnError>) => {
     return (options?.client ?? client).get<GetRedditFeedResponse, GetRedditFeedError, ThrowOnError>({
@@ -312,7 +257,7 @@ export const getRedditFeed = <ThrowOnError extends boolean = false>(options: Opt
 };
 
 /**
- * Get plan and usage stats for current account
+ * Get plan and usage stats
  */
 export const getUsageStats = <ThrowOnError extends boolean = false>(options?: OptionsLegacyParser<unknown, ThrowOnError>) => {
     return (options?.client ?? client).get<GetUsageStatsResponse, GetUsageStatsError, ThrowOnError>({
@@ -322,7 +267,7 @@ export const getUsageStats = <ThrowOnError extends boolean = false>(options?: Op
 };
 
 /**
- * List posts visible to the authenticated user
+ * List posts
  * **Getting Post URLs:**
  * For published posts, each platform entry includes `platformPostUrl` with the public URL.
  * Use `status=published` filter to fetch only published posts with their URLs.
@@ -341,38 +286,24 @@ export const listPosts = <ThrowOnError extends boolean = false>(options?: Option
 };
 
 /**
- * Create a draft, scheduled, or immediate post
+ * Create post
  * **Getting Post URLs:**
- * - For immediate posts (`publishNow: true`): The response includes `platformPostUrl` in each platform entry under `post.platforms[]`.
- * - For scheduled posts: Fetch the post via `GET /v1/posts/{postId}` after the scheduled time; `platformPostUrl` will be populated once published.
+ * - Immediate posts (`publishNow: true`): response includes `platformPostUrl` in `post.platforms[]`.
+ * - Scheduled posts: fetch via `GET /v1/posts/{postId}` after publish time for `platformPostUrl`.
  *
- * **Content/Caption requirements:**
- * - `content` (caption/description) is optional when:
- * - Media is attached (`mediaItems` or per-platform `customMedia`)
- * - All platforms have `customContent` set
- * - Posting only to YouTube (title is used instead)
- * - Text-only posts (no media) require `content`
- * - Stories do not use captions (content is ignored)
- * - Reels, feed posts, and other media posts can have optional captions
+ * **Content requirements:**
+ * - `content` is optional when media is attached, all platforms have `customContent`, or posting to YouTube only.
+ * - Text-only posts require `content`. Stories ignore captions.
  *
- * Platform constraints:
- * - YouTube requires a video in mediaItems; optional custom thumbnail via MediaItem.thumbnail.
- * - Instagram and TikTok require media; do not mix videos and images for TikTok.
- * - Instagram carousels support up to 10 items; Stories publish as 'story'.
- * - Threads carousels support up to 10 images (no videos in carousels); single posts support one image or video.
- * - Facebook Stories require media (single image or video); set contentType to 'story' in platformSpecificData.
- * - LinkedIn multi-image supports up to 20 images; single PDF documents supported (max 100MB, ~300 pages, cannot mix with other media).
- * - Pinterest supports single image via image_url or a single video per Pin; boardId is required.
- * - Bluesky supports up to 4 images per post. Images may be automatically recompressed to ≤ ~1MB to satisfy Bluesky's blob limit. When no media is attached, a link preview may be generated for URLs in the text.
- * - Snapchat requires media (single image or video); set contentType to 'story', 'saved_story', or 'spotlight' in platformSpecificData. Stories are ephemeral (24h), Saved Stories are permanent, Spotlight is for video content.
- *
- * **Multi-page/multi-location posting:**
- * Some platforms allow posting to multiple pages, organizations, or locations from a single account connection.
- * Use the same accountId multiple times with different targets in platformSpecificData:
- * - Facebook: `pageId` - post to multiple Facebook Pages (list via GET /v1/accounts/{id}/facebook-page)
- * - LinkedIn: `organizationUrn` - post to multiple organizations (list via GET /v1/accounts/{id}/linkedin-organizations)
- * - Google Business: `locationId` - post to multiple locations (list via GET /v1/accounts/{id}/gmb-locations)
- * - Reddit: `subreddit` - post to multiple subreddits from the same account
+ * **Platform constraints:**
+ * - YouTube: video required, optional thumbnail via `MediaItem.thumbnail`
+ * - Instagram/TikTok: media required; TikTok cannot mix videos and images
+ * - Instagram carousels: up to 10 items; Threads carousels: up to 10 images only
+ * - Facebook Stories: single image or video, set `contentType: 'story'`
+ * - LinkedIn: up to 20 images or a single PDF (max 100MB)
+ * - Pinterest: single image or video, `boardId` required
+ * - Bluesky: up to 4 images, auto-recompressed to ~1MB
+ * - Snapchat: single image or video, set `contentType` in platformSpecificData
  *
  */
 export const createPost = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<CreatePostData, ThrowOnError>) => {
@@ -383,7 +314,7 @@ export const createPost = <ThrowOnError extends boolean = false>(options: Option
 };
 
 /**
- * Get a single post
+ * Get post
  * Fetch a single post by ID. For published posts, this returns `platformPostUrl`
  * for each platform - useful for retrieving post URLs after scheduled posts publish.
  *
@@ -396,7 +327,7 @@ export const getPost = <ThrowOnError extends boolean = false>(options: OptionsLe
 };
 
 /**
- * Update a post
+ * Update post
  * Update an existing post. Only draft, scheduled, failed, and partial posts can be edited.
  * Published, publishing, and cancelled posts cannot be modified.
  *
@@ -409,8 +340,9 @@ export const updatePost = <ThrowOnError extends boolean = false>(options: Option
 };
 
 /**
- * Delete a post
- * Delete a post. Published posts cannot be deleted.
+ * Delete post
+ * Delete a draft or scheduled post from Late. Only posts that have not been published can be deleted.
+ * To remove a published post from a social media platform, use the [Unpublish endpoint](#tag/Posts/operation/unpublishPost) instead.
  * When deleting a scheduled or draft post that consumed upload quota, the quota will be automatically refunded.
  *
  */
@@ -422,7 +354,7 @@ export const deletePost = <ThrowOnError extends boolean = false>(options: Option
 };
 
 /**
- * Validate and schedule multiple posts from CSV
+ * Bulk upload from CSV
  */
 export const bulkUploadPosts = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<BulkUploadPostsData, ThrowOnError>) => {
     return (options?.client ?? client).post<BulkUploadPostsResponse, BulkUploadPostsError, ThrowOnError>({
@@ -437,7 +369,7 @@ export const bulkUploadPosts = <ThrowOnError extends boolean = false>(options: O
 };
 
 /**
- * Retry publishing a failed or partial post
+ * Retry failed post
  */
 export const retryPost = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<RetryPostData, ThrowOnError>) => {
     return (options?.client ?? client).post<RetryPostResponse, RetryPostError, ThrowOnError>({
@@ -447,9 +379,10 @@ export const retryPost = <ThrowOnError extends boolean = false>(options: Options
 };
 
 /**
- * Delete a published post from a social media platform
+ * Unpublish post
  * Permanently deletes a published post from the specified social media platform.
- * The post record in Late is kept but its platform status is set to "cancelled".
+ * The post record in Late is kept but its platform status is updated to "cancelled".
+ * This does not delete the post from Late, only from the platform.
  *
  * **Supported platforms:** Threads, Facebook, Twitter/X, LinkedIn, YouTube, Pinterest, Reddit, Bluesky, Google Business, Telegram.
  *
@@ -472,7 +405,7 @@ export const unpublishPost = <ThrowOnError extends boolean = false>(options: Opt
 };
 
 /**
- * List team users (root + invited)
+ * List users
  */
 export const listUsers = <ThrowOnError extends boolean = false>(options?: OptionsLegacyParser<unknown, ThrowOnError>) => {
     return (options?.client ?? client).get<ListUsersResponse, ListUsersError, ThrowOnError>({
@@ -482,7 +415,7 @@ export const listUsers = <ThrowOnError extends boolean = false>(options?: Option
 };
 
 /**
- * Get user by id (self or invited)
+ * Get user
  */
 export const getUser = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetUserData, ThrowOnError>) => {
     return (options?.client ?? client).get<GetUserResponse, GetUserError, ThrowOnError>({
@@ -492,7 +425,7 @@ export const getUser = <ThrowOnError extends boolean = false>(options: OptionsLe
 };
 
 /**
- * List profiles visible to the authenticated user
+ * List profiles
  * Returns profiles within the user's plan limit. Profiles are sorted by creation date (oldest first).
  * Use `includeOverLimit=true` to include profiles that exceed the plan limit (for management/deletion purposes).
  *
@@ -505,7 +438,7 @@ export const listProfiles = <ThrowOnError extends boolean = false>(options?: Opt
 };
 
 /**
- * Create a new profile
+ * Create profile
  */
 export const createProfile = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<CreateProfileData, ThrowOnError>) => {
     return (options?.client ?? client).post<CreateProfileResponse, CreateProfileError, ThrowOnError>({
@@ -515,7 +448,7 @@ export const createProfile = <ThrowOnError extends boolean = false>(options: Opt
 };
 
 /**
- * Get a profile by id
+ * Get profile
  */
 export const getProfile = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetProfileData, ThrowOnError>) => {
     return (options?.client ?? client).get<GetProfileResponse, GetProfileError, ThrowOnError>({
@@ -525,7 +458,7 @@ export const getProfile = <ThrowOnError extends boolean = false>(options: Option
 };
 
 /**
- * Update a profile
+ * Update profile
  */
 export const updateProfile = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<UpdateProfileData, ThrowOnError>) => {
     return (options?.client ?? client).put<UpdateProfileResponse, UpdateProfileError, ThrowOnError>({
@@ -535,7 +468,7 @@ export const updateProfile = <ThrowOnError extends boolean = false>(options: Opt
 };
 
 /**
- * Delete a profile (must have no connected accounts)
+ * Delete profile
  */
 export const deleteProfile = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<DeleteProfileData, ThrowOnError>) => {
     return (options?.client ?? client).delete<DeleteProfileResponse, DeleteProfileError, ThrowOnError>({
@@ -545,7 +478,7 @@ export const deleteProfile = <ThrowOnError extends boolean = false>(options: Opt
 };
 
 /**
- * List connected social accounts
+ * List accounts
  * Returns list of connected social accounts.
  * By default, only returns accounts from profiles within the user's plan limit.
  * Follower count data (followersCount, followersLastUpdated) is only included if user has analytics add-on.
@@ -559,7 +492,7 @@ export const listAccounts = <ThrowOnError extends boolean = false>(options?: Opt
 };
 
 /**
- * Get follower stats and growth metrics
+ * Get follower stats
  * Returns follower count history and growth metrics for connected social accounts.
  * **Requires analytics add-on subscription.**
  *
@@ -574,7 +507,7 @@ export const getFollowerStats = <ThrowOnError extends boolean = false>(options?:
 };
 
 /**
- * Update a social account
+ * Update account
  */
 export const updateAccount = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<UpdateAccountData, ThrowOnError>) => {
     return (options?.client ?? client).put<UpdateAccountResponse, UpdateAccountError, ThrowOnError>({
@@ -584,7 +517,7 @@ export const updateAccount = <ThrowOnError extends boolean = false>(options: Opt
 };
 
 /**
- * Disconnect a social account
+ * Disconnect account
  */
 export const deleteAccount = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<DeleteAccountData, ThrowOnError>) => {
     return (options?.client ?? client).delete<DeleteAccountResponse, DeleteAccountError, ThrowOnError>({
@@ -594,7 +527,7 @@ export const deleteAccount = <ThrowOnError extends boolean = false>(options: Opt
 };
 
 /**
- * Check health of all connected accounts
+ * Check accounts health
  * Returns the health status of all connected social accounts, including token validity,
  * permissions status, and any issues that need attention. Useful for monitoring account
  * connections and identifying accounts that need reconnection.
@@ -608,7 +541,7 @@ export const getAllAccountsHealth = <ThrowOnError extends boolean = false>(optio
 };
 
 /**
- * Check health of a specific account
+ * Check account health
  * Returns detailed health information for a specific social account, including token status,
  * granted permissions, missing permissions, and actionable recommendations.
  *
@@ -621,7 +554,7 @@ export const getAccountHealth = <ThrowOnError extends boolean = false>(options: 
 };
 
 /**
- * List API keys for the current user
+ * List keys
  */
 export const listApiKeys = <ThrowOnError extends boolean = false>(options?: OptionsLegacyParser<unknown, ThrowOnError>) => {
     return (options?.client ?? client).get<ListApiKeysResponse, ListApiKeysError, ThrowOnError>({
@@ -631,7 +564,7 @@ export const listApiKeys = <ThrowOnError extends boolean = false>(options?: Opti
 };
 
 /**
- * Create a new API key
+ * Create key
  */
 export const createApiKey = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<CreateApiKeyData, ThrowOnError>) => {
     return (options?.client ?? client).post<CreateApiKeyResponse, CreateApiKeyError, ThrowOnError>({
@@ -641,7 +574,7 @@ export const createApiKey = <ThrowOnError extends boolean = false>(options: Opti
 };
 
 /**
- * Delete an API key
+ * Delete key
  */
 export const deleteApiKey = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<DeleteApiKeyData, ThrowOnError>) => {
     return (options?.client ?? client).delete<DeleteApiKeyResponse, DeleteApiKeyError, ThrowOnError>({
@@ -651,7 +584,7 @@ export const deleteApiKey = <ThrowOnError extends boolean = false>(options: Opti
 };
 
 /**
- * Create a team member invite token
+ * Create invite token
  * Generate a secure invite link to grant team members access to your profiles.
  * Invites expire after 7 days and are single-use.
  *
@@ -664,90 +597,28 @@ export const createInviteToken = <ThrowOnError extends boolean = false>(options:
 };
 
 /**
- * Start OAuth connection for a platform
+ * Get OAuth connect URL
  * Initiate an OAuth connection flow for any supported social media platform.
  *
  * **Standard Flow (Hosted UI):**
- * For Facebook connections, Late hosts the page selection UI:
- *
  * 1. Call this endpoint with your API key and `redirect_url` (optional)
  * 2. Redirect your user to the returned `authUrl`
- * 3. After OAuth, the user is redirected to Late’s hosted page selector at
- * `/connect/facebook/select-page?profileId=X&tempToken=Y&userProfile=Z&redirect_url=YOUR_URL&connect_token=CT`
- * 4. After they pick a page, Late saves the connection and finally redirects to your `redirect_url` (if provided)
+ * 3. After OAuth, Late hosts the page/account selection UI
+ * 4. Once the user picks, Late saves the connection and redirects to your `redirect_url` (if provided)
  *
- * **Headless/Whitelabel Mode (Facebook, LinkedIn, Pinterest & Google Business Profile):**
- * Build your own fully branded selection UI while Late handles OAuth:
+ * **Headless Mode (Facebook, LinkedIn, Pinterest, Google Business, Snapchat):**
+ * Build your own branded selection UI while Late handles OAuth. Add `&headless=true` to this endpoint:
  *
- * **Facebook:**
- * 1. Call this endpoint with your API key and add `&headless=true`, e.g.
- * `GET /v1/connect/facebook?profileId=PROFILE_ID&redirect_url=https://yourapp.com/callback&headless=true`
- * 2. Redirect your user to the returned `authUrl`
- * 3. After OAuth, the user is redirected directly to **your** `redirect_url` with:
- * - `profileId` – your Late profile ID
- * - `tempToken` – temporary Facebook access token
- * - `userProfile` – URL‑encoded JSON user profile
- * - `connect_token` – short‑lived connect token (for API auth)
- * - `platform=facebook`
- * - `step=select_page`
- * 4. Use `tempToken`, `userProfile`, and the `X-Connect-Token` header with:
- * - `GET /v1/connect/facebook/select-page` to fetch pages
- * - `POST /v1/connect/facebook/select-page` to save the selected page
- * 5. In this mode, users never see Late's hosted page selector – only your UI.
+ * `GET /v1/connect/{platform}?profileId=PROFILE_ID&redirect_url=https://yourapp.com/callback&headless=true`
  *
- * **LinkedIn:**
- * 1. Call this endpoint with `&headless=true`, e.g.
- * `GET /v1/connect/linkedin?profileId=PROFILE_ID&redirect_url=https://yourapp.com/callback&headless=true`
- * 2. Redirect your user to the returned `authUrl`
- * 3. After OAuth, the user is redirected directly to **your** `redirect_url` with:
- * - `profileId` – your Late profile ID
- * - `pendingDataToken` – token to fetch OAuth data via API (see step 4)
- * - `connect_token` – short-lived connect token (for API auth)
- * - `platform=linkedin`
- * - `step=select_organization`
- * 4. Call `GET /v1/connect/pending-data?token=PENDING_DATA_TOKEN` to fetch the OAuth data:
- * - `tempToken` – temporary LinkedIn access token
- * - `userProfile` – JSON object with `id`, `username`, `displayName`, `profilePicture`
- * - `organizations` – JSON array with `id`, `urn`, `name`, `vanityName` for each org
- * - `refreshToken` / `expiresIn` – token metadata
- * This endpoint is one-time use and data expires after 10 minutes.
- * 5. **Optional:** To fetch full organization details (logos, website, industry, description), call `GET /v1/connect/linkedin/organizations?tempToken=X&orgIds=id1,id2,...`
- * 6. Call `POST /v1/connect/linkedin/select-organization` with the `X-Connect-Token` header to save the selection.
- * 7. In this mode, users never see Late's hosted organization selector – only your UI.
- * 8. Note: If the user has no organization admin access, `step=select_organization` will NOT be present,
- * and the account will be connected directly as a personal account.
+ * After OAuth, the user is redirected to your `redirect_url` with OAuth data including `profileId`, `tempToken`, `userProfile`, `connect_token`, `platform`, and a `step` parameter indicating what selection is needed.
  *
- * **Pinterest:**
- * 1. Call this endpoint with `&headless=true`, e.g.
- * `GET /v1/connect/pinterest?profileId=PROFILE_ID&redirect_url=https://yourapp.com/callback&headless=true`
- * 2. Redirect your user to the returned `authUrl`
- * 3. After OAuth, the user is redirected directly to **your** `redirect_url` with:
- * - `profileId` – your Late profile ID
- * - `tempToken` – temporary Pinterest access token
- * - `userProfile` – URL‑encoded JSON user profile
- * - `connect_token` – short‑lived connect token (for API auth)
- * - `platform=pinterest`
- * - `step=select_board`
- * 4. Use `tempToken`, `userProfile`, and the `X-Connect-Token` header with:
- * - `GET /v1/connect/pinterest/select-board` to fetch boards
- * - `POST /v1/connect/pinterest/select-board` to save the selected board
- * 5. In this mode, users never see Late's hosted board selector – only your UI.
+ * **Facebook example:**
+ * 1. Redirect params include `step=select_page`
+ * 2. Use `GET /v1/connect/facebook/select-page` to fetch pages
+ * 3. Use `POST /v1/connect/facebook/select-page` to save the selected page
  *
- * **Google Business Profile:**
- * 1. Call this endpoint with `&headless=true`, e.g.
- * `GET /v1/connect/googlebusiness?profileId=PROFILE_ID&redirect_url=https://yourapp.com/callback&headless=true`
- * 2. Redirect your user to the returned `authUrl`
- * 3. After OAuth, the user is redirected directly to **your** `redirect_url` with:
- * - `profileId` – your Late profile ID
- * - `tempToken` – temporary Google access token
- * - `userProfile` – URL‑encoded JSON user profile (includes refresh token info)
- * - `connect_token` – short‑lived connect token (for API auth)
- * - `platform=googlebusiness`
- * - `step=select_location`
- * 4. Use `tempToken`, `userProfile`, and the `X-Connect-Token` header with:
- * - `GET /v1/connect/googlebusiness/locations` to fetch business locations
- * - `POST /v1/connect/googlebusiness/select-location` to save the selected location
- * 5. In this mode, users never see Late's hosted location selector – only your UI.
+ * LinkedIn, Pinterest, Google Business, and Snapchat follow the same pattern with their respective selection endpoints. LinkedIn uses `pendingDataToken` instead of `tempToken` in redirect params; call `GET /v1/connect/pending-data?token=TOKEN` to retrieve the OAuth data (one-time use, expires in 10 minutes).
  *
  */
 export const getConnectUrl = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetConnectUrlData, ThrowOnError>) => {
@@ -758,7 +629,7 @@ export const getConnectUrl = <ThrowOnError extends boolean = false>(options: Opt
 };
 
 /**
- * Complete OAuth token exchange manually (for server-side flows)
+ * Complete OAuth callback
  */
 export const handleOAuthCallback = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<HandleOAuthCallbackData, ThrowOnError>) => {
     return (options?.client ?? client).post<HandleOAuthCallbackResponse, HandleOAuthCallbackError, ThrowOnError>({
@@ -768,7 +639,7 @@ export const handleOAuthCallback = <ThrowOnError extends boolean = false>(option
 };
 
 /**
- * List Facebook Pages after OAuth (Headless Mode)
+ * List Facebook pages
  * **Headless Mode for Custom UI**
  *
  * After initiating Facebook OAuth via `/v1/connect/facebook`, you'll be redirected to
@@ -790,7 +661,7 @@ export const listFacebookPages = <ThrowOnError extends boolean = false>(options:
 };
 
 /**
- * Select a Facebook Page to complete the connection (Headless Mode)
+ * Select Facebook page
  * **Complete the Headless Flow**
  *
  * After displaying your custom UI with the list of pages from the GET endpoint, call this
@@ -810,7 +681,7 @@ export const selectFacebookPage = <ThrowOnError extends boolean = false>(options
 };
 
 /**
- * List Google Business Locations after OAuth (Headless Mode)
+ * List Google Business locations
  * **Headless Mode for Custom UI**
  *
  * After initiating Google Business OAuth via `/v1/connect/googlebusiness?headless=true`, you'll be redirected
@@ -832,7 +703,7 @@ export const listGoogleBusinessLocations = <ThrowOnError extends boolean = false
 };
 
 /**
- * Select a Google Business location to complete the connection (Headless Mode)
+ * Select Google Business location
  * **Complete the Headless Flow**
  *
  * After displaying your custom UI with the list of locations from the GET `/v1/connect/googlebusiness/locations`
@@ -852,7 +723,7 @@ export const selectGoogleBusinessLocation = <ThrowOnError extends boolean = fals
 };
 
 /**
- * Get Google Business Profile reviews
+ * Get reviews
  * Fetches reviews for a connected Google Business Profile account.
  *
  * Returns all reviews for the business location, including:
@@ -873,7 +744,7 @@ export const getGoogleBusinessReviews = <ThrowOnError extends boolean = false>(o
 };
 
 /**
- * Get Google Business Profile food menus
+ * Get food menus
  * Fetches food menus for a connected Google Business Profile location.
  *
  * Returns the full menu structure including:
@@ -893,7 +764,7 @@ export const getGoogleBusinessFoodMenus = <ThrowOnError extends boolean = false>
 };
 
 /**
- * Update Google Business Profile food menus
+ * Update food menus
  * Updates the food menus for a connected Google Business Profile location.
  *
  * Send the full menus array. Use `updateMask` for partial updates (e.g. `"menus"` to only update the menus field).
@@ -909,7 +780,7 @@ export const updateGoogleBusinessFoodMenus = <ThrowOnError extends boolean = fal
 };
 
 /**
- * Get Google Business Profile location details
+ * Get location details
  * Fetches detailed location information including opening hours, special hours,
  * business description, phone numbers, website, categories, and more.
  *
@@ -924,7 +795,7 @@ export const getGoogleBusinessLocationDetails = <ThrowOnError extends boolean = 
 };
 
 /**
- * Update Google Business Profile location details
+ * Update location details
  * Updates location details such as opening hours, special hours, business description, phone, and website.
  *
  * The `updateMask` field is required and specifies which fields to update.
@@ -946,7 +817,7 @@ export const updateGoogleBusinessLocationDetails = <ThrowOnError extends boolean
 };
 
 /**
- * List Google Business Profile media (photos)
+ * List media
  * Lists media items (photos) for a Google Business Profile location.
  * Returns photo URLs, descriptions, categories, and metadata.
  *
@@ -959,7 +830,7 @@ export const listGoogleBusinessMedia = <ThrowOnError extends boolean = false>(op
 };
 
 /**
- * Upload a photo to Google Business Profile
+ * Upload photo
  * Creates a media item (photo) for a location from a publicly accessible URL.
  *
  * Categories determine where the photo appears:
@@ -983,7 +854,7 @@ export const createGoogleBusinessMedia = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Delete a photo from Google Business Profile
+ * Delete photo
  */
 export const deleteGoogleBusinessMedia = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<DeleteGoogleBusinessMediaData, ThrowOnError>) => {
     return (options?.client ?? client).delete<DeleteGoogleBusinessMediaResponse, DeleteGoogleBusinessMediaError, ThrowOnError>({
@@ -993,7 +864,7 @@ export const deleteGoogleBusinessMedia = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Get Google Business Profile location attributes
+ * Get attributes
  * Fetches location attributes such as amenities, services, and accessibility features.
  *
  * Common attributes for restaurants include:
@@ -1013,7 +884,7 @@ export const getGoogleBusinessAttributes = <ThrowOnError extends boolean = false
 };
 
 /**
- * Update Google Business Profile location attributes
+ * Update attributes
  * Updates location attributes (amenities, services, etc.).
  *
  * The `attributeMask` specifies which attributes to update (comma-separated).
@@ -1027,7 +898,7 @@ export const updateGoogleBusinessAttributes = <ThrowOnError extends boolean = fa
 };
 
 /**
- * List place action links (booking, ordering, reservations)
+ * List action links
  * Lists place action links for a Google Business Profile location.
  *
  * Place actions are the booking, ordering, and reservation buttons that appear on your listing.
@@ -1041,7 +912,7 @@ export const listGoogleBusinessPlaceActions = <ThrowOnError extends boolean = fa
 };
 
 /**
- * Create a place action link (booking, ordering, reservation)
+ * Create action link
  * Creates a place action link for a location.
  *
  * Available action types:
@@ -1062,7 +933,7 @@ export const createGoogleBusinessPlaceAction = <ThrowOnError extends boolean = f
 };
 
 /**
- * Delete a place action link
+ * Delete action link
  */
 export const deleteGoogleBusinessPlaceAction = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<DeleteGoogleBusinessPlaceActionData, ThrowOnError>) => {
     return (options?.client ?? client).delete<DeleteGoogleBusinessPlaceActionResponse, DeleteGoogleBusinessPlaceActionError, ThrowOnError>({
@@ -1072,7 +943,7 @@ export const deleteGoogleBusinessPlaceAction = <ThrowOnError extends boolean = f
 };
 
 /**
- * Fetch pending OAuth selection data (Headless Mode)
+ * Get pending OAuth data
  * **Fetch Pending OAuth Data for Headless Mode**
  *
  * In headless mode, platforms like LinkedIn store OAuth selection data (organizations, pages, etc.)
@@ -1095,7 +966,7 @@ export const getPendingOAuthData = <ThrowOnError extends boolean = false>(option
 };
 
 /**
- * Fetch full LinkedIn organization details (Headless Mode)
+ * List LinkedIn orgs
  * **Fetch Full Organization Details for Custom UI**
  *
  * After LinkedIn OAuth in headless mode, the redirect URL contains organization data with only
@@ -1116,7 +987,7 @@ export const listLinkedInOrganizations = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Select LinkedIn organization or personal account after OAuth
+ * Select LinkedIn org
  * **Complete the LinkedIn Connection Flow**
  *
  * After OAuth, the user is redirected with `organizations` in the URL params (if they have org admin access).
@@ -1140,7 +1011,7 @@ export const selectLinkedInOrganization = <ThrowOnError extends boolean = false>
 };
 
 /**
- * List Pinterest Boards after OAuth (Headless Mode)
+ * List Pinterest boards
  * **Retrieve Pinterest Boards for Selection UI**
  *
  * After initiating Pinterest OAuth via `/v1/connect/pinterest` with `headless=true`, you'll be redirected to
@@ -1161,7 +1032,7 @@ export const listPinterestBoardsForSelection = <ThrowOnError extends boolean = f
 };
 
 /**
- * Select a Pinterest Board to complete the connection (Headless Mode)
+ * Select Pinterest board
  * **Complete the Pinterest Connection Flow**
  *
  * After OAuth, use this endpoint to save the selected board and complete the Pinterest account connection.
@@ -1177,7 +1048,7 @@ export const selectPinterestBoard = <ThrowOnError extends boolean = false>(optio
 };
 
 /**
- * List Snapchat Public Profiles after OAuth (Headless Mode)
+ * List Snapchat profiles
  * **Headless Mode for Custom UI**
  *
  * After initiating Snapchat OAuth via `/v1/connect/snapchat?headless=true`, you'll be redirected to
@@ -1198,7 +1069,7 @@ export const listSnapchatProfiles = <ThrowOnError extends boolean = false>(optio
 };
 
 /**
- * Select a Snapchat Public Profile to complete the connection (Headless Mode)
+ * Select Snapchat profile
  * **Complete the Snapchat Connection Flow**
  *
  * After OAuth, use this endpoint to save the selected Public Profile and complete the Snapchat account connection.
@@ -1226,7 +1097,7 @@ export const selectSnapchatProfile = <ThrowOnError extends boolean = false>(opti
 };
 
 /**
- * Connect Bluesky using app password
+ * Connect Bluesky account
  * Connect a Bluesky account using identifier (handle or email) and an app password.
  *
  * To get your userId for the state parameter, call `GET /v1/users` - the response includes a `currentUserId` field.
@@ -1240,7 +1111,7 @@ export const connectBlueskyCredentials = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Generate Telegram access code
+ * Generate Telegram code
  * Generate a unique access code for connecting a Telegram channel or group.
  *
  * **Connection Flow:**
@@ -1261,7 +1132,7 @@ export const getTelegramConnectStatus = <ThrowOnError extends boolean = false>(o
 };
 
 /**
- * Direct Telegram connection (power users)
+ * Connect Telegram directly
  * Connect a Telegram channel/group directly using the chat ID.
  *
  * This is an alternative to the access code flow for power users who know their Telegram chat ID.
@@ -1276,7 +1147,7 @@ export const initiateTelegramConnect = <ThrowOnError extends boolean = false>(op
 };
 
 /**
- * Check Telegram connection status
+ * Check Telegram status
  * Poll this endpoint to check if a Telegram access code has been used to connect a channel/group.
  *
  * **Recommended polling interval:** 3 seconds
@@ -1295,7 +1166,7 @@ export const completeTelegramConnect = <ThrowOnError extends boolean = false>(op
 };
 
 /**
- * List available Facebook pages for a connected account
+ * List Facebook pages
  * Returns all Facebook pages the connected account has access to, including the currently selected page.
  */
 export const getFacebookPages = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetFacebookPagesData, ThrowOnError>) => {
@@ -1306,7 +1177,7 @@ export const getFacebookPages = <ThrowOnError extends boolean = false>(options: 
 };
 
 /**
- * Update selected Facebook page for a connected account
+ * Update Facebook page
  */
 export const updateFacebookPage = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<UpdateFacebookPageData, ThrowOnError>) => {
     return (options?.client ?? client).put<UpdateFacebookPageResponse, UpdateFacebookPageError, ThrowOnError>({
@@ -1316,7 +1187,7 @@ export const updateFacebookPage = <ThrowOnError extends boolean = false>(options
 };
 
 /**
- * Get available LinkedIn organizations for a connected account
+ * List LinkedIn orgs
  */
 export const getLinkedInOrganizations = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetLinkedInOrganizationsData, ThrowOnError>) => {
     return (options?.client ?? client).get<GetLinkedInOrganizationsResponse, GetLinkedInOrganizationsError, ThrowOnError>({
@@ -1326,32 +1197,12 @@ export const getLinkedInOrganizations = <ThrowOnError extends boolean = false>(o
 };
 
 /**
- * Get aggregate analytics for a LinkedIn personal account
- * Returns aggregate analytics across ALL posts for a LinkedIn personal account.
- * Uses LinkedIn's `memberCreatorPostAnalytics` API with `q=me` finder.
+ * Get LinkedIn aggregate stats
+ * Returns aggregate analytics across all posts for a LinkedIn personal account. Organization accounts should use `/v1/analytics` instead.
  *
- * **Important:** This endpoint only works for LinkedIn **personal** accounts. Organization accounts should use the standard `/v1/analytics` endpoint for per-post analytics.
+ * **Required scope:** `r_member_postAnalytics`. Missing scope returns 403 with reconnect instructions.
  *
- * **Required Scope:** `r_member_postAnalytics`
- *
- * If the connected account doesn't have this scope, you'll receive a 403 error with instructions to reconnect.
- *
- * **Aggregation Options:**
- * - `TOTAL` (default): Returns lifetime totals for all metrics
- * - `DAILY`: Returns daily breakdown of metrics over time
- *
- * **Available Metrics:**
- * - `IMPRESSION`: Number of times posts were displayed
- * - `MEMBERS_REACHED`: Unique members who saw posts (NOT available with DAILY aggregation)
- * - `REACTION`: Total reactions (likes, celebrates, etc.)
- * - `COMMENT`: Total comments
- * - `RESHARE`: Total reshares/reposts
- *
- * **Date Range Filtering:**
- * Use `startDate` and `endDate` parameters to filter analytics to a specific time period.
- * If omitted, returns lifetime analytics.
- *
- * **LinkedIn API Limitation:** The combination of `MEMBERS_REACHED` + `DAILY` aggregation is not supported by LinkedIn's API.
+ * **Aggregation:** `TOTAL` (default, lifetime totals) or `DAILY` (time series). Use `startDate`/`endDate` to filter by date range. Note: `MEMBERS_REACHED` is not available with `DAILY` aggregation.
  *
  */
 export const getLinkedInAggregateAnalytics = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetLinkedInAggregateAnalyticsData, ThrowOnError>) => {
@@ -1362,7 +1213,7 @@ export const getLinkedInAggregateAnalytics = <ThrowOnError extends boolean = fal
 };
 
 /**
- * Get analytics for a specific LinkedIn post by URN
+ * Get LinkedIn post stats
  * Returns analytics for a specific LinkedIn post using its URN.
  * Works for both personal and organization accounts.
  *
@@ -1389,7 +1240,7 @@ export const getLinkedInPostAnalytics = <ThrowOnError extends boolean = false>(o
 };
 
 /**
- * Switch LinkedIn account type (personal/organization)
+ * Switch LinkedIn account type
  */
 export const updateLinkedInOrganization = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<UpdateLinkedInOrganizationData, ThrowOnError>) => {
     return (options?.client ?? client).put<UpdateLinkedInOrganizationResponse, UpdateLinkedInOrganizationError, ThrowOnError>({
@@ -1399,28 +1250,14 @@ export const updateLinkedInOrganization = <ThrowOnError extends boolean = false>
 };
 
 /**
- * Resolve a LinkedIn profile or company URL to a URN for @mentions
- * Converts a LinkedIn profile URL (person) or company page URL (organization) to a URN that can be used to @mention them in posts.
+ * Resolve LinkedIn mention
+ * Converts a LinkedIn profile or company URL to a URN for @mentions in posts. Supports person mentions (`linkedin.com/in/username` or just `username`) and organization mentions (`linkedin.com/company/name` or `company/name`).
  *
- * **Supports both:**
- * - **Person mentions:** `linkedin.com/in/username` or just `username`
- * - **Organization mentions:** `linkedin.com/company/company-name` or `company/company-name`
+ * Person mentions require the connected account to have admin access to at least one LinkedIn Organization. Organization mentions work with any account.
  *
- * **⚠️ Organization Admin Required for Person Mentions Only:**
- * Person mentions require the connected LinkedIn account to have admin access to at least one LinkedIn Organization (Company Page).
- * Organization mentions do NOT have this requirement - any LinkedIn account can tag companies.
+ * For person mentions to be clickable, provide the `displayName` parameter matching the exact name on their LinkedIn profile. Organization names are fetched automatically.
  *
- * **IMPORTANT - Display Name Requirement:**
- * For **person mentions** to be clickable, the display name must **exactly match** what appears on their LinkedIn profile.
- * - Organization mentions automatically retrieve the company name from LinkedIn API
- * - Person mentions require the exact name, so provide the `displayName` parameter
- *
- * **Mention Format:**
- * Use the returned `mentionFormat` value directly in your post content:
- * ```
- * Great insights from @[Miquel Palet](urn:li:person:4qj5ox-agD) on this topic!
- * Excited to partner with @[Microsoft](urn:li:organization:1035)!
- * ```
+ * Use the returned `mentionFormat` value directly in your post content.
  *
  */
 export const getLinkedInMentions = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetLinkedInMentionsData, ThrowOnError>) => {
@@ -1431,7 +1268,7 @@ export const getLinkedInMentions = <ThrowOnError extends boolean = false>(option
 };
 
 /**
- * List Pinterest boards for a connected account
+ * List Pinterest boards
  */
 export const getPinterestBoards = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetPinterestBoardsData, ThrowOnError>) => {
     return (options?.client ?? client).get<GetPinterestBoardsResponse, GetPinterestBoardsError, ThrowOnError>({
@@ -1441,7 +1278,7 @@ export const getPinterestBoards = <ThrowOnError extends boolean = false>(options
 };
 
 /**
- * Set default Pinterest board on the connection
+ * Set default Pinterest board
  */
 export const updatePinterestBoards = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<UpdatePinterestBoardsData, ThrowOnError>) => {
     return (options?.client ?? client).put<UpdatePinterestBoardsResponse, UpdatePinterestBoardsError, ThrowOnError>({
@@ -1451,7 +1288,7 @@ export const updatePinterestBoards = <ThrowOnError extends boolean = false>(opti
 };
 
 /**
- * List available Google Business Profile locations for a connected account
+ * List Google Business locations
  * Returns all Google Business Profile locations the connected account has access to, including the currently selected location.
  */
 export const getGmbLocations = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetGmbLocationsData, ThrowOnError>) => {
@@ -1462,7 +1299,7 @@ export const getGmbLocations = <ThrowOnError extends boolean = false>(options: O
 };
 
 /**
- * Update selected Google Business Profile location for a connected account
+ * Update Google Business location
  */
 export const updateGmbLocation = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<UpdateGmbLocationData, ThrowOnError>) => {
     return (options?.client ?? client).put<UpdateGmbLocationResponse, UpdateGmbLocationError, ThrowOnError>({
@@ -1472,7 +1309,7 @@ export const updateGmbLocation = <ThrowOnError extends boolean = false>(options:
 };
 
 /**
- * List Reddit subreddits for a connected account
+ * List Reddit subreddits
  */
 export const getRedditSubreddits = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetRedditSubredditsData, ThrowOnError>) => {
     return (options?.client ?? client).get<GetRedditSubredditsResponse, GetRedditSubredditsError, ThrowOnError>({
@@ -1482,7 +1319,7 @@ export const getRedditSubreddits = <ThrowOnError extends boolean = false>(option
 };
 
 /**
- * Set default subreddit on the connection
+ * Set default subreddit
  */
 export const updateRedditSubreddits = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<UpdateRedditSubredditsData, ThrowOnError>) => {
     return (options?.client ?? client).put<UpdateRedditSubredditsResponse, UpdateRedditSubredditsError, ThrowOnError>({
@@ -1492,7 +1329,7 @@ export const updateRedditSubreddits = <ThrowOnError extends boolean = false>(opt
 };
 
 /**
- * List available post flairs for a Reddit subreddit
+ * List subreddit flairs
  */
 export const getRedditFlairs = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetRedditFlairsData, ThrowOnError>) => {
     return (options?.client ?? client).get<GetRedditFlairsResponse, GetRedditFlairsError, ThrowOnError>({
@@ -1502,7 +1339,7 @@ export const getRedditFlairs = <ThrowOnError extends boolean = false>(options: O
 };
 
 /**
- * Get queue schedules for a profile
+ * List schedules
  * Retrieve queue schedules for a profile. Each profile can have multiple queues.
  * - Without `all=true`: Returns the default queue (or specific queue if queueId provided)
  * - With `all=true`: Returns all queues for the profile
@@ -1516,7 +1353,7 @@ export const listQueueSlots = <ThrowOnError extends boolean = false>(options: Op
 };
 
 /**
- * Create a new queue for a profile
+ * Create schedule
  * Create an additional queue for a profile. The first queue created becomes the default.
  * Subsequent queues are non-default unless explicitly set.
  *
@@ -1529,7 +1366,7 @@ export const createQueueSlot = <ThrowOnError extends boolean = false>(options: O
 };
 
 /**
- * Create or update a queue schedule
+ * Update schedule
  * Create a new queue or update an existing one.
  * - Without queueId: Creates or updates the default queue
  * - With queueId: Updates the specific queue
@@ -1544,7 +1381,7 @@ export const updateQueueSlot = <ThrowOnError extends boolean = false>(options: O
 };
 
 /**
- * Delete a queue schedule
+ * Delete schedule
  * Delete a queue from a profile. Requires queueId to specify which queue to delete.
  * If deleting the default queue, another queue will be promoted to default.
  *
@@ -1557,7 +1394,7 @@ export const deleteQueueSlot = <ThrowOnError extends boolean = false>(options: O
 };
 
 /**
- * Preview upcoming queue slots for a profile
+ * Preview upcoming slots
  */
 export const previewQueue = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<PreviewQueueData, ThrowOnError>) => {
     return (options?.client ?? client).get<PreviewQueueResponse, PreviewQueueError, ThrowOnError>({
@@ -1567,7 +1404,7 @@ export const previewQueue = <ThrowOnError extends boolean = false>(options: Opti
 };
 
 /**
- * Preview the next available queue slot (informational only)
+ * Get next available slot
  * Returns the next available queue slot for preview/informational purposes.
  *
  * **Important: To schedule a post to the queue, do NOT use this endpoint's response
@@ -1593,7 +1430,7 @@ export const getNextQueueSlot = <ThrowOnError extends boolean = false>(options: 
 };
 
 /**
- * List all webhooks
+ * List webhooks
  * Retrieve all configured webhooks for the authenticated user. Supports up to 10 webhooks per user.
  */
 export const getWebhookSettings = <ThrowOnError extends boolean = false>(options?: OptionsLegacyParser<unknown, ThrowOnError>) => {
@@ -1604,7 +1441,7 @@ export const getWebhookSettings = <ThrowOnError extends boolean = false>(options
 };
 
 /**
- * Create a new webhook
+ * Create webhook
  * Create a new webhook configuration. Maximum 10 webhooks per user.
  *
  * **Note:** Webhooks are automatically disabled after 10 consecutive delivery failures.
@@ -1618,7 +1455,7 @@ export const createWebhookSettings = <ThrowOnError extends boolean = false>(opti
 };
 
 /**
- * Update a webhook
+ * Update webhook
  * Update an existing webhook configuration. All fields except `_id` are optional - only provided fields will be updated.
  *
  * **Note:** Webhooks are automatically disabled after 10 consecutive delivery failures.
@@ -1632,7 +1469,7 @@ export const updateWebhookSettings = <ThrowOnError extends boolean = false>(opti
 };
 
 /**
- * Delete a webhook
+ * Delete webhook
  * Permanently delete a webhook configuration.
  */
 export const deleteWebhookSettings = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<DeleteWebhookSettingsData, ThrowOnError>) => {
@@ -1656,7 +1493,7 @@ export const testWebhook = <ThrowOnError extends boolean = false>(options: Optio
 };
 
 /**
- * Get webhook delivery logs
+ * Get delivery logs
  * Retrieve webhook delivery history. Logs are automatically deleted after 7 days.
  *
  */
@@ -1669,7 +1506,7 @@ export const getWebhookLogs = <ThrowOnError extends boolean = false>(options?: O
 
 /**
  * @deprecated
- * Get publishing logs (deprecated)
+ * List publishing logs (deprecated)
  * **Deprecated:** Use `/v1/posts/logs` instead. This endpoint is maintained for backwards compatibility.
  *
  * Retrieve publishing logs for all posts. Logs show detailed information about each
@@ -1691,7 +1528,7 @@ export const listLogs = <ThrowOnError extends boolean = false>(options?: Options
 };
 
 /**
- * Get a single log entry
+ * Get log entry
  * Retrieve detailed information about a specific log entry, including full request
  * and response bodies for debugging.
  *
@@ -1704,7 +1541,7 @@ export const getLog = <ThrowOnError extends boolean = false>(options: OptionsLeg
 };
 
 /**
- * Get publishing logs
+ * List publishing logs
  * Retrieve publishing logs for all posts. Logs show detailed information about each
  * publishing attempt including API requests, responses, and timing data.
  *
@@ -1724,7 +1561,7 @@ export const listPostsLogs = <ThrowOnError extends boolean = false>(options?: Op
 };
 
 /**
- * Get connection logs
+ * List connection logs
  * Retrieve connection event logs showing account connection and disconnection history.
  * Useful for debugging OAuth issues and tracking account lifecycle.
  *
@@ -1746,7 +1583,7 @@ export const listConnectionLogs = <ThrowOnError extends boolean = false>(options
 };
 
 /**
- * Get logs for a specific post
+ * Get post logs
  * Retrieve all publishing logs for a specific post. Shows the complete history
  * of publishing attempts for that post across all platforms.
  *
@@ -1759,7 +1596,7 @@ export const getPostLogs = <ThrowOnError extends boolean = false>(options: Optio
 };
 
 /**
- * List conversations across all accounts
+ * List conversations
  * Fetch conversations (DMs) from all connected messaging accounts in a single API call.
  * Supports filtering by profile and platform. Results are aggregated and deduplicated.
  *
@@ -1774,7 +1611,7 @@ export const listInboxConversations = <ThrowOnError extends boolean = false>(opt
 };
 
 /**
- * Get conversation details
+ * Get conversation
  * Retrieve details and metadata for a specific conversation. Requires accountId query parameter.
  */
 export const getInboxConversation = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetInboxConversationData, ThrowOnError>) => {
@@ -1796,7 +1633,7 @@ export const updateInboxConversation = <ThrowOnError extends boolean = false>(op
 };
 
 /**
- * Get messages in a conversation
+ * List messages
  * Fetch messages for a specific conversation. Requires accountId query parameter.
  */
 export const getInboxConversationMessages = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetInboxConversationMessagesData, ThrowOnError>) => {
@@ -1807,7 +1644,7 @@ export const getInboxConversationMessages = <ThrowOnError extends boolean = fals
 };
 
 /**
- * Send a message
+ * Send message
  * Send a message in a conversation. Supports text, attachments, quick replies, buttons, carousels, and message tags.
  *
  * **Attachment support by platform:**
@@ -1815,21 +1652,9 @@ export const getInboxConversationMessages = <ThrowOnError extends boolean = fals
  * - Facebook Messenger: Images, videos, audio, files
  * - Instagram: Images, videos, audio via URL (8MB images, 25MB video/audio)
  * - Twitter/X: Images, videos (requires media upload)
- * - Bluesky: Not supported
- * - Reddit: Not supported
+ * - Bluesky/Reddit: Not supported
  *
- * **Interactive message support:**
- * | Field | Instagram | Facebook | Telegram |
- * |---|---|---|---|
- * | quickReplies | Meta quick_replies (13 max) | Meta quick_replies (13 max) | ReplyKeyboardMarkup (one_time) |
- * | buttons | Generic template | Generic template | Inline keyboard |
- * | template | Generic template (carousel) | Generic template (carousel) | Ignored |
- * | replyMarkup | Ignored | Ignored | InlineKeyboardMarkup / ReplyKeyboardMarkup |
- * | messagingType | Ignored | RESPONSE / UPDATE / MESSAGE_TAG | Ignored |
- * | messageTag | HUMAN_AGENT only | 4 tag types | Ignored |
- * | replyTo | Ignored | Ignored | reply_parameters |
- *
- * Platform-specific fields are silently ignored on unsupported platforms.
+ * **Interactive messages:** Supports quick replies, buttons, templates, and reply markup. Feature availability varies by platform (Instagram, Facebook, Telegram). Unsupported fields are silently ignored.
  *
  */
 export const sendInboxMessage = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<SendInboxMessageData, ThrowOnError>) => {
@@ -1840,7 +1665,7 @@ export const sendInboxMessage = <ThrowOnError extends boolean = false>(options: 
 };
 
 /**
- * Edit a message (Telegram only)
+ * Edit message
  * Edit the text and/or reply markup of a previously sent Telegram message.
  * Only supported for Telegram. Returns 400 for other platforms.
  *
@@ -1949,7 +1774,7 @@ export const deleteTelegramCommands = <ThrowOnError extends boolean = false>(opt
 };
 
 /**
- * List posts with comments across all accounts
+ * List commented posts
  * Fetch posts with their comment counts from all connected accounts.
  * Aggregates data from multiple accounts in a single API call.
  *
@@ -1964,7 +1789,7 @@ export const listInboxComments = <ThrowOnError extends boolean = false>(options?
 };
 
 /**
- * Get comments for a post
+ * Get post comments
  * Fetch comments for a specific post. Requires accountId query parameter.
  */
 export const getInboxPostComments = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetInboxPostCommentsData, ThrowOnError>) => {
@@ -1975,7 +1800,7 @@ export const getInboxPostComments = <ThrowOnError extends boolean = false>(optio
 };
 
 /**
- * Reply to a post or comment
+ * Reply to comment
  * Post a reply to a post or specific comment. Requires accountId in request body.
  */
 export const replyToInboxPost = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<ReplyToInboxPostData, ThrowOnError>) => {
@@ -1986,7 +1811,7 @@ export const replyToInboxPost = <ThrowOnError extends boolean = false>(options: 
 };
 
 /**
- * Delete a comment
+ * Delete comment
  * Delete a comment on a post. Supported by Facebook, Instagram, Bluesky, Reddit, YouTube, LinkedIn, and TikTok.
  * Requires accountId and commentId query parameters.
  *
@@ -1999,7 +1824,7 @@ export const deleteInboxComment = <ThrowOnError extends boolean = false>(options
 };
 
 /**
- * Hide a comment
+ * Hide comment
  * Hide a comment on a post. Supported by Facebook, Instagram, and Threads.
  * Hidden comments are only visible to the commenter and page admin.
  *
@@ -2012,7 +1837,7 @@ export const hideInboxComment = <ThrowOnError extends boolean = false>(options: 
 };
 
 /**
- * Unhide a comment
+ * Unhide comment
  * Unhide a previously hidden comment. Supported by Facebook, Instagram, and Threads.
  *
  */
@@ -2024,7 +1849,7 @@ export const unhideInboxComment = <ThrowOnError extends boolean = false>(options
 };
 
 /**
- * Like a comment
+ * Like comment
  * Like or upvote a comment on a post.
  *
  * **Supported platforms:** Facebook, Twitter/X, Bluesky, Reddit
@@ -2040,7 +1865,7 @@ export const likeInboxComment = <ThrowOnError extends boolean = false>(options: 
 };
 
 /**
- * Unlike a comment
+ * Unlike comment
  * Remove a like from a comment.
  *
  * **Supported platforms:** Facebook, Twitter/X, Bluesky, Reddit
@@ -2056,7 +1881,7 @@ export const unlikeInboxComment = <ThrowOnError extends boolean = false>(options
 };
 
 /**
- * Send private reply to comment author
+ * Send private reply
  * Send a private direct message to the author of a comment on your post.
  * This is useful for handling customer inquiries or sensitive matters privately.
  *
@@ -2081,7 +1906,7 @@ export const sendPrivateReplyToComment = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * List reviews across all accounts
+ * List reviews
  * Fetch reviews from all connected Facebook Pages and Google Business accounts.
  * Aggregates data with filtering and sorting options.
  *
@@ -2096,7 +1921,7 @@ export const listInboxReviews = <ThrowOnError extends boolean = false>(options?:
 };
 
 /**
- * Reply to a review
+ * Reply to review
  * Post a reply to a review. Requires accountId in request body.
  */
 export const replyToInboxReview = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<ReplyToInboxReviewData, ThrowOnError>) => {
@@ -2107,7 +1932,7 @@ export const replyToInboxReview = <ThrowOnError extends boolean = false>(options
 };
 
 /**
- * Delete a review reply
+ * Delete review reply
  * Delete a reply to a review (Google Business only). Requires accountId in request body.
  */
 export const deleteInboxReviewReply = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<DeleteInboxReviewReplyData, ThrowOnError>) => {
