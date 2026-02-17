@@ -231,7 +231,7 @@ export type ErrorResponse = {
 };
 
 /**
- * Cannot mix videos and images. Up to 10 images for feed posts. Stories require single image or video (no captions, ephemeral 24h). Use pageId for multi-page posting.
+ * Up to 10 images for feed posts, cannot mix videos and images. Stories require single image or video (ephemeral 24h, no captions). Use pageId for multi-page posting.
  */
 export type FacebookPlatformData = {
     /**
@@ -243,10 +243,7 @@ export type FacebookPlatformData = {
      */
     firstComment?: string;
     /**
-     * Target Facebook Page ID for multi-page posting.
-     * If omitted, uses the selected/default page on the connection.
-     * Use GET /api/v1/accounts/{id}/facebook-page to list available pages.
-     *
+     * Target Facebook Page ID for multi-page posting. If omitted, uses the default page. Use GET /v1/accounts/{id}/facebook-page to list pages.
      */
     pageId?: string;
 };
@@ -341,23 +338,15 @@ export type FoodMenuSection = {
 };
 
 /**
- * Posts support text and a single image (no videos). Images must be publicly accessible URLs. Optional call-to-action button. Posts appear on GBP, Google Search, and Maps. Use locationId for multi-location posting. Language is auto-detected; override with languageCode.
+ * Text and single image only (no videos). Optional call-to-action button. Posts appear on GBP, Google Search, and Maps. Use locationId for multi-location posting.
  */
 export type GoogleBusinessPlatformData = {
     /**
-     * Target Google Business location ID for multi-location posting.
-     * Format: "locations/123456789"
-     * If omitted, uses the selected/default location on the connection.
-     * Use GET /api/v1/accounts/{id}/gmb-locations to list available locations.
-     *
+     * Target GBP location ID (e.g. "locations/123456789"). If omitted, uses the default location. Use GET /v1/accounts/{id}/gmb-locations to list locations.
      */
     locationId?: string;
     /**
-     * BCP 47 language code for the post content (e.g., "en", "de", "es", "fr").
-     * If omitted, the language is automatically detected from the post text.
-     * Setting this explicitly is recommended when auto-detection may not be accurate
-     * (e.g., very short posts, mixed-language content, or transliterated text).
-     *
+     * BCP 47 language code (e.g. "en", "de", "es"). Auto-detected if omitted. Set explicitly for short or mixed-language posts.
      */
     languageCode?: string;
     /**
@@ -393,7 +382,7 @@ export type HashtagInfo = {
 export type status = 'safe' | 'banned' | 'restricted' | 'unknown';
 
 /**
- * Feed posts require aspect ratio 0.8-1.91; images outside this range must use contentType story. Carousels up to 10 items. Stories require media, no captions. User tag coordinates 0.0-1.0 from top-left. Images over 8 MB and videos over 100 MB (stories) or 300 MB (reels) are auto-compressed.
+ * Feed aspect ratio 0.8-1.91, carousels up to 10 items, stories require media (no captions). User tag coordinates 0.0-1.0 from top-left. Images over 8 MB and videos over platform limits are auto-compressed.
  */
 export type InstagramPlatformData = {
     /**
@@ -471,9 +460,7 @@ export type LinkedInAggregateAnalyticsDailyResponse = {
         endDate?: string;
     } | null;
     /**
-     * Daily breakdown of each metric. Each metric contains an array of date/count pairs.
-     * Note: 'reach' (MEMBERS_REACHED) is not available with DAILY aggregation per LinkedIn API limitations.
-     *
+     * Daily breakdown of each metric as date/count pairs. Reach not available with DAILY aggregation.
      */
     analytics?: {
         impressions?: Array<{
@@ -549,15 +536,11 @@ export type LinkedInAggregateAnalyticsTotalResponse = {
 export type aggregation3 = 'TOTAL';
 
 /**
- * Up to 20 images, no multi-video. Single PDF supported (max 100MB, ~300 pages, cannot mix with other media). Link previews auto-generated when no media attached (disable with disableLinkPreview). Use organizationUrn for multi-org posting.
+ * Up to 20 images, no multi-video. Single PDF supported (max 100MB). Link previews auto-generated when no media attached. Use organizationUrn for multi-org posting.
  */
 export type LinkedInPlatformData = {
     /**
-     * Target LinkedIn Organization URN for multi-organization posting.
-     * Format: "urn:li:organization:123456789"
-     * If omitted, uses the selected/default organization on the connection.
-     * Use GET /api/v1/accounts/{id}/linkedin-organizations to list available organizations.
-     *
+     * Target LinkedIn Organization URN (e.g. "urn:li:organization:123456789"). If omitted, uses the default org. Use GET /v1/accounts/{id}/linkedin-organizations to list orgs.
      */
     organizationUrn?: string;
     /**
@@ -571,9 +554,7 @@ export type LinkedInPlatformData = {
 };
 
 /**
- * Media referenced in posts. URLs must be publicly reachable over HTTPS. When using third-party storage, ensure signed links remain valid until upload completes.
- * Use POST /v1/media/presign to get a presigned URL for direct cloud storage upload (up to 5GB). Late automatically compresses images and videos that exceed platform limits server-side during publishing. Videos larger than 200 MB may not be compressed due to timeout constraints.
- *
+ * Media referenced in posts. URLs must be publicly reachable over HTTPS. Use POST /v1/media/presign for uploads up to 5GB. Late auto-compresses images and videos that exceed platform limits (videos over 200 MB may not be compressed).
  */
 export type MediaItem = {
     type?: 'image' | 'video' | 'gif' | 'document';
@@ -709,11 +690,7 @@ export type PlatformTarget = {
      */
     platformPostId?: string;
     /**
-     * Public URL of the published post on the platform.
-     * Populated after successful publish. For immediate posts (publishNow=true),
-     * this is included in the response. For scheduled posts, fetch the post
-     * via GET /v1/posts/{postId} after the scheduled time.
-     *
+     * Public URL of the published post. Included in the response for immediate posts; for scheduled posts, fetch via GET /v1/posts/{postId} after publish time.
      */
     platformPostUrl?: string;
     /**
@@ -921,8 +898,7 @@ export type Profile = {
     color?: string;
     isDefault?: boolean;
     /**
-     * Only present when includeOverLimit=true is used. Indicates if this profile exceeds the user's plan limit. Over-limit profiles cannot be used for posting but can be managed (disconnected accounts, deleted).
-     *
+     * Only present when includeOverLimit=true. Indicates if this profile exceeds the plan limit.
      */
     isOverLimit?: boolean;
     createdAt?: string;
@@ -1022,14 +998,11 @@ export type QueueUpdateResponse = {
 };
 
 /**
- * Posts are either link (with URL/media) or self (text-only). If media is provided, the first item URL is used as the link; use forceSelf to override. Subreddit defaults to the account's configured one. Images over 20 MB are auto-compressed. Some subreddits require a flair; if missing, the first available flair is used as fallback.
+ * Posts are either link (with URL/media) or self (text-only). Use forceSelf to override. Subreddit defaults to the account's configured one. Some subreddits require a flair.
  */
 export type RedditPlatformData = {
     /**
-     * Target subreddit name (without "r/" prefix).
-     * Overrides the default subreddit configured on the account connection.
-     * Use GET /api/v1/accounts/{id}/reddit-subreddits to list available subreddits.
-     *
+     * Target subreddit name (without "r/" prefix). Overrides the default. Use GET /v1/accounts/{id}/reddit-subreddits to list options.
      */
     subreddit?: string;
     /**
@@ -1045,18 +1018,13 @@ export type RedditPlatformData = {
      */
     forceSelf?: boolean;
     /**
-     * Flair ID for the post. Required by some subreddits.
-     * Use GET /api/v1/accounts/{id}/reddit-flairs?subreddit=name to list available flairs.
-     *
+     * Flair ID for the post. Required by some subreddits. Use GET /v1/accounts/{id}/reddit-flairs?subreddit=name to list flairs.
      */
     flairId?: string;
 };
 
 /**
- * Requires a Public Profile. Media required for all content types (single item only, auto-encrypted).
- * Content types: story (ephemeral 24h, no caption), saved_story (permanent, title max 45 chars), spotlight (video, description max 160 chars).
- * Images max 20 MB (JPEG/PNG), videos max 500 MB (MP4, 5-60s, min 540x960px).
- *
+ * Requires a Public Profile. Single media item only. Content types: story (ephemeral 24h), saved_story (permanent, title max 45 chars), spotlight (video, max 160 chars).
  */
 export type SnapchatPlatformData = {
     /**
@@ -1077,20 +1045,7 @@ export type SocialAccount = {
     username?: string;
     displayName?: string;
     /**
-     * Full profile URL for the connected account. Available for all platforms:
-     * - Twitter/X: https://x.com/{username}
-     * - Instagram: https://instagram.com/{username}
-     * - TikTok: https://tiktok.com/@{username}
-     * - YouTube: https://youtube.com/@{handle} or https://youtube.com/channel/{id}
-     * - LinkedIn Personal: https://www.linkedin.com/in/{vanityName}/
-     * - LinkedIn Organization: https://www.linkedin.com/company/{vanityName}/
-     * - Threads: https://threads.net/@{username}
-     * - Pinterest: https://pinterest.com/{username}
-     * - Reddit: https://reddit.com/user/{username}
-     * - Bluesky: https://bsky.app/profile/{handle}
-     * - Facebook: https://facebook.com/{username} or https://facebook.com/{pageId}
-     * - Google Business: Google Maps URL for the business location
-     *
+     * Full profile URL for the connected account on its platform.
      */
     profileUrl?: string;
     isActive?: boolean;
@@ -1105,7 +1060,7 @@ export type SocialAccount = {
 };
 
 /**
- * Supports text, images (up to 10), videos (up to 10), and mixed media albums. Captions up to 1024 chars for media posts, 4096 for text-only. Channel posts show channel name as author; group posts show bot name. Analytics not available via Telegram Bot API.
+ * Text, images (up to 10), videos (up to 10), and mixed media albums. Captions up to 1024 chars for media, 4096 for text-only.
  */
 export type TelegramPlatformData = {
     /**
@@ -1132,7 +1087,7 @@ export type TelegramPlatformData = {
 export type parseMode = 'HTML' | 'Markdown' | 'MarkdownV2';
 
 /**
- * Carousels support up to 10 images (no videos). Single posts support one image or video. Videos must be H.264/AAC MP4, max 5 min. Images must be JPEG/PNG, max 8 MB. threadItems creates a reply chain.
+ * Up to 10 images per carousel (no videos). Videos must be H.264/AAC MP4, max 5 min. Images JPEG/PNG, max 8 MB. Use threadItems for reply chains.
  */
 export type ThreadsPlatformData = {
     /**
@@ -1145,7 +1100,7 @@ export type ThreadsPlatformData = {
 };
 
 /**
- * Photo carousels up to 35 images. Video titles up to 2200 chars; photo titles auto-truncated to 90 chars (use description field for longer text up to 4000 chars). privacyLevel must match creator_info options. allowDuet/allowStitch required for videos. contentPreviewConfirmed and expressConsentGiven must be true. Both camelCase and snake_case accepted.
+ * Photo carousels up to 35 images. Video titles up to 2200 chars, photo titles truncated to 90 chars. privacyLevel must match creator_info options. Both camelCase and snake_case accepted.
  */
 export type TikTokPlatformData = {
     /**
@@ -1640,7 +1595,7 @@ export type YouTubeDailyViewsResponse = {
 };
 
 /**
- * Videos up to 3 min are auto-detected as Shorts, longer as regular videos. Custom thumbnails supported for regular videos only (via mediaItem.thumbnail). Scheduled videos are uploaded immediately with the specified visibility. madeForKids defaults to false.
+ * Videos under 3 min auto-detected as Shorts. Custom thumbnails for regular videos only. Scheduled videos are uploaded immediately with the specified visibility.
  */
 export type YouTubePlatformData = {
     /**
@@ -2410,8 +2365,7 @@ export type GetUserError = ({
 export type ListProfilesData = {
     query?: {
         /**
-         * When true, includes profiles that exceed the user's plan limit. Over-limit profiles will have isOverLimit: true in the response. Useful for managing/deleting profiles after a plan downgrade.
-         *
+         * When true, includes over-limit profiles (marked with isOverLimit: true).
          */
         includeOverLimit?: boolean;
     };
@@ -2489,9 +2443,7 @@ export type DeleteProfileError = (unknown | {
 export type ListAccountsData = {
     query?: {
         /**
-         * When true, includes accounts from profiles that exceed the user's plan limit.
-         * Useful for disconnecting accounts from over-limit profiles so they can be deleted.
-         *
+         * When true, includes accounts from over-limit profiles.
          */
         includeOverLimit?: boolean;
         /**
@@ -2801,10 +2753,7 @@ export type GetConnectUrlData = {
          */
         profileId: string;
         /**
-         * Your custom redirect URL after connection completes.
-         * Standard mode: Late redirects here with ?connected={platform}&profileId=X&username=Y.
-         * Headless mode: pass headless=true on this endpoint. User is redirected to your URL with OAuth data (profileId, tempToken, userProfile, connect_token, platform, step). See endpoint description for details.
-         *
+         * Your custom redirect URL after connection completes. Standard mode appends ?connected={platform}&profileId=X&username=Y. Headless mode appends OAuth data params.
          */
         redirect_url?: string;
     };
@@ -3002,8 +2951,7 @@ export type SelectGoogleBusinessLocationData = {
          */
         tempToken: string;
         /**
-         * Decoded user profile object from the OAuth callback. Contains the refresh token needed for token refresh. Always include this field.
-         *
+         * Decoded user profile from the OAuth callback. Contains the refresh token. Always include this field.
          */
         userProfile?: {
             id?: string;
@@ -3193,10 +3141,7 @@ export type GetGoogleBusinessLocationDetailsData = {
     };
     query?: {
         /**
-         * Comma-separated fields to return. Defaults to common fields.
-         * Available: name, title, phoneNumbers, categories, storefrontAddress, websiteUri,
-         * regularHours, specialHours, serviceArea, profile, openInfo, metadata, moreHours
-         *
+         * Comma-separated fields to return. Available: name, title, phoneNumbers, categories, storefrontAddress, websiteUri, regularHours, specialHours, serviceArea, profile, openInfo, metadata, moreHours.
          */
         readMask?: string;
     };
@@ -3941,8 +3886,7 @@ export type ConnectBlueskyCredentialsData = {
          */
         appPassword: string;
         /**
-         * Required state parameter formatted as {userId}-{profileId}. userId is your Late user ID (from GET /v1/users, currentUserId field), profileId is the profile to connect the account to (from GET /v1/profiles).
-         *
+         * Required state formatted as {userId}-{profileId}. Get userId from GET /v1/users and profileId from GET /v1/profiles.
          */
         state: string;
         /**
@@ -4000,10 +3944,7 @@ export type GetTelegramConnectStatusError = (unknown | {
 export type InitiateTelegramConnectData = {
     body: {
         /**
-         * The Telegram chat ID. Can be:
-         * - Numeric ID (e.g., "-1001234567890")
-         * - Username with @ prefix (e.g., "@mychannel")
-         *
+         * The Telegram chat ID. Numeric ID (e.g. "-1001234567890") or username with @ prefix (e.g. "@mychannel").
          */
         chatId: string;
         /**
@@ -4136,27 +4077,19 @@ export type GetLinkedInAggregateAnalyticsData = {
     };
     query?: {
         /**
-         * Type of aggregation: TOTAL (default, returns single totals) or DAILY (returns daily breakdown). Note: MEMBERS_REACHED is not available with DAILY aggregation.
-         *
+         * TOTAL (default, lifetime totals) or DAILY (time series). MEMBERS_REACHED not available with DAILY.
          */
         aggregation?: 'TOTAL' | 'DAILY';
         /**
-         * End date for analytics data in YYYY-MM-DD format (exclusive).
-         * If provided without startDate, startDate defaults to 30 days before endDate.
-         *
+         * End date (YYYY-MM-DD, exclusive). Defaults to today if omitted.
          */
         endDate?: string;
         /**
-         * Comma-separated list of metrics to fetch. If omitted, fetches all available metrics.
-         * Valid values: IMPRESSION, MEMBERS_REACHED, REACTION, COMMENT, RESHARE
-         *
+         * Comma-separated metrics: IMPRESSION, MEMBERS_REACHED, REACTION, COMMENT, RESHARE. Omit for all.
          */
         metrics?: string;
         /**
-         * Start date for analytics data in YYYY-MM-DD format.
-         * If provided without endDate, endDate defaults to today.
-         * If omitted entirely, returns lifetime analytics.
-         *
+         * Start date (YYYY-MM-DD). If omitted, returns lifetime analytics.
          */
         startDate?: string;
     };
@@ -4283,13 +4216,11 @@ export type GetLinkedInMentionsData = {
     };
     query: {
         /**
-         * The exact display name as shown on LinkedIn. Required for person mentions (for clickable mentions; if not provided, a name is derived from the vanity URL which may not match). Optional for organization mentions (company name is auto-retrieved from LinkedIn).
-         *
+         * Exact display name as shown on LinkedIn. Required for person mentions to be clickable. Optional for org mentions.
          */
         displayName?: string;
         /**
-         * LinkedIn profile URL, company URL, or vanity name. Person examples: miquelpalet, linkedin.com/in/miquelpalet. Organization examples: company/microsoft, linkedin.com/company/microsoft.
-         *
+         * LinkedIn profile URL, company URL, or vanity name.
          */
         url: string;
     };
@@ -5645,9 +5576,7 @@ export type ListInboxCommentsError = ({
 export type GetInboxPostCommentsData = {
     path: {
         /**
-         * The post identifier. Accepts a Late post ID (MongoDB ObjectId) which is automatically resolved to the platform-specific post ID, or a platform-specific post ID directly (e.g. tweet ID, Facebook Graph ID, YouTube video ID).
-         * LinkedIn: for your own posts, the full URN stored in Late is used automatically. For third-party posts, pass the full activity URN or the raw numeric activity ID from the LinkedIn URL (automatically wrapped as urn:li:activity:).
-         *
+         * Late post ID or platform-specific post ID. Late IDs are auto-resolved. LinkedIn third-party posts accept full activity URN or numeric ID.
          */
         postId: string;
     };
@@ -5784,10 +5713,7 @@ export type ReplyToInboxPostData = {
     };
     path: {
         /**
-         * The post identifier. Accepts a Late post ID or a platform-specific post ID.
-         *
-         * LinkedIn: for third-party posts, pass the full activity URN (e.g. urn:li:activity:7422459067685855232) or the raw numeric activity ID from the URL.
-         *
+         * Late post ID or platform-specific post ID. LinkedIn third-party posts accept full activity URN or numeric ID.
          */
         postId: string;
     };
@@ -5812,10 +5738,7 @@ export type ReplyToInboxPostError = ({
 export type DeleteInboxCommentData = {
     path: {
         /**
-         * The post identifier. Accepts a Late post ID or a platform-specific post ID.
-         *
-         * LinkedIn: for third-party posts, pass the full activity URN (e.g. urn:li:activity:7422459067685855232) or the raw numeric activity ID from the URL.
-         *
+         * Late post ID or platform-specific post ID. LinkedIn third-party posts accept full activity URN or numeric ID.
          */
         postId: string;
     };
