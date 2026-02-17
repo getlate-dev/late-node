@@ -251,7 +251,7 @@ try {
 | Method | Description |
 |--------|-------------|
 | `tools.getYouTubeTranscript()` | Get YouTube transcript |
-| `tools.checkInstagramHashtags()` | Check Instagram hashtag bans |
+| `tools.checkInstagramHashtags()` | Check IG hashtag bans |
 | `tools.downloadBlueskyMedia()` | Download Bluesky media |
 | `tools.downloadFacebookVideo()` | Download Facebook video |
 | `tools.downloadInstagramMedia()` | Download Instagram media |
@@ -275,22 +275,20 @@ try {
 | Method | Description |
 |--------|-------------|
 | `logs.listConnectionLogs()` | List connection logs |
-| `logs.listLogs()` | List publishing logs (deprecated) |
 | `logs.listPostsLogs()` | List publishing logs |
-| `logs.getLog()` | Get log entry |
 | `logs.getPostLogs()` | Get post logs |
 
 ### Connect (OAuth)
 | Method | Description |
 |--------|-------------|
 | `connect.listFacebookPages()` | List Facebook pages |
-| `connect.listGoogleBusinessLocations()` | List Google Business locations |
+| `connect.listGoogleBusinessLocations()` | List GBP locations |
 | `connect.listLinkedInOrganizations()` | List LinkedIn orgs |
 | `connect.listPinterestBoardsForSelection()` | List Pinterest boards |
 | `connect.listSnapchatProfiles()` | List Snapchat profiles |
 | `connect.getConnectUrl()` | Get OAuth connect URL |
 | `connect.getFacebookPages()` | List Facebook pages |
-| `connect.getGmbLocations()` | List Google Business locations |
+| `connect.getGmbLocations()` | List GBP locations |
 | `connect.getLinkedInOrganizations()` | List LinkedIn orgs |
 | `connect.getPendingOAuthData()` | Get pending OAuth data |
 | `connect.getPinterestBoards()` | List Pinterest boards |
@@ -298,7 +296,7 @@ try {
 | `connect.getRedditSubreddits()` | List Reddit subreddits |
 | `connect.getTelegramConnectStatus()` | Generate Telegram code |
 | `connect.updateFacebookPage()` | Update Facebook page |
-| `connect.updateGmbLocation()` | Update Google Business location |
+| `connect.updateGmbLocation()` | Update GBP location |
 | `connect.updateLinkedInOrganization()` | Switch LinkedIn account type |
 | `connect.updatePinterestBoards()` | Set default Pinterest board |
 | `connect.updateRedditSubreddits()` | Set default subreddit |
@@ -307,7 +305,7 @@ try {
 | `connect.handleOAuthCallback()` | Complete OAuth callback |
 | `connect.initiateTelegramConnect()` | Connect Telegram directly |
 | `connect.selectFacebookPage()` | Select Facebook page |
-| `connect.selectGoogleBusinessLocation()` | Select Google Business location |
+| `connect.selectGoogleBusinessLocation()` | Select GBP location |
 | `connect.selectLinkedInOrganization()` | Select LinkedIn org |
 | `connect.selectPinterestBoard()` | Select Pinterest board |
 | `connect.selectSnapchatProfile()` | Select Snapchat profile |
@@ -321,15 +319,15 @@ try {
 ### Account Settings
 | Method | Description |
 |--------|-------------|
-| `accountSettings.getInstagramIceBreakers()` | Get Instagram ice breakers |
-| `accountSettings.getMessengerMenu()` | Get Facebook persistent menu |
-| `accountSettings.getTelegramCommands()` | Get Telegram bot commands |
-| `accountSettings.deleteInstagramIceBreakers()` | Delete Instagram ice breakers |
-| `accountSettings.deleteMessengerMenu()` | Delete Facebook persistent menu |
-| `accountSettings.deleteTelegramCommands()` | Delete Telegram bot commands |
-| `accountSettings.setInstagramIceBreakers()` | Set Instagram ice breakers |
-| `accountSettings.setMessengerMenu()` | Set Facebook persistent menu |
-| `accountSettings.setTelegramCommands()` | Set Telegram bot commands |
+| `accountSettings.getInstagramIceBreakers()` | Get IG ice breakers |
+| `accountSettings.getMessengerMenu()` | Get FB persistent menu |
+| `accountSettings.getTelegramCommands()` | Get TG bot commands |
+| `accountSettings.deleteInstagramIceBreakers()` | Delete IG ice breakers |
+| `accountSettings.deleteMessengerMenu()` | Delete FB persistent menu |
+| `accountSettings.deleteTelegramCommands()` | Delete TG bot commands |
+| `accountSettings.setInstagramIceBreakers()` | Set IG ice breakers |
+| `accountSettings.setMessengerMenu()` | Set FB persistent menu |
+| `accountSettings.setTelegramCommands()` | Set TG bot commands |
 
 ### Comments (Inbox)
 | Method | Description |

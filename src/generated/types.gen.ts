@@ -94,12 +94,7 @@ export type ApiKey = {
 };
 
 /**
- * Bluesky post settings:
- * - Supports text posts with up to 4 images per post
- * - Videos supported (single video per post)
- * - threadItems creates a reply chain (Bluesky thread)
- * - Images exceeding Bluesky's 1MB limit are automatically compressed
- * - Alt text for images is supported via mediaItem properties
+ * Bluesky post settings. Supports text posts with up to 4 images or a single video. threadItems creates a reply chain (Bluesky thread). Images exceeding 1MB are automatically compressed. Alt text supported via mediaItem properties.
  *
  */
 export type BlueskyPlatformData = {
@@ -132,13 +127,7 @@ export type ConnectionLog = {
     accountId?: string;
     platform?: 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat';
     /**
-     * Type of connection event:
-     * - `connect_success` - New account connected successfully
-     * - `connect_failed` - Connection attempt failed
-     * - `disconnect` - Account was disconnected
-     * - `reconnect_success` - Existing account reconnected successfully
-     * - `reconnect_failed` - Reconnection attempt failed
-     *
+     * Type of connection event: connect_success, connect_failed, disconnect, reconnect_success, reconnect_failed
      */
     eventType?: 'connect_success' | 'connect_failed' | 'disconnect' | 'reconnect_success' | 'reconnect_failed';
     /**
@@ -209,13 +198,7 @@ export type ConnectionLog = {
 export type platform = 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat';
 
 /**
- * Type of connection event:
- * - `connect_success` - New account connected successfully
- * - `connect_failed` - Connection attempt failed
- * - `disconnect` - Account was disconnected
- * - `reconnect_success` - Existing account reconnected successfully
- * - `reconnect_failed` - Reconnection attempt failed
- *
+ * Type of connection event: connect_success, connect_failed, disconnect, reconnect_success, reconnect_failed
  */
 export type eventType = 'connect_success' | 'connect_failed' | 'disconnect' | 'reconnect_success' | 'reconnect_failed';
 
@@ -248,14 +231,7 @@ export type ErrorResponse = {
 };
 
 /**
- * Constraints:
- * - Posts cannot mix videos and images.
- * - Multiple images supported via attached_media (up to 10 images for feed posts).
- * - Multiple videos in the same post are not supported.
- * - Stories require media (single image or video); text captions are not displayed with stories.
- * - Stories are ephemeral (disappear after 24 hours).
- * - Use pageId to post to multiple pages from the same account connection.
- *
+ * Cannot mix videos and images. Up to 10 images for feed posts. Stories require single image or video (no captions, ephemeral 24h). Use pageId for multi-page posting.
  */
 export type FacebookPlatformData = {
     /**
@@ -365,14 +341,7 @@ export type FoodMenuSection = {
 };
 
 /**
- * Google Business Profile post settings:
- * - Posts support text content and a single image (no videos)
- * - Images must be publicly accessible URLs
- * - Call-to-action buttons drive user engagement
- * - Posts appear on your Google Business Profile and in Google Search/Maps
- * - Use locationId to post to multiple locations from the same account connection
- * - Language is auto-detected from content; override with languageCode if needed
- *
+ * Posts support text and a single image (no videos). Images must be publicly accessible URLs. Optional call-to-action button. Posts appear on GBP, Google Search, and Maps. Use locationId for multi-location posting. Language is auto-detected; override with languageCode.
  */
 export type GoogleBusinessPlatformData = {
     /**
@@ -396,14 +365,7 @@ export type GoogleBusinessPlatformData = {
      */
     callToAction?: {
         /**
-         * Button action type:
-         * - LEARN_MORE: Link to more information
-         * - BOOK: Booking/reservation link
-         * - ORDER: Online ordering link
-         * - SHOP: E-commerce/shopping link
-         * - SIGN_UP: Registration/signup link
-         * - CALL: Phone call action
-         *
+         * Button action type: LEARN_MORE, BOOK, ORDER, SHOP, SIGN_UP, CALL
          */
         type: 'LEARN_MORE' | 'BOOK' | 'ORDER' | 'SHOP' | 'SIGN_UP' | 'CALL';
         /**
@@ -414,14 +376,7 @@ export type GoogleBusinessPlatformData = {
 };
 
 /**
- * Button action type:
- * - LEARN_MORE: Link to more information
- * - BOOK: Booking/reservation link
- * - ORDER: Online ordering link
- * - SHOP: E-commerce/shopping link
- * - SIGN_UP: Registration/signup link
- * - CALL: Phone call action
- *
+ * Button action type: LEARN_MORE, BOOK, ORDER, SHOP, SIGN_UP, CALL
  */
 export type type = 'LEARN_MORE' | 'BOOK' | 'ORDER' | 'SHOP' | 'SIGN_UP' | 'CALL';
 
@@ -438,21 +393,7 @@ export type HashtagInfo = {
 export type status = 'safe' | 'banned' | 'restricted' | 'unknown';
 
 /**
- * Constraints:
- * - Feed posts require images with aspect ratio between 0.8 (4:5 portrait) and 1.91 (1.91:1 landscape).
- * - Images outside this range (e.g., 9:16 Stories/TikTok format) must use contentType 'story'.
- * - Validation happens at post creation; invalid images are rejected immediately with helpful error messages.
- * - Carousels support up to 10 media items.
- * - Stories require media; no captions are published with Stories.
- * - User tags: coordinates range from 0.0 to 1.0 representing position from top-left corner. For carousels, use `mediaIndex` to tag specific slides. Tagged users receive notifications.
- *
- * **Automatic Compression (similar to Bluesky):**
- * - All images (story, post, carousel, thumbnails) exceeding 8 MB are automatically compressed using quality reduction and resizing.
- * - Story videos exceeding 100 MB are automatically compressed.
- * - Reel videos exceeding 300 MB are automatically compressed.
- * - Compression uses Sharp (images) and FFmpeg (videos) to maintain quality while meeting size limits.
- * - Original files are preserved; compressed versions are uploaded to blob storage automatically.
- *
+ * Feed posts require aspect ratio 0.8-1.91; images outside this range must use contentType story. Carousels up to 10 items. Stories require media, no captions. User tag coordinates 0.0-1.0 from top-left. Images over 8 MB and videos over 100 MB (stories) or 300 MB (reels) are auto-compressed.
  */
 export type InstagramPlatformData = {
     /**
@@ -472,27 +413,16 @@ export type InstagramPlatformData = {
      */
     firstComment?: string;
     /**
-     * Trial Reels configuration. Trial reels are only shared to non-followers initially.
-     * They can later be "graduated" (converted to regular reels visible to followers)
-     * either manually in the Instagram app or automatically based on performance.
-     * Only applies to Reels (video posts).
-     *
+     * Trial Reels configuration. Trial reels are shared to non-followers first and can later be graduated to regular reels manually or automatically based on performance. Only applies to Reels.
      */
     trialParams?: {
         /**
-         * The graduation strategy specifies when a trial reel becomes a regular reel:
-         * - MANUAL: The trial reel can only be manually graduated from the native Instagram app.
-         * - SS_PERFORMANCE: The trial reel will be automatically graduated if it performs well with non-followers.
-         *
+         * MANUAL (graduate from Instagram app) or SS_PERFORMANCE (auto-graduate if performs well with non-followers)
          */
         graduationStrategy?: 'MANUAL' | 'SS_PERFORMANCE';
     };
     /**
-     * Tag Instagram users in photos by username and position coordinates. Not supported for stories or videos.
-     * For carousel posts, use the optional `mediaIndex` field to specify which slide each tag applies to.
-     * Tags without `mediaIndex` default to the first image (index 0) for backwards compatibility.
-     * Tags targeting video items are silently skipped (Instagram only supports tagging on images).
-     *
+     * Tag Instagram users in photos by username and position. Not supported for stories or videos. For carousels, use mediaIndex to target specific slides (defaults to 0). Tags on video items are silently skipped.
      */
     userTags?: Array<{
         /**
@@ -508,34 +438,22 @@ export type InstagramPlatformData = {
          */
         y: number;
         /**
-         * Zero-based index of the carousel item to tag. Defaults to 0 (first image) if omitted.
-         * Only relevant for carousel posts. Tags targeting video items or out-of-range indices are ignored.
-         *
+         * Zero-based index of the carousel item to tag. Defaults to 0. Tags on video items or out-of-range indices are ignored.
          */
         mediaIndex?: number;
     }>;
     /**
-     * Custom name for the original audio in Reels. Replaces the default "Original Audio" label.
-     * Only applies to Reels (video posts). Can only be set once - either during creation or
-     * later from the Instagram audio page in the app.
-     *
+     * Custom name for original audio in Reels. Replaces the default "Original Audio" label. Can only be set once.
      */
     audioName?: string;
     /**
-     * Millisecond offset from the start of the video to use as the Reel thumbnail.
-     * Only applies to Reels (video posts). If a custom thumbnail URL (instagramThumbnail
-     * in mediaItems) is provided, it takes priority and this offset is ignored.
-     * Defaults to 0 (first frame).
-     *
+     * Millisecond offset from video start for the Reel thumbnail. Ignored if a custom thumbnail URL is provided. Defaults to 0.
      */
     thumbOffset?: number;
 };
 
 /**
- * The graduation strategy specifies when a trial reel becomes a regular reel:
- * - MANUAL: The trial reel can only be manually graduated from the native Instagram app.
- * - SS_PERFORMANCE: The trial reel will be automatically graduated if it performs well with non-followers.
- *
+ * MANUAL (graduate from Instagram app) or SS_PERFORMANCE (auto-graduate if performs well with non-followers)
  */
 export type graduationStrategy = 'MANUAL' | 'SS_PERFORMANCE';
 
@@ -631,14 +549,7 @@ export type LinkedInAggregateAnalyticsTotalResponse = {
 export type aggregation3 = 'TOTAL';
 
 /**
- * Constraints:
- * - Multi-image posts support up to 20 images.
- * - Multi-video posts are not supported.
- * - Single PDF document posts are supported (max 100MB, ~300 pages). Documents cannot be mixed with other media.
- * - Post ID is returned in the x-restli-id response header.
- * - Link previews are automatically generated for URLs when no media is attached (can be disabled with disableLinkPreview).
- * - Use organizationUrn to post to multiple organizations from the same account connection.
- *
+ * Up to 20 images, no multi-video. Single PDF supported (max 100MB, ~300 pages, cannot mix with other media). Link previews auto-generated when no media attached (disable with disableLinkPreview). Use organizationUrn for multi-org posting.
  */
 export type LinkedInPlatformData = {
     /**
@@ -660,15 +571,8 @@ export type LinkedInPlatformData = {
 };
 
 /**
- * Media referenced in posts. URLs must be publicly reachable over HTTPS by the destination platforms.
- * When using third-party storage, ensure signed links remain valid until upload completes.
- *
- * **Uploading Media:**
- * Use `POST /v1/media/presign` to get a presigned URL, then upload your file directly to cloud storage.
- * Supports files up to 5GB. See the `/v1/media/presign` endpoint documentation for details.
- *
- * **Automatic Media Compression:**
- * Late automatically compresses images and videos that exceed platform limits. Compression happens server-side during publishing. Videos larger than 200 MB may not be compressed due to server timeout constraints.
+ * Media referenced in posts. URLs must be publicly reachable over HTTPS. When using third-party storage, ensure signed links remain valid until upload completes.
+ * Use POST /v1/media/presign to get a presigned URL for direct cloud storage upload (up to 5GB). Late automatically compresses images and videos that exceed platform limits server-side during publishing. Videos larger than 200 MB may not be compressed due to timeout constraints.
  *
  */
 export type MediaItem = {
@@ -817,59 +721,26 @@ export type PlatformTarget = {
      */
     publishedAt?: string;
     /**
-     * Human-readable error message when status is 'failed'.
-     * Contains platform-specific error details explaining why the publish failed.
-     * Examples:
-     * - "Instagram access token has expired. Please reconnect your account."
-     * - "Post text exceeds the 500 character limit for Threads."
-     * - "You do not have enough karma to post in this subreddit."
-     * - "Video is too long for Reels. Facebook Reels must be 90 seconds or less."
-     *
+     * Human-readable error message when status is failed. Contains platform-specific error details explaining why the publish failed.
      */
     errorMessage?: string;
     /**
-     * Error category for programmatic handling:
-     * - auth_expired: Token expired or revoked, account needs reconnection
-     * - user_content: Content doesn't meet platform requirements (too long, wrong format, etc.)
-     * - user_abuse: Rate limits, spam detection, excessive posting
-     * - account_issue: Account configuration problems (missing board, inactive account)
-     * - platform_rejected: Platform rules violated (banned, suspended, policy violation)
-     * - platform_error: Platform-side issues (5xx errors, maintenance)
-     * - system_error: Late infrastructure issues (timeouts, network errors)
-     * - unknown: Unclassified error
-     *
+     * Error category for programmatic handling: auth_expired (token expired/revoked), user_content (wrong format/too long), user_abuse (rate limits/spam), account_issue (config problems), platform_rejected (policy violation), platform_error (5xx/maintenance), system_error (Late infra), unknown
      */
     errorCategory?: 'auth_expired' | 'user_content' | 'user_abuse' | 'account_issue' | 'platform_rejected' | 'platform_error' | 'system_error' | 'unknown';
     /**
-     * Who/what caused the error:
-     * - user: User action required (fix content, reconnect account)
-     * - platform: Platform-side issue (outage, API change)
-     * - system: Late system issue (rare)
-     *
+     * Who caused the error: user (fix content/reconnect), platform (outage/API change), system (Late issue, rare)
      */
     errorSource?: 'user' | 'platform' | 'system';
 };
 
 /**
- * Error category for programmatic handling:
- * - auth_expired: Token expired or revoked, account needs reconnection
- * - user_content: Content doesn't meet platform requirements (too long, wrong format, etc.)
- * - user_abuse: Rate limits, spam detection, excessive posting
- * - account_issue: Account configuration problems (missing board, inactive account)
- * - platform_rejected: Platform rules violated (banned, suspended, policy violation)
- * - platform_error: Platform-side issues (5xx errors, maintenance)
- * - system_error: Late infrastructure issues (timeouts, network errors)
- * - unknown: Unclassified error
- *
+ * Error category for programmatic handling: auth_expired (token expired/revoked), user_content (wrong format/too long), user_abuse (rate limits/spam), account_issue (config problems), platform_rejected (policy violation), platform_error (5xx/maintenance), system_error (Late infra), unknown
  */
 export type errorCategory = 'auth_expired' | 'user_content' | 'user_abuse' | 'account_issue' | 'platform_rejected' | 'platform_error' | 'system_error' | 'unknown';
 
 /**
- * Who/what caused the error:
- * - user: User action required (fix content, reconnect account)
- * - platform: Platform-side issue (outage, API change)
- * - system: Late system issue (rare)
- *
+ * Who caused the error: user (fix content/reconnect), platform (outage/API change), system (Late issue, rare)
  */
 export type errorSource = 'user' | 'platform' | 'system';
 
@@ -888,11 +759,7 @@ export type Post = {
     timezone?: string;
     status?: 'draft' | 'scheduled' | 'publishing' | 'published' | 'failed' | 'partial';
     /**
-     * YouTube tag constraints when targeting YouTube:
-     * - No count cap; duplicates removed.
-     * - Each tag must be ≤ 100 chars.
-     * - Combined characters across all tags ≤ 500.
-     *
+     * YouTube constraints: each tag max 100 chars, combined max 500 chars, duplicates removed.
      */
     tags?: Array<(string)>;
     hashtags?: Array<(string)>;
@@ -962,14 +829,7 @@ export type PostLog = {
     accountId?: string;
     accountUsername?: string;
     /**
-     * Type of action logged:
-     * - `publish` - Initial publish attempt
-     * - `retry` - Retry after failure
-     * - `media_upload` - Media upload step
-     * - `rate_limit_pause` - Account paused due to rate limits
-     * - `token_refresh` - Token was refreshed
-     * - `cancelled` - Post was cancelled
-     *
+     * Type of action logged: publish (initial attempt), retry (after failure), media_upload, rate_limit_pause, token_refresh, cancelled
      */
     action?: 'publish' | 'retry' | 'media_upload' | 'rate_limit_pause' | 'token_refresh' | 'cancelled';
     status?: 'success' | 'failed' | 'pending' | 'skipped';
@@ -1032,51 +892,11 @@ export type PostLog = {
 };
 
 /**
- * Type of action logged:
- * - `publish` - Initial publish attempt
- * - `retry` - Retry after failure
- * - `media_upload` - Media upload step
- * - `rate_limit_pause` - Account paused due to rate limits
- * - `token_refresh` - Token was refreshed
- * - `cancelled` - Post was cancelled
- *
+ * Type of action logged: publish (initial attempt), retry (after failure), media_upload, rate_limit_pause, token_refresh, cancelled
  */
 export type action = 'publish' | 'retry' | 'media_upload' | 'rate_limit_pause' | 'token_refresh' | 'cancelled';
 
 export type status3 = 'success' | 'failed' | 'pending' | 'skipped';
-
-export type PostLogDetail = PostLog & {
-    /**
-     * Populated post with full details
-     */
-    postId?: {
-        _id?: string;
-        content?: string;
-        status?: string;
-        scheduledFor?: string;
-        platforms?: Array<{
-            [key: string]: unknown;
-        }>;
-        mediaItems?: Array<{
-            [key: string]: unknown;
-        }>;
-    };
-    /**
-     * Populated account reference
-     */
-    accountId?: {
-        _id?: string;
-        platform?: string;
-        username?: string;
-        displayName?: string;
-    };
-    /**
-     * Additional metadata (e.g., rate limit info)
-     */
-    metadata?: {
-        [key: string]: unknown;
-    };
-};
 
 export type PostRetryResponse = {
     message?: string;
@@ -1101,9 +921,7 @@ export type Profile = {
     color?: string;
     isDefault?: boolean;
     /**
-     * Only present when `includeOverLimit=true` is used. Indicates if this profile
-     * exceeds the user's plan limit. Over-limit profiles cannot be used for posting
-     * but can be managed (disconnected accounts, deleted).
+     * Only present when includeOverLimit=true is used. Indicates if this profile exceeds the user's plan limit. Over-limit profiles cannot be used for posting but can be managed (disconnected accounts, deleted).
      *
      */
     isOverLimit?: boolean;
@@ -1204,15 +1022,7 @@ export type QueueUpdateResponse = {
 };
 
 /**
- * Reddit post settings:
- * - Posts are either "link" (with URL/media) or "self" (text-only)
- * - If media is provided, the first media item's URL is used as the link
- * - Use forceSelf to override and create a text post with the URL in the body
- * - Subreddit defaults to the account's configured subreddit if omitted
- * - Use the same accountId multiple times with different subreddit values in platformSpecificData to post to multiple subreddits
- * - Images are automatically compressed if they exceed Reddit's 20MB limit
- * - Some subreddits require a flair; if not provided, the API will attempt to use the first available flair as fallback
- *
+ * Posts are either link (with URL/media) or self (text-only). If media is provided, the first item URL is used as the link; use forceSelf to override. Subreddit defaults to the account's configured one. Images over 20 MB are auto-compressed. Some subreddits require a flair; if missing, the first available flair is used as fallback.
  */
 export type RedditPlatformData = {
     /**
@@ -1243,30 +1053,20 @@ export type RedditPlatformData = {
 };
 
 /**
- * Snapchat requires a Public Profile. Media is required for all content types (single item only, auto-encrypted before upload).
- *
- * **Content types:** Story (ephemeral 24h, no caption), Saved Story (permanent, title max 45 chars), Spotlight (video, description max 160 chars).
- *
- * **Media limits:** Images max 20 MB (JPEG/PNG), videos max 500 MB (MP4, 5-60s, min 540x960px, 9:16 recommended).
+ * Requires a Public Profile. Media required for all content types (single item only, auto-encrypted).
+ * Content types: story (ephemeral 24h, no caption), saved_story (permanent, title max 45 chars), spotlight (video, description max 160 chars).
+ * Images max 20 MB (JPEG/PNG), videos max 500 MB (MP4, 5-60s, min 540x960px).
  *
  */
 export type SnapchatPlatformData = {
     /**
-     * Type of Snapchat content to publish:
-     * - `story` - Ephemeral snap visible for 24 hours (default)
-     * - `saved_story` - Permanent story saved to Public Profile
-     * - `spotlight` - Video posted to Spotlight (Snapchat's TikTok-like feed)
-     *
+     * Content type: story (ephemeral 24h, default), saved_story (permanent on Public Profile), spotlight (video feed)
      */
     contentType?: 'story' | 'saved_story' | 'spotlight';
 };
 
 /**
- * Type of Snapchat content to publish:
- * - `story` - Ephemeral snap visible for 24 hours (default)
- * - `saved_story` - Permanent story saved to Public Profile
- * - `spotlight` - Video posted to Spotlight (Snapchat's TikTok-like feed)
- *
+ * Content type: story (ephemeral 24h, default), saved_story (permanent on Public Profile), spotlight (video feed)
  */
 export type contentType2 = 'story' | 'saved_story' | 'spotlight';
 
@@ -1305,18 +1105,7 @@ export type SocialAccount = {
 };
 
 /**
- * Telegram channel/group posting settings:
- * - Supports text, images (up to 10), videos (up to 10), and mixed media albums
- * - Posts to channels display the channel name and logo as author
- * - Posts to groups display the bot name (Late) as author
- * - Message IDs are returned for analytics tracking
- * - Captions support up to 1024 characters for media posts, 4096 for text-only
- *
- * **Analytics:**
- * - **Not available via API.** The Telegram Bot API does not expose message analytics (views, forwards, reactions).
- * - View counts are only visible to channel admins directly in the Telegram app.
- * - This is a Telegram platform limitation that affects all third-party tools.
- *
+ * Supports text, images (up to 10), videos (up to 10), and mixed media albums. Captions up to 1024 chars for media posts, 4096 for text-only. Channel posts show channel name as author; group posts show bot name. Analytics not available via Telegram Bot API.
  */
 export type TelegramPlatformData = {
     /**
@@ -1343,13 +1132,7 @@ export type TelegramPlatformData = {
 export type parseMode = 'HTML' | 'Markdown' | 'MarkdownV2';
 
 /**
- * Constraints:
- * - Carousel posts support up to 10 images (no videos in carousels).
- * - Single posts support one image or one video.
- * - Videos must be H.264/AAC MP4 format, max 5 minutes duration.
- * - Images must be JPEG or PNG, max 8 MB each.
- * - threadItems creates a reply chain (Threads equivalent of Twitter threads).
- *
+ * Carousels support up to 10 images (no videos). Single posts support one image or video. Videos must be H.264/AAC MP4, max 5 min. Images must be JPEG/PNG, max 8 MB. threadItems creates a reply chain.
  */
 export type ThreadsPlatformData = {
     /**
@@ -1362,25 +1145,11 @@ export type ThreadsPlatformData = {
 };
 
 /**
- * TikTok platform-specific settings for video/photo posting.
- *
- * **Constraints:**
- * - Photo carousels support up to 35 images.
- * - **Title length limits**:
- * - Videos: up to 2200 chars (full content used as title)
- * - Photos: content is automatically truncated to 90 chars for title (hashtags/URLs stripped). Use 'description' field for longer text (up to 4000 chars).
- * - privacyLevel must be chosen from creator_info.privacy_level_options (no defaulting).
- * - allowDuet and allowStitch required for videos; allowComment for all.
- * - contentPreviewConfirmed and expressConsentGiven must be true before posting.
- *
- * **Note:** Both camelCase and snake_case field names are accepted for backwards compatibility.
- * The nested `tiktokSettings` object format is also still supported but deprecated.
- *
+ * Photo carousels up to 35 images. Video titles up to 2200 chars; photo titles auto-truncated to 90 chars (use description field for longer text up to 4000 chars). privacyLevel must match creator_info options. allowDuet/allowStitch required for videos. contentPreviewConfirmed and expressConsentGiven must be true. Both camelCase and snake_case accepted.
  */
 export type TikTokPlatformData = {
     /**
-     * When true, Late sends the post to the TikTok Creator Inbox as a draft instead of publishing it immediately. When omitted or false, TikTok uses direct posting (live publish) as usual.
-     *
+     * When true, sends the post to the TikTok Creator Inbox as a draft instead of publishing immediately.
      */
     draft?: boolean;
     /**
@@ -1440,9 +1209,7 @@ export type TikTokPlatformData = {
      */
     videoMadeWithAi?: boolean;
     /**
-     * Optional long-form description for photo posts (max 4000 chars).
-     * Recommended for photo posts when content exceeds 90 characters, as photo titles are automatically truncated to 90 chars (after stripping hashtags/URLs).
-     *
+     * Optional long-form description for photo posts (max 4000 chars). Recommended when content exceeds 90 chars, as photo titles are auto-truncated.
      */
     description?: string;
 };
@@ -1456,30 +1223,6 @@ export type commercialContentType = 'none' | 'brand_organic' | 'brand_content';
  * Optional override. Defaults based on provided media items.
  */
 export type mediaType = 'video' | 'photo';
-
-/**
- * **DEPRECATED**: Use flat properties directly in TikTokPlatformData instead.
- * This nested format is supported for backwards compatibility only.
- *
- * @deprecated
- */
-export type TikTokSettings = {
-    privacyLevel?: string;
-    allowComment?: boolean;
-    allowDuet?: boolean;
-    allowStitch?: boolean;
-    commercialContentType?: string;
-    brandPartnerPromote?: boolean;
-    isBrandOrganicPost?: boolean;
-    contentPreviewConfirmed?: boolean;
-    expressConsentGiven?: boolean;
-    mediaType?: string;
-    videoCoverTimestampMs?: number;
-    photoCoverIndex?: number;
-    autoAddMusic?: boolean;
-    videoMadeWithAi?: boolean;
-    description?: string;
-};
 
 export type TranscriptResponse = {
     transcript?: string;
@@ -1897,16 +1640,7 @@ export type YouTubeDailyViewsResponse = {
 };
 
 /**
- * YouTube video upload settings:
- * - Videos ≤ 3 minutes are automatically detected as YouTube Shorts
- * - Videos > 3 minutes become regular YouTube videos
- * - Custom thumbnails supported for regular videos (via mediaItem.thumbnail)
- * - Custom thumbnails NOT supported for Shorts via API
- * - Scheduled videos are uploaded immediately as the specified visibility and published at scheduled time
- * - Visibility defaults to "public" if not specified
- * - madeForKids defaults to false (not child-directed)
- * - Set containsSyntheticMedia: true if your video contains AI-generated content
- *
+ * Videos up to 3 min are auto-detected as Shorts, longer as regular videos. Custom thumbnails supported for regular videos only (via mediaItem.thumbnail). Scheduled videos are uploaded immediately with the specified visibility. madeForKids defaults to false.
  */
 export type YouTubePlatformData = {
     /**
@@ -1914,24 +1648,11 @@ export type YouTubePlatformData = {
      */
     title?: string;
     /**
-     * Video visibility setting:
-     * - public: Anyone can search for and watch (default)
-     * - unlisted: Only people with the link can watch
-     * - private: Only you and people you specifically share with can watch
-     *
+     * Video visibility: public (default, anyone can watch), unlisted (link only), private (invite only)
      */
     visibility?: 'public' | 'private' | 'unlisted';
     /**
-     * COPPA compliance: Audience designation for the video.
-     * - true: Video is made for kids (child-directed content)
-     * - false: Video is NOT made for kids (default)
-     *
-     * This field maps to YouTube's `selfDeclaredMadeForKids` setting. Videos marked as made for kids
-     * have restricted features (no comments, no notifications, limited ad targeting).
-     *
-     * IMPORTANT: If not specified, defaults to false. YouTube requires this to be explicitly set,
-     * otherwise the video may be blocked from views until configured in YouTube Studio.
-     *
+     * COPPA compliance flag. Set true for child-directed content (restricts comments, notifications, ad targeting). Defaults to false. YouTube may block views if not explicitly set.
      */
     madeForKids?: boolean;
     /**
@@ -1939,20 +1660,11 @@ export type YouTubePlatformData = {
      */
     firstComment?: string;
     /**
-     * AI-generated content disclosure flag. Set to true if your video contains AI-generated or synthetic content
-     * that could be mistaken for real people, places, or events. This helps viewers understand when realistic
-     * content has been created or altered using AI. YouTube may add a label to videos when this is set.
-     * Added to YouTube Data API in October 2024.
-     *
+     * AI-generated content disclosure. Set true if the video contains synthetic content that could be mistaken for real. YouTube may add a label.
      */
     containsSyntheticMedia?: boolean;
     /**
-     * YouTube video category ID. Defaults to '22' (People & Blogs).
-     * Common categories: 1 (Film & Animation), 2 (Autos & Vehicles), 10 (Music),
-     * 15 (Pets & Animals), 17 (Sports), 20 (Gaming), 22 (People & Blogs),
-     * 23 (Comedy), 24 (Entertainment), 25 (News & Politics), 26 (Howto & Style),
-     * 27 (Education), 28 (Science & Technology).
-     *
+     * YouTube video category ID. Defaults to 22 (People & Blogs). Common: 1 (Film), 2 (Autos), 10 (Music), 15 (Pets), 17 (Sports), 20 (Gaming), 23 (Comedy), 24 (Entertainment), 25 (News), 26 (Howto), 27 (Education), 28 (Science & Tech).
      */
     categoryId?: string;
 };
@@ -2207,10 +1919,7 @@ export type GetAnalyticsData = {
          */
         platform?: string;
         /**
-         * Returns analytics for a single post. Accepts both Late Post IDs (from `POST /v1/posts`)
-         * and External Post IDs (from this endpoint's list response). The API automatically
-         * resolves Late Post IDs to their corresponding External Post analytics.
-         *
+         * Returns analytics for a single post. Accepts both Late Post IDs and External Post IDs. Late IDs are auto-resolved to External Post analytics.
          */
         postId?: string;
         /**
@@ -2222,11 +1931,7 @@ export type GetAnalyticsData = {
          */
         sortBy?: 'date' | 'engagement';
         /**
-         * Filter by post source:
-         * - `late` - Only posts scheduled/published via Late API
-         * - `external` - Only posts synced from the platform (not posted via Late)
-         * - `all` - All posts (default)
-         *
+         * Filter by post source: late (posted via Late API), external (synced from platform), all (default)
          */
         source?: 'all' | 'late' | 'external';
         /**
@@ -2474,9 +2179,7 @@ export type CreatePostData = {
     body: {
         title?: string;
         /**
-         * Post caption/text content. Optional when media is attached (images, videos, etc.).
-         * Required for text-only posts. Can also be omitted if all platforms have customContent set.
-         *
+         * Post caption/text. Optional when media is attached or all platforms have customContent. Required for text-only posts.
          */
         content?: string;
         mediaItems?: Array<{
@@ -2505,11 +2208,7 @@ export type CreatePostData = {
         isDraft?: boolean;
         timezone?: string;
         /**
-         * Tags/keywords for the post. YouTube-specific constraints:
-         * - No count limit; duplicates are automatically removed
-         * - Each tag must be ≤ 100 characters
-         * - Combined total across all tags ≤ 500 characters (YouTube's limit)
-         *
+         * Tags/keywords. YouTube constraints: each tag max 100 chars, combined max 500 chars, duplicates auto-removed.
          */
         tags?: Array<(string)>;
         hashtags?: Array<(string)>;
@@ -2519,21 +2218,11 @@ export type CreatePostData = {
             [key: string]: unknown;
         };
         /**
-         * Root-level TikTok settings applied to all TikTok platforms in the request.
-         * This is a convenience shorthand. Settings here are merged into each TikTok
-         * platform's platformSpecificData, with platform-specific settings taking precedence.
-         *
+         * Root-level TikTok settings applied to all TikTok platforms. Merged into each platform's platformSpecificData, with platform-specific settings taking precedence.
          */
         tiktokSettings?: TikTokPlatformData;
         /**
-         * Profile ID to schedule via queue.
-         *
-         * When provided (without `scheduledFor`), the post will be automatically assigned
-         * to the next available slot from the profile's queue. The system uses distributed
-         * locking to prevent race conditions when multiple posts are scheduled concurrently.
-         * Do not call `/v1/queue/next-slot` and then use that time in `scheduledFor`.
-         * That bypasses the queue system and can cause duplicate slot assignments.
-         *
+         * Profile ID to schedule via queue. When provided without scheduledFor, the post is auto-assigned to the next available slot. Do not call /v1/queue/next-slot and use that time in scheduledFor, as that bypasses queue locking.
          */
         queuedFromProfile?: string;
         /**
@@ -2584,10 +2273,7 @@ export type UpdatePostData = {
         content?: string;
         scheduledFor?: string;
         /**
-         * Root-level TikTok settings applied to all TikTok platforms in the request.
-         * This is a convenience shorthand. Settings here are merged into each TikTok
-         * platform's platformSpecificData, with platform-specific settings taking precedence.
-         *
+         * Root-level TikTok settings applied to all TikTok platforms. Merged into each platform's platformSpecificData, with platform-specific settings taking precedence.
          */
         tiktokSettings?: TikTokPlatformData;
         [key: string]: unknown | string | TikTokPlatformData;
@@ -2724,9 +2410,7 @@ export type GetUserError = ({
 export type ListProfilesData = {
     query?: {
         /**
-         * When true, includes profiles that exceed the user's plan limit.
-         * Over-limit profiles will have `isOverLimit: true` in the response.
-         * Useful for managing/deleting profiles after a plan downgrade.
+         * When true, includes profiles that exceed the user's plan limit. Over-limit profiles will have isOverLimit: true in the response. Useful for managing/deleting profiles after a plan downgrade.
          *
          */
         includeOverLimit?: boolean;
@@ -3118,12 +2802,8 @@ export type GetConnectUrlData = {
         profileId: string;
         /**
          * Your custom redirect URL after connection completes.
-         *
-         * **Standard Mode:** After the user selects an account, Late redirects here with `?connected={platform}&profileId=X&username=Y`.
-         *
-         * **Headless Mode:** Pass `headless=true` as a query parameter on this endpoint. After OAuth, the user is redirected to your URL with OAuth data (`profileId`, `tempToken`, `userProfile`, `connect_token`, `platform`, `step`). See the main endpoint description for details.
-         *
-         * Example: `https://yourdomain.com/integrations/callback`
+         * Standard mode: Late redirects here with ?connected={platform}&profileId=X&username=Y.
+         * Headless mode: pass headless=true on this endpoint. User is redirected to your URL with OAuth data (profileId, tempToken, userProfile, connect_token, platform, step). See endpoint description for details.
          *
          */
         redirect_url?: string;
@@ -3322,8 +3002,7 @@ export type SelectGoogleBusinessLocationData = {
          */
         tempToken: string;
         /**
-         * Decoded user profile object from the OAuth callback. **Important:** This contains
-         * the refresh token needed for token refresh. Always include this field.
+         * Decoded user profile object from the OAuth callback. Contains the refresh token needed for token refresh. Always include this field.
          *
          */
         userProfile?: {
@@ -3871,7 +3550,7 @@ export type DeleteGoogleBusinessPlaceActionError = (ErrorResponse);
 export type GetPendingOAuthDataData = {
     query: {
         /**
-         * The pending data token from the OAuth redirect URL (`pendingDataToken` parameter)
+         * The pending data token from the OAuth redirect URL (pendingDataToken parameter)
          */
         token: string;
     };
@@ -4262,9 +3941,7 @@ export type ConnectBlueskyCredentialsData = {
          */
         appPassword: string;
         /**
-         * Required state parameter formatted as `{userId}-{profileId}`.
-         * - `userId`: Your Late user ID (get from `GET /v1/users` → `currentUserId`)
-         * - `profileId`: The profile ID to connect the account to (get from `GET /v1/profiles`)
+         * Required state parameter formatted as {userId}-{profileId}. userId is your Late user ID (from GET /v1/users, currentUserId field), profileId is the profile to connect the account to (from GET /v1/profiles).
          *
          */
         state: string;
@@ -4459,11 +4136,7 @@ export type GetLinkedInAggregateAnalyticsData = {
     };
     query?: {
         /**
-         * Type of aggregation for the analytics data.
-         * - `TOTAL` (default): Returns single totals for each metric
-         * - `DAILY`: Returns daily breakdown of metrics
-         *
-         * Note: `MEMBERS_REACHED` metric is not available with `DAILY` aggregation.
+         * Type of aggregation: TOTAL (default, returns single totals) or DAILY (returns daily breakdown). Note: MEMBERS_REACHED is not available with DAILY aggregation.
          *
          */
         aggregation?: 'TOTAL' | 'DAILY';
@@ -4610,16 +4283,12 @@ export type GetLinkedInMentionsData = {
     };
     query: {
         /**
-         * The exact display name as shown on LinkedIn.
-         * - **Person mentions:** Required for clickable mentions. If not provided, a name is derived from the vanity URL which may not match exactly.
-         * - **Organization mentions:** Optional. If not provided, the company name is automatically retrieved from LinkedIn.
+         * The exact display name as shown on LinkedIn. Required for person mentions (for clickable mentions; if not provided, a name is derived from the vanity URL which may not match). Optional for organization mentions (company name is auto-retrieved from LinkedIn).
          *
          */
         displayName?: string;
         /**
-         * LinkedIn profile URL, company URL, or vanity name.
-         * - Person: `miquelpalet`, `linkedin.com/in/miquelpalet`
-         * - Organization: `company/microsoft`, `linkedin.com/company/microsoft`
+         * LinkedIn profile URL, company URL, or vanity name. Person examples: miquelpalet, linkedin.com/in/miquelpalet. Organization examples: company/microsoft, linkedin.com/company/microsoft.
          *
          */
         url: string;
@@ -5150,73 +4819,6 @@ export type GetWebhookLogsResponse = ({
 export type GetWebhookLogsError = ({
     error?: string;
 });
-
-export type ListLogsData = {
-    query?: {
-        /**
-         * Filter by action type
-         */
-        action?: 'publish' | 'retry' | 'media_upload' | 'rate_limit_pause' | 'token_refresh' | 'cancelled' | 'all';
-        /**
-         * Number of days to look back (max 7)
-         */
-        days?: number;
-        /**
-         * Maximum number of logs to return (max 100)
-         */
-        limit?: number;
-        /**
-         * Filter by platform
-         */
-        platform?: 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat' | 'all';
-        /**
-         * Number of logs to skip (for pagination)
-         */
-        skip?: number;
-        /**
-         * Filter by log status
-         */
-        status?: 'success' | 'failed' | 'pending' | 'skipped' | 'all';
-    };
-};
-
-export type ListLogsResponse = ({
-    logs?: Array<PostLog>;
-    pagination?: {
-        /**
-         * Total number of logs matching the query
-         */
-        total?: number;
-        limit?: number;
-        skip?: number;
-        /**
-         * Total number of pages
-         */
-        pages?: number;
-        hasMore?: boolean;
-    };
-});
-
-export type ListLogsError = ({
-    error?: string;
-});
-
-export type GetLogData = {
-    path: {
-        /**
-         * The log entry ID
-         */
-        logId: string;
-    };
-};
-
-export type GetLogResponse = ({
-    log?: PostLogDetail;
-});
-
-export type GetLogError = ({
-    error?: string;
-} | unknown);
 
 export type ListPostsLogsData = {
     query?: {
@@ -6044,10 +5646,7 @@ export type GetInboxPostCommentsData = {
     path: {
         /**
          * The post identifier. Accepts a Late post ID (MongoDB ObjectId) which is automatically resolved to the platform-specific post ID, or a platform-specific post ID directly (e.g. tweet ID, Facebook Graph ID, YouTube video ID).
-         *
-         * **LinkedIn:** For your own posts, the full URN stored in Late (e.g., `urn:li:share:7429218977714745345`) is used automatically.
-         * For third-party posts, pass either the full activity URN (e.g., `urn:li:activity:7422459067685855232`) or the raw numeric activity ID from the LinkedIn URL (automatically wrapped as `urn:li:activity:`).
-         * Note: LinkedIn post URLs use activity IDs (`linkedin.com/feed/update/urn:li:activity:XXXX`).
+         * LinkedIn: for your own posts, the full URN stored in Late is used automatically. For third-party posts, pass the full activity URN or the raw numeric activity ID from the LinkedIn URL (automatically wrapped as urn:li:activity:).
          *
          */
         postId: string;
@@ -6187,7 +5786,7 @@ export type ReplyToInboxPostData = {
         /**
          * The post identifier. Accepts a Late post ID or a platform-specific post ID.
          *
-         * **LinkedIn:** For third-party posts, pass the full activity URN (e.g., `urn:li:activity:7422459067685855232`) or the raw numeric activity ID from the URL.
+         * LinkedIn: for third-party posts, pass the full activity URN (e.g. urn:li:activity:7422459067685855232) or the raw numeric activity ID from the URL.
          *
          */
         postId: string;
@@ -6215,7 +5814,7 @@ export type DeleteInboxCommentData = {
         /**
          * The post identifier. Accepts a Late post ID or a platform-specific post ID.
          *
-         * **LinkedIn:** For third-party posts, pass the full activity URN (e.g., `urn:li:activity:7422459067685855232`) or the raw numeric activity ID from the URL.
+         * LinkedIn: for third-party posts, pass the full activity URN (e.g. urn:li:activity:7422459067685855232) or the raw numeric activity ID from the URL.
          *
          */
         postId: string;

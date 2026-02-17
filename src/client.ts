@@ -54,7 +54,6 @@ import {
   getLinkedInMentions,
   getLinkedInOrganizations,
   getLinkedInPostAnalytics,
-  getLog,
   getMediaPresignedUrl,
   getMessengerMenu,
   getNextQueueSlot,
@@ -90,7 +89,6 @@ import {
   listInboxConversations,
   listInboxReviews,
   listLinkedInOrganizations,
-  listLogs,
   listPinterestBoardsForSelection,
   listPosts,
   listPostsLogs,
@@ -434,8 +432,6 @@ export class Late {
    * Logs API - Publishing logs
    */
   logs = {
-    listLogs: listLogs,
-    getLog: getLog,
     listPostsLogs: listPostsLogs,
     listConnectionLogs: listConnectionLogs,
     getPostLogs: getPostLogs,
