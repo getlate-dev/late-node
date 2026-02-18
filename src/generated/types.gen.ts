@@ -231,15 +231,19 @@ export type ErrorResponse = {
 };
 
 /**
- * Up to 10 images for feed posts, cannot mix videos and images. Stories require single image or video (ephemeral 24h, no captions). Use pageId for multi-page posting.
+ * Feed posts support up to 10 images (no mixed video+image). Stories require single media (24h, no captions). Reels require single vertical video (9:16, 3-60s).
  */
 export type FacebookPlatformData = {
     /**
-     * Set to 'story' to publish as a Facebook Page Story (24-hour ephemeral content). Requires media.
+     * Set to 'story' for Page Stories (24h ephemeral) or 'reel' for Reels (short vertical video). Defaults to feed post if omitted.
      */
-    contentType?: 'story';
+    contentType?: 'story' | 'reel';
     /**
-     * Optional first comment to post immediately after publishing (feed posts only, not stories)
+     * Reel title (only for contentType=reel). Separate from the caption/content field.
+     */
+    title?: string;
+    /**
+     * Optional first comment to post immediately after publishing (feed posts only, not stories or reels)
      */
     firstComment?: string;
     /**
@@ -249,9 +253,9 @@ export type FacebookPlatformData = {
 };
 
 /**
- * Set to 'story' to publish as a Facebook Page Story (24-hour ephemeral content). Requires media.
+ * Set to 'story' for Page Stories (24h ephemeral) or 'reel' for Reels (short vertical video). Defaults to feed post if omitted.
  */
-export type contentType = 'story';
+export type contentType = 'story' | 'reel';
 
 export type FollowerStatsResponse = {
     accounts?: Array<AccountWithFollowerStats>;
@@ -440,6 +444,11 @@ export type InstagramPlatformData = {
      */
     thumbOffset?: number;
 };
+
+/**
+ * Set to 'story' to publish as a Story. Default posts become Reels or feed depending on media.
+ */
+export type contentType2 = 'story';
 
 /**
  * MANUAL (graduate from Instagram app) or SS_PERFORMANCE (auto-graduate if performs well with non-followers)
@@ -1036,7 +1045,7 @@ export type SnapchatPlatformData = {
 /**
  * Content type: story (ephemeral 24h, default), saved_story (permanent on Public Profile), spotlight (video feed)
  */
-export type contentType2 = 'story' | 'saved_story' | 'spotlight';
+export type contentType3 = 'story' | 'saved_story' | 'spotlight';
 
 export type SocialAccount = {
     _id?: string;
