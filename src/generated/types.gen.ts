@@ -91,7 +91,33 @@ export type ApiKey = {
      * Returned only once, on creation
      */
     key?: string;
+    /**
+     * 'full' grants access to all profiles, 'profiles' restricts to specific profiles
+     */
+    scope?: 'full' | 'profiles';
+    /**
+     * Profiles this key can access (populated with name and color). Only present when scope is 'profiles'.
+     */
+    profileIds?: Array<{
+        _id?: string;
+        name?: string;
+        color?: string;
+    }>;
+    /**
+     * 'read-write' allows all operations, 'read' restricts to GET requests only
+     */
+    permission?: 'read-write' | 'read';
 };
+
+/**
+ * 'full' grants access to all profiles, 'profiles' restricts to specific profiles
+ */
+export type scope = 'full' | 'profiles';
+
+/**
+ * 'read-write' allows all operations, 'read' restricts to GET requests only
+ */
+export type permission = 'read-write' | 'read';
 
 /**
  * Bluesky post settings. Supports text posts with up to 4 images or a single video. threadItems creates a reply chain (Bluesky thread). Images exceeding 1MB are automatically compressed. Alt text supported via mediaItem properties.
@@ -2698,6 +2724,18 @@ export type CreateApiKeyData = {
          * Days until expiry
          */
         expiresIn?: number;
+        /**
+         * 'full' grants access to all profiles (default), 'profiles' restricts to specific profiles
+         */
+        scope?: 'full' | 'profiles';
+        /**
+         * Profile IDs this key can access. Required when scope is 'profiles'.
+         */
+        profileIds?: Array<(string)>;
+        /**
+         * 'read-write' allows all operations (default), 'read' restricts to GET requests only
+         */
+        permission?: 'read-write' | 'read';
     };
 };
 
