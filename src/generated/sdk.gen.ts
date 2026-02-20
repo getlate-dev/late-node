@@ -1428,7 +1428,7 @@ export const replyToInboxPost = <ThrowOnError extends boolean = false>(options: 
 
 /**
  * Delete comment
- * Delete a comment on a post. Supported by Facebook, Instagram, Bluesky, Reddit, YouTube, LinkedIn, and TikTok.
+ * Delete a comment on a post. Supported by Facebook, Instagram, Bluesky, Reddit, YouTube, and LinkedIn.
  * Requires accountId and commentId query parameters.
  *
  */

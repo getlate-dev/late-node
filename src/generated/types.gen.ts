@@ -5558,7 +5558,7 @@ export type ListInboxCommentsData = {
         /**
          * Filter by platform
          */
-        platform?: 'facebook' | 'instagram' | 'twitter' | 'bluesky' | 'threads' | 'youtube' | 'linkedin' | 'reddit' | 'tiktok';
+        platform?: 'facebook' | 'instagram' | 'twitter' | 'bluesky' | 'threads' | 'youtube' | 'linkedin' | 'reddit';
         /**
          * Filter by profile ID
          */
