@@ -575,6 +575,10 @@ export type aggregation3 = 'TOTAL';
  */
 export type LinkedInPlatformData = {
     /**
+     * Title displayed on LinkedIn document (PDF/carousel) posts. Required by LinkedIn for document posts. If omitted, falls back to the media item title, then the filename.
+     */
+    documentTitle?: string;
+    /**
      * Target LinkedIn Organization URN (e.g. "urn:li:organization:123456789"). If omitted, uses the default org. Use GET /v1/accounts/{id}/linkedin-organizations to list orgs.
      */
     organizationUrn?: string;
@@ -594,6 +598,10 @@ export type LinkedInPlatformData = {
 export type MediaItem = {
     type?: 'image' | 'video' | 'gif' | 'document';
     url?: string;
+    /**
+     * Optional title for the media item. Used as the document title for LinkedIn PDF/carousel posts. If omitted, falls back to the post title, then the filename.
+     */
+    title?: string;
     filename?: string;
     /**
      * Optional file size in bytes
