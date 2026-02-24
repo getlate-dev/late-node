@@ -1328,7 +1328,7 @@ export type Webhook = {
     /**
      * Events subscribed to
      */
-    events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'account.connected' | 'account.disconnected' | 'message.received')>;
+    events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'account.connected' | 'account.disconnected' | 'message.received' | 'comment.received')>;
     /**
      * Whether webhook delivery is enabled
      */
@@ -1362,7 +1362,7 @@ export type WebhookLog = {
      * Name of the webhook that was triggered
      */
     webhookName?: string;
-    event?: 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'account.connected' | 'account.disconnected' | 'message.received' | 'webhook.test';
+    event?: 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'account.connected' | 'account.disconnected' | 'message.received' | 'comment.received' | 'webhook.test';
     url?: string;
     status?: 'success' | 'failed';
     /**
@@ -1394,7 +1394,7 @@ export type WebhookLog = {
     createdAt?: string;
 };
 
-export type event = 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'account.connected' | 'account.disconnected' | 'message.received' | 'webhook.test';
+export type event = 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'account.connected' | 'account.disconnected' | 'message.received' | 'comment.received' | 'webhook.test';
 
 export type status5 = 'success' | 'failed';
 
@@ -1458,7 +1458,74 @@ export type event3 = 'account.disconnected';
 export type disconnectionType = 'intentional' | 'unintentional';
 
 /**
- * Webhook payload for message received events (DMs from Instagram, Telegram)
+ * Webhook payload for comment received events (Instagram, Facebook, Twitter/X, YouTube, LinkedIn, Bluesky, Reddit)
+ */
+export type WebhookPayloadComment = {
+    event?: 'comment.received';
+    comment?: {
+        /**
+         * Platform comment ID
+         */
+        id?: string;
+        /**
+         * Internal post ID
+         */
+        postId?: string;
+        /**
+         * Platform's post ID
+         */
+        platformPostId?: string;
+        platform?: 'instagram' | 'facebook' | 'twitter' | 'youtube' | 'linkedin' | 'bluesky' | 'reddit';
+        /**
+         * Comment text content
+         */
+        text?: string;
+        author?: {
+            /**
+             * Author's platform ID
+             */
+            id?: string;
+            username?: string;
+            name?: string;
+            picture?: (string) | null;
+        };
+        createdAt?: string;
+        /**
+         * Whether this is a reply to another comment
+         */
+        isReply?: boolean;
+        /**
+         * Parent comment ID if this is a reply
+         */
+        parentCommentId?: (string) | null;
+    };
+    post?: {
+        /**
+         * Internal post ID
+         */
+        id?: string;
+        /**
+         * Platform's post ID
+         */
+        platformPostId?: string;
+    };
+    account?: {
+        /**
+         * Social account ID
+         */
+        id?: string;
+        platform?: string;
+        username?: string;
+    };
+    timestamp?: string;
+};
+
+export type event4 = 'comment.received';
+
+export type platform2 = 'instagram' | 'facebook' | 'twitter' | 'youtube' | 'linkedin' | 'bluesky' | 'reddit';
+
+/**
+ * Webhook payload for message received events (DMs from Instagram, Facebook, Telegram, Bluesky, Reddit)
  */
 export type WebhookPayloadMessage = {
     event?: 'message.received';
@@ -1471,7 +1538,7 @@ export type WebhookPayloadMessage = {
          * Internal conversation ID
          */
         conversationId?: string;
-        platform?: 'instagram' | 'facebook' | 'telegram';
+        platform?: 'instagram' | 'facebook' | 'telegram' | 'bluesky' | 'reddit';
         /**
          * Platform's message ID
          */
@@ -1569,9 +1636,9 @@ export type WebhookPayloadMessage = {
     timestamp?: string;
 };
 
-export type event4 = 'message.received';
+export type event5 = 'message.received';
 
-export type platform2 = 'instagram' | 'facebook' | 'telegram';
+export type platform3 = 'instagram' | 'facebook' | 'telegram' | 'bluesky' | 'reddit';
 
 export type direction = 'incoming';
 
@@ -1598,7 +1665,7 @@ export type WebhookPayloadPost = {
     timestamp?: string;
 };
 
-export type event5 = 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial';
+export type event6 = 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial';
 
 export type YouTubeDailyViewsResponse = {
     success?: boolean;
@@ -4672,7 +4739,7 @@ export type CreateWebhookSettingsData = {
         /**
          * Events to subscribe to
          */
-        events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'account.connected' | 'account.disconnected' | 'message.received')>;
+        events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'account.connected' | 'account.disconnected' | 'message.received' | 'comment.received')>;
         /**
          * Enable or disable webhook delivery
          */
@@ -4716,7 +4783,7 @@ export type UpdateWebhookSettingsData = {
         /**
          * Events to subscribe to
          */
-        events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'account.connected' | 'account.disconnected' | 'message.received')>;
+        events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'account.connected' | 'account.disconnected' | 'message.received' | 'comment.received')>;
         /**
          * Enable or disable webhook delivery
          */
@@ -4782,7 +4849,7 @@ export type GetWebhookLogsData = {
         /**
          * Filter by event type
          */
-        event?: 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'account.connected' | 'account.disconnected' | 'message.received' | 'webhook.test';
+        event?: 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'account.connected' | 'account.disconnected' | 'message.received' | 'comment.received' | 'webhook.test';
         /**
          * Maximum number of logs to return (max 100)
          */
