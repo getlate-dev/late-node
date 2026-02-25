@@ -1236,6 +1236,10 @@ export type TranscriptSegment = {
 
 export type TwitterPlatformData = {
     /**
+     * Controls who can reply to the tweet. "following" allows only people you follow, "mentionedUsers" allows only mentioned users, "subscribers" allows only subscribers. Omit for default (everyone can reply). For threads, applies to the first tweet only.
+     */
+    replySettings?: 'following' | 'mentionedUsers' | 'subscribers';
+    /**
      * Sequence of tweets in a thread. First item is the root tweet.
      */
     threadItems?: Array<{
@@ -1243,6 +1247,11 @@ export type TwitterPlatformData = {
         mediaItems?: Array<MediaItem>;
     }>;
 };
+
+/**
+ * Controls who can reply to the tweet. "following" allows only people you follow, "mentionedUsers" allows only mentioned users, "subscribers" allows only subscribers. Omit for default (everyone can reply). For threads, applies to the first tweet only.
+ */
+export type replySettings = 'following' | 'mentionedUsers' | 'subscribers';
 
 export type UploadedFile = {
     type?: 'image' | 'video' | 'document';
