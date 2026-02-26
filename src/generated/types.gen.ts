@@ -2057,6 +2057,190 @@ export type GetYouTubeDailyViewsError = ({
     error?: string;
 });
 
+export type GetDailyMetricsData = {
+    query?: {
+        /**
+         * Inclusive start date (ISO 8601). Defaults to 180 days ago.
+         */
+        fromDate?: string;
+        /**
+         * Filter by platform (e.g. "instagram", "tiktok"). Omit for all platforms.
+         */
+        platform?: string;
+        /**
+         * Filter by profile ID. Omit for all profiles.
+         */
+        profileId?: string;
+        /**
+         * Inclusive end date (ISO 8601). Defaults to now.
+         */
+        toDate?: string;
+    };
+};
+
+export type GetDailyMetricsResponse = ({
+    dailyData?: Array<{
+        date?: string;
+        postCount?: number;
+        platforms?: {
+            [key: string]: (number);
+        };
+        metrics?: {
+            impressions?: number;
+            reach?: number;
+            likes?: number;
+            comments?: number;
+            shares?: number;
+            saves?: number;
+            clicks?: number;
+            views?: number;
+        };
+    }>;
+    platformBreakdown?: Array<{
+        platform?: string;
+        postCount?: number;
+        impressions?: number;
+        reach?: number;
+        likes?: number;
+        comments?: number;
+        shares?: number;
+        saves?: number;
+        clicks?: number;
+        views?: number;
+    }>;
+});
+
+export type GetDailyMetricsError = ({
+    error?: string;
+} | {
+    error?: string;
+    code?: string;
+});
+
+export type GetBestTimeToPostData = {
+    query?: {
+        /**
+         * Filter by platform (e.g. "instagram", "tiktok"). Omit for all platforms.
+         */
+        platform?: string;
+        /**
+         * Filter by profile ID. Omit for all profiles.
+         */
+        profileId?: string;
+    };
+};
+
+export type GetBestTimeToPostResponse = ({
+    slots?: Array<{
+        /**
+         * 0=Monday, 6=Sunday
+         */
+        day_of_week?: number;
+        /**
+         * Hour in UTC (0-23)
+         */
+        hour?: number;
+        /**
+         * Average engagement (likes + comments + shares + saves)
+         */
+        avg_engagement?: number;
+        /**
+         * Number of posts in this slot
+         */
+        post_count?: number;
+    }>;
+});
+
+export type GetBestTimeToPostError = ({
+    error?: string;
+} | {
+    error?: string;
+    requiresAddon?: boolean;
+});
+
+export type GetContentDecayData = {
+    query?: {
+        /**
+         * Filter by platform (e.g. "instagram", "tiktok"). Omit for all platforms.
+         */
+        platform?: string;
+        /**
+         * Filter by profile ID. Omit for all profiles.
+         */
+        profileId?: string;
+    };
+};
+
+export type GetContentDecayResponse = ({
+    buckets?: Array<{
+        /**
+         * Sort order (0 = earliest, 6 = latest)
+         */
+        bucket_order?: number;
+        /**
+         * Human-readable label
+         */
+        bucket_label?: string;
+        /**
+         * Average % of final engagement reached (0-100)
+         */
+        avg_pct_of_final?: number;
+        /**
+         * Number of posts with data in this bucket
+         */
+        post_count?: number;
+    }>;
+});
+
+export type GetContentDecayError = ({
+    error?: string;
+} | {
+    error?: string;
+    requiresAddon?: boolean;
+});
+
+export type GetPostingFrequencyData = {
+    query?: {
+        /**
+         * Filter by platform (e.g. "instagram", "tiktok"). Omit for all platforms.
+         */
+        platform?: string;
+        /**
+         * Filter by profile ID. Omit for all profiles.
+         */
+        profileId?: string;
+    };
+};
+
+export type GetPostingFrequencyResponse = ({
+    frequency?: Array<{
+        platform?: string;
+        /**
+         * Number of posts published that week
+         */
+        posts_per_week?: number;
+        /**
+         * Average engagement rate as percentage (0-100)
+         */
+        avg_engagement_rate?: number;
+        /**
+         * Average raw engagement (likes+comments+shares+saves)
+         */
+        avg_engagement?: number;
+        /**
+         * Number of calendar weeks observed at this frequency
+         */
+        weeks_count?: number;
+    }>;
+});
+
+export type GetPostingFrequencyError = ({
+    error?: string;
+} | {
+    error?: string;
+    requiresAddon?: boolean;
+});
+
 export type ListAccountGroupsResponse = ({
     groups?: Array<{
         _id?: string;

@@ -88,6 +88,26 @@ describe('Endpoint Methods', () => {
       expect(client.analytics.getYouTubeDailyViews).toBeTypeOf('function');
     });
 
+    it('should have getDailyMetrics method', () => {
+      expect(client.analytics.getDailyMetrics).toBeDefined();
+      expect(client.analytics.getDailyMetrics).toBeTypeOf('function');
+    });
+
+    it('should have getBestTimeToPost method', () => {
+      expect(client.analytics.getBestTimeToPost).toBeDefined();
+      expect(client.analytics.getBestTimeToPost).toBeTypeOf('function');
+    });
+
+    it('should have getContentDecay method', () => {
+      expect(client.analytics.getContentDecay).toBeDefined();
+      expect(client.analytics.getContentDecay).toBeTypeOf('function');
+    });
+
+    it('should have getPostingFrequency method', () => {
+      expect(client.analytics.getPostingFrequency).toBeDefined();
+      expect(client.analytics.getPostingFrequency).toBeTypeOf('function');
+    });
+
     it('should have getLinkedInAggregateAnalytics method', () => {
       expect(client.analytics.getLinkedInAggregateAnalytics).toBeDefined();
       expect(client.analytics.getLinkedInAggregateAnalytics).toBeTypeOf('function');

@@ -203,8 +203,12 @@ try {
 | Method | Description |
 |--------|-------------|
 | `analytics.getAnalytics()` | Get post analytics |
+| `analytics.getBestTimeToPost()` | Get best times to post |
+| `analytics.getContentDecay()` | Get content performance decay |
+| `analytics.getDailyMetrics()` | Get daily aggregated metrics |
 | `analytics.getLinkedInAggregateAnalytics()` | Get LinkedIn aggregate stats |
 | `analytics.getLinkedInPostAnalytics()` | Get LinkedIn post stats |
+| `analytics.getPostingFrequency()` | Get posting frequency vs engagement |
 | `analytics.getYouTubeDailyViews()` | Get YouTube daily views |
 
 ### Account Groups
