@@ -1970,6 +1970,156 @@ export type DownloadBlueskyMediaResponse = ({
 
 export type DownloadBlueskyMediaError = unknown;
 
+export type ValidatePostLengthData = {
+    body: {
+        /**
+         * The post text to check
+         */
+        text: string;
+    };
+};
+
+export type ValidatePostLengthResponse = ({
+    text?: string;
+    platforms?: {
+        [key: string]: {
+            /**
+             * Character count for this platform
+             */
+            count?: number;
+            /**
+             * Maximum allowed characters
+             */
+            limit?: number;
+            /**
+             * Whether the text is within the limit
+             */
+            valid?: boolean;
+        };
+    };
+});
+
+export type ValidatePostLengthError = unknown;
+
+export type ValidatePostData = {
+    body: {
+        /**
+         * Post text content
+         */
+        content?: string;
+        /**
+         * Target platforms (same format as POST /v1/posts)
+         */
+        platforms: Array<{
+            platform: 'twitter' | 'instagram' | 'tiktok' | 'youtube' | 'facebook' | 'linkedin' | 'bluesky' | 'threads' | 'reddit' | 'pinterest' | 'telegram' | 'snapchat' | 'googlebusiness';
+            customContent?: string;
+            platformSpecificData?: {
+                [key: string]: unknown;
+            };
+            customMedia?: Array<{
+                url?: string;
+                type?: 'image' | 'video';
+            }>;
+        }>;
+        /**
+         * Root media items shared across platforms
+         */
+        mediaItems?: Array<{
+            url?: string;
+            type?: 'image' | 'video';
+        }>;
+    };
+};
+
+export type ValidatePostResponse = (({
+    valid?: boolean;
+    message?: string;
+    warnings?: Array<{
+        platform?: string;
+        warning?: string;
+    }>;
+} | {
+    valid?: boolean;
+    errors?: Array<{
+        platform?: string;
+        error?: string;
+    }>;
+    warnings?: Array<{
+        platform?: string;
+        warning?: string;
+    }>;
+}));
+
+export type ValidatePostError = unknown;
+
+export type ValidateMediaData = {
+    body: {
+        /**
+         * Public media URL to validate
+         */
+        url: string;
+    };
+};
+
+export type ValidateMediaResponse = ({
+    valid?: boolean;
+    url?: string;
+    /**
+     * Error message if valid is false
+     */
+    error?: string;
+    contentType?: string;
+    /**
+     * File size in bytes
+     */
+    size?: (number) | null;
+    sizeFormatted?: string;
+    type?: 'image' | 'video' | 'unknown';
+    /**
+     * Per-platform size limit comparison (only present when size and type are known)
+     */
+    platformLimits?: {
+        [key: string]: {
+            /**
+             * Platform size limit in bytes
+             */
+            limit?: number;
+            limitFormatted?: string;
+            withinLimit?: boolean;
+        };
+    };
+});
+
+export type ValidateMediaError = unknown;
+
+export type ValidateSubredditData = {
+    query: {
+        /**
+         * Subreddit name (with or without "r/" prefix)
+         */
+        name: string;
+    };
+};
+
+export type ValidateSubredditResponse = (({
+    exists?: boolean;
+    subreddit?: {
+        name?: string;
+        title?: string;
+        description?: string;
+        subscribers?: number;
+        isNSFW?: boolean;
+        type?: 'public' | 'private' | 'restricted';
+        allowImages?: boolean;
+        allowVideos?: boolean;
+    };
+} | {
+    exists?: boolean;
+    error?: string;
+}));
+
+export type ValidateSubredditError = unknown;
+
 export type GetAnalyticsData = {
     query?: {
         /**

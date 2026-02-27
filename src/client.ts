@@ -134,6 +134,10 @@ import {
   updateQueueSlot,
   updateRedditSubreddits,
   updateWebhookSettings,
+  validateMedia,
+  validatePost,
+  validatePostLength,
+  validateSubreddit,
 } from './generated/sdk.gen';
 
 import { LateApiError, parseApiError } from './errors';
@@ -211,6 +215,16 @@ export class Late {
     downloadFacebookVideo: downloadFacebookVideo,
     downloadLinkedInVideo: downloadLinkedInVideo,
     downloadBlueskyMedia: downloadBlueskyMedia,
+  };
+
+  /**
+   * validate API
+   */
+  validate = {
+    validatePostLength: validatePostLength,
+    validatePost: validatePost,
+    validateMedia: validateMedia,
+    validateSubreddit: validateSubreddit,
   };
 
   /**

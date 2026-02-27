@@ -395,6 +395,14 @@ try {
 | `reviews.deleteInboxReviewReply()` | Delete review reply |
 | `reviews.replyToInboxReview()` | Reply to review |
 
+### Validate
+| Method | Description |
+|--------|-------------|
+| `validate.validateMedia()` | Validate media URL |
+| `validate.validatePost()` | Validate post content |
+| `validate.validatePostLength()` | Validate post character count |
+| `validate.validateSubreddit()` | Check subreddit existence |
+
 ### Invites
 | Method | Description |
 |--------|-------------|
