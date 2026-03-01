@@ -6160,10 +6160,6 @@ export type ReplyToInboxPostData = {
          */
         commentId?: string;
         /**
-         * (Reddit only) Subreddit name for replies
-         */
-        subreddit?: string;
-        /**
          * (Bluesky only) Parent content identifier
          */
         parentCid?: string;
