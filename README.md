@@ -339,6 +339,7 @@ try {
 |--------|-------------|
 | `comments.listInboxComments()` | List commented posts |
 | `comments.getInboxPostComments()` | Get post comments |
+| `comments.getPostReactions()` | Get post reactions (who reacted) |
 | `comments.deleteInboxComment()` | Delete comment |
 | `comments.hideInboxComment()` | Hide comment |
 | `comments.likeInboxComment()` | Like comment |

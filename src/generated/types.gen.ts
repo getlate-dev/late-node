@@ -6437,6 +6437,94 @@ export type DeleteInboxCommentError = ({
     error?: string;
 } | unknown);
 
+export type GetPostReactionsData = {
+    path: {
+        /**
+         * Late post ID or platform-specific post ID (LinkedIn activity URN or numeric ID).
+         */
+        postId: string;
+    };
+    query: {
+        /**
+         * The social account ID (must be a LinkedIn organization account).
+         */
+        accountId: string;
+        /**
+         * Offset-based pagination start index.
+         */
+        cursor?: string;
+        /**
+         * Maximum number of reactions to return per page.
+         */
+        limit?: number;
+    };
+};
+
+export type GetPostReactionsResponse = ({
+    status?: string;
+    reactions?: Array<{
+        /**
+         * LinkedIn reaction enum (LIKE, PRAISE, EMPATHY, INTEREST, APPRECIATION, ENTERTAINMENT)
+         */
+        reactionType?: string;
+        /**
+         * User-friendly label (Like, Celebrate, Love, Insightful, Support, Funny)
+         */
+        reactionLabel?: string;
+        reactedAt?: string;
+        from?: {
+            /**
+             * LinkedIn person or organization URN
+             */
+            urn?: string;
+            /**
+             * Reactor's display name
+             */
+            name?: string;
+            /**
+             * Reactor's headline/job title (LinkedIn only)
+             */
+            headline?: string;
+            /**
+             * LinkedIn vanity name
+             */
+            username?: string;
+            /**
+             * Profile picture URL
+             */
+            profilePicture?: string;
+            /**
+             * Direct link to reactor's LinkedIn profile
+             */
+            profileUrl?: string;
+        };
+    }>;
+    pagination?: {
+        hasMore?: boolean;
+        /**
+         * Offset for next page
+         */
+        cursor?: string;
+        /**
+         * Total number of reactions (when available)
+         */
+        total?: number;
+    };
+    meta?: {
+        platform?: string;
+        postId?: string;
+        accountId?: string;
+        lastUpdated?: string;
+    };
+});
+
+export type GetPostReactionsError = ({
+    error?: string;
+    code?: 'PLATFORM_LIMITATION';
+} | {
+    error?: string;
+} | unknown);
+
 export type HideInboxCommentData = {
     body: {
         /**
