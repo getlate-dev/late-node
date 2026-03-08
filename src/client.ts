@@ -57,6 +57,7 @@ import {
   getLinkedInMentions,
   getLinkedInOrganizations,
   getLinkedInPostAnalytics,
+  getLinkedInPostReactions,
   getMediaPresignedUrl,
   getMessengerMenu,
   getNextQueueSlot,
@@ -64,7 +65,6 @@ import {
   getPinterestBoards,
   getPost,
   getPostLogs,
-  getPostReactions,
   getPostTimeline,
   getPostingFrequency,
   getProfile,
@@ -242,6 +242,7 @@ export class Late {
     getPostTimeline: getPostTimeline,
     getLinkedInAggregateAnalytics: getLinkedInAggregateAnalytics,
     getLinkedInPostAnalytics: getLinkedInPostAnalytics,
+    getLinkedInPostReactions: getLinkedInPostReactions,
   };
 
   /**
@@ -497,7 +498,6 @@ export class Late {
     getInboxPostComments: getInboxPostComments,
     replyToInboxPost: replyToInboxPost,
     deleteInboxComment: deleteInboxComment,
-    getPostReactions: getPostReactions,
     hideInboxComment: hideInboxComment,
     unhideInboxComment: unhideInboxComment,
     likeInboxComment: likeInboxComment,

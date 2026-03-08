@@ -123,6 +123,11 @@ describe('Endpoint Methods', () => {
       expect(client.analytics.getLinkedInPostAnalytics).toBeTypeOf('function');
     });
 
+    it('should have getLinkedInPostReactions method', () => {
+      expect(client.analytics.getLinkedInPostReactions).toBeDefined();
+      expect(client.analytics.getLinkedInPostReactions).toBeTypeOf('function');
+    });
+
   });
 
   describe('api Keys', () => {
