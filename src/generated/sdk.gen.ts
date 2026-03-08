@@ -1077,7 +1077,7 @@ export const getLinkedInPostAnalytics = <ThrowOnError extends boolean = false>(o
 };
 
 /**
- * Get LinkedIn post reactions (who reacted)
+ * Get LinkedIn post reactions
  * Returns individual reactions for a specific LinkedIn post, including reactor profiles
  * (name, headline/job title, profile picture, profile URL, reaction type).
  * Only works for **organization/company page** accounts. LinkedIn restricts reaction

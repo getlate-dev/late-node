@@ -208,7 +208,7 @@ try {
 | `analytics.getDailyMetrics()` | Get daily aggregated metrics |
 | `analytics.getLinkedInAggregateAnalytics()` | Get LinkedIn aggregate stats |
 | `analytics.getLinkedInPostAnalytics()` | Get LinkedIn post stats |
-| `analytics.getLinkedInPostReactions()` | Get LinkedIn post reactions (who reacted) |
+| `analytics.getLinkedInPostReactions()` | Get LinkedIn post reactions |
 | `analytics.getPostingFrequency()` | Get posting frequency vs engagement |
 | `analytics.getPostTimeline()` | Get post analytics timeline |
 | `analytics.getYouTubeDailyViews()` | Get YouTube daily views |
