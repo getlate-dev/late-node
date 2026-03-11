@@ -405,6 +405,51 @@ try {
 | `validate.validatePostLength()` | Validate post character count |
 | `validate.validateSubreddit()` | Check subreddit existence |
 
+### WhatsApp
+| Method | Description |
+|--------|-------------|
+| `whatsapp.bulkDeleteWhatsAppContacts()` | Bulk delete contacts |
+| `whatsapp.bulkUpdateWhatsAppContacts()` | Bulk update contacts |
+| `whatsapp.createWhatsAppBroadcast()` | Create broadcast |
+| `whatsapp.createWhatsAppContact()` | Create contact |
+| `whatsapp.createWhatsAppTemplate()` | Create template |
+| `whatsapp.getWhatsAppBroadcast()` | Get broadcast |
+| `whatsapp.getWhatsAppBroadcastRecipients()` | List recipients |
+| `whatsapp.getWhatsAppBroadcasts()` | List broadcasts |
+| `whatsapp.getWhatsAppBusinessProfile()` | Get business profile |
+| `whatsapp.getWhatsAppContact()` | Get contact |
+| `whatsapp.getWhatsAppContacts()` | List contacts |
+| `whatsapp.getWhatsAppGroups()` | List contact groups |
+| `whatsapp.getWhatsAppTemplate()` | Get template |
+| `whatsapp.getWhatsAppTemplates()` | List templates |
+| `whatsapp.updateWhatsAppBusinessProfile()` | Update business profile |
+| `whatsapp.updateWhatsAppContact()` | Update contact |
+| `whatsapp.updateWhatsAppTemplate()` | Update template |
+| `whatsapp.deleteWhatsAppBroadcast()` | Delete broadcast |
+| `whatsapp.deleteWhatsAppContact()` | Delete contact |
+| `whatsapp.deleteWhatsAppGroup()` | Delete group |
+| `whatsapp.deleteWhatsAppTemplate()` | Delete template |
+| `whatsapp.addWhatsAppBroadcastRecipients()` | Add recipients |
+| `whatsapp.cancelWhatsAppBroadcastSchedule()` | Cancel scheduled broadcast |
+| `whatsapp.importWhatsAppContacts()` | Bulk import contacts |
+| `whatsapp.removeWhatsAppBroadcastRecipients()` | Remove recipients |
+| `whatsapp.renameWhatsAppGroup()` | Rename group |
+| `whatsapp.scheduleWhatsAppBroadcast()` | Schedule broadcast |
+| `whatsapp.sendWhatsAppBroadcast()` | Send broadcast |
+| `whatsapp.sendWhatsAppBulk()` | Bulk send template messages |
+
+### WhatsApp Phone Numbers
+| Method | Description |
+|--------|-------------|
+| `whatsappPhoneNumbers.getPreverifiedWhatsAppNumbers()` | Get pre-verified numbers |
+| `whatsappPhoneNumbers.getWhatsAppPhoneNumber()` | Get phone number |
+| `whatsappPhoneNumbers.getWhatsAppPhoneNumbers()` | List phone numbers |
+| `whatsappPhoneNumbers.purchaseWhatsAppPhoneNumber()` | Purchase phone number |
+| `whatsappPhoneNumbers.releaseWhatsAppPhoneNumber()` | Release phone number |
+| `whatsappPhoneNumbers.requestWhatsAppVerificationCode()` | Request OTP |
+| `whatsappPhoneNumbers.searchAvailableWhatsAppNumbers()` | Search available numbers |
+| `whatsappPhoneNumbers.verifyWhatsAppPhoneNumber()` | Verify OTP |
+
 ### Invites
 | Method | Description |
 |--------|-------------|
