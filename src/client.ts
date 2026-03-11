@@ -78,7 +78,6 @@ import {
   getPostLogs,
   getPostTimeline,
   getPostingFrequency,
-  getPreverifiedWhatsAppNumbers,
   getProfile,
   getRedditFeed,
   getRedditFlairs,
@@ -133,10 +132,8 @@ import {
   renameWhatsAppGroup,
   replyToInboxPost,
   replyToInboxReview,
-  requestWhatsAppVerificationCode,
   retryPost,
   scheduleWhatsAppBroadcast,
-  searchAvailableWhatsAppNumbers,
   searchReddit,
   selectFacebookPage,
   selectGoogleBusinessLocation,
@@ -176,7 +173,6 @@ import {
   validatePost,
   validatePostLength,
   validateSubreddit,
-  verifyWhatsAppPhoneNumber,
 } from './generated/sdk.gen';
 
 import { LateApiError, parseApiError } from './errors';
@@ -591,13 +587,9 @@ export class Late {
    */
   whatsappphonenumbers = {
     getWhatsAppPhoneNumbers: getWhatsAppPhoneNumbers,
-    searchAvailableWhatsAppNumbers: searchAvailableWhatsAppNumbers,
-    getPreverifiedWhatsAppNumbers: getPreverifiedWhatsAppNumbers,
     purchaseWhatsAppPhoneNumber: purchaseWhatsAppPhoneNumber,
     getWhatsAppPhoneNumber: getWhatsAppPhoneNumber,
     releaseWhatsAppPhoneNumber: releaseWhatsAppPhoneNumber,
-    requestWhatsAppVerificationCode: requestWhatsAppVerificationCode,
-    verifyWhatsAppPhoneNumber: verifyWhatsAppPhoneNumber,
   };
 
   /**

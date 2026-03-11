@@ -441,14 +441,10 @@ try {
 ### WhatsApp Phone Numbers
 | Method | Description |
 |--------|-------------|
-| `whatsappPhoneNumbers.getPreverifiedWhatsAppNumbers()` | Get pre-verified numbers |
 | `whatsappPhoneNumbers.getWhatsAppPhoneNumber()` | Get phone number |
 | `whatsappPhoneNumbers.getWhatsAppPhoneNumbers()` | List phone numbers |
 | `whatsappPhoneNumbers.purchaseWhatsAppPhoneNumber()` | Purchase phone number |
 | `whatsappPhoneNumbers.releaseWhatsAppPhoneNumber()` | Release phone number |
-| `whatsappPhoneNumbers.requestWhatsAppVerificationCode()` | Request OTP |
-| `whatsappPhoneNumbers.searchAvailableWhatsAppNumbers()` | Search available numbers |
-| `whatsappPhoneNumbers.verifyWhatsAppPhoneNumber()` | Verify OTP |
 
 ### Invites
 | Method | Description |

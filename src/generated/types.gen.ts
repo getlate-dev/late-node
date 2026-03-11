@@ -8013,64 +8013,6 @@ export type GetWhatsAppPhoneNumbersError = ({
     error?: string;
 });
 
-export type SearchAvailableWhatsAppNumbersData = {
-    query?: {
-        /**
-         * Pattern to match within the phone number
-         */
-        contains?: string;
-        /**
-         * Maximum results (default 20, max 100)
-         */
-        limit?: number;
-        /**
-         * City name (e.g., "New York")
-         */
-        locality?: string;
-        /**
-         * Area code to search (e.g., "212" for New York)
-         */
-        prefix?: string;
-    };
-};
-
-export type SearchAvailableWhatsAppNumbersResponse = ({
-    numbers?: Array<{
-        [key: string]: unknown;
-    }>;
-});
-
-export type SearchAvailableWhatsAppNumbersError = ({
-    error?: string;
-} | unknown);
-
-export type GetPreverifiedWhatsAppNumbersData = {
-    query: {
-        /**
-         * Profile ID to filter by
-         */
-        profileId: string;
-    };
-};
-
-export type GetPreverifiedWhatsAppNumbersResponse = ({
-    /**
-     * IDs to pass in FB.login() extras.setup.preVerifiedPhone.ids
-     */
-    preVerifiedIds?: Array<(string)>;
-    numbers?: Array<{
-        id?: string;
-        phoneNumber?: string;
-        metaPreverifiedId?: string;
-        metaVerifiedAt?: string;
-        metaVerificationExpiresAt?: string;
-    }>;
-});
-
-export type GetPreverifiedWhatsAppNumbersError = (unknown | {
-    error?: string;
-});
-
 export type PurchaseWhatsAppPhoneNumberData = {
     body: {
         /**
@@ -8148,54 +8090,5 @@ export type ReleaseWhatsAppPhoneNumberResponse = ({
 });
 
 export type ReleaseWhatsAppPhoneNumberError = (unknown | {
-    error?: string;
-});
-
-export type RequestWhatsAppVerificationCodeData = {
-    body?: {
-        /**
-         * Delivery method for the verification code
-         */
-        method?: 'SMS' | 'VOICE';
-    };
-    path: {
-        /**
-         * Phone number record ID
-         */
-        phoneNumberId: string;
-    };
-};
-
-export type RequestWhatsAppVerificationCodeResponse = ({
-    message?: string;
-    method?: 'SMS' | 'VOICE';
-});
-
-export type RequestWhatsAppVerificationCodeError = (unknown | {
-    error?: string;
-});
-
-export type VerifyWhatsAppPhoneNumberData = {
-    body: {
-        /**
-         * 6-digit verification code
-         */
-        code: string;
-    };
-    path: {
-        /**
-         * Phone number record ID
-         */
-        phoneNumberId: string;
-    };
-};
-
-export type VerifyWhatsAppPhoneNumberResponse = ({
-    message?: string;
-    metaVerifiedAt?: string;
-    metaVerificationExpiresAt?: string;
-});
-
-export type VerifyWhatsAppPhoneNumberError = (unknown | {
     error?: string;
 });
