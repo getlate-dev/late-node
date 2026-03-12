@@ -3894,7 +3894,7 @@ export type GetGoogleBusinessLocationDetailsData = {
          */
         locationId?: string;
         /**
-         * Comma-separated fields to return. Available: name, title, phoneNumbers, categories, storefrontAddress, websiteUri, regularHours, specialHours, serviceArea, profile, openInfo, metadata, moreHours.
+         * Comma-separated fields to return. Available: name, title, phoneNumbers, categories, storefrontAddress, websiteUri, regularHours, specialHours, serviceArea, serviceItems, profile, openInfo, metadata, moreHours.
          */
         readMask?: string;
     };
@@ -3947,6 +3947,46 @@ export type GetGoogleBusinessLocationDetailsResponse = ({
         primaryPhone?: string;
         additionalPhones?: Array<(string)>;
     };
+    /**
+     * Business categories (returned when readMask includes 'categories')
+     */
+    categories?: {
+        primaryCategory?: {
+            /**
+             * Category resource name
+             */
+            name?: string;
+            /**
+             * Human-readable category name
+             */
+            displayName?: string;
+        };
+        additionalCategories?: Array<{
+            name?: string;
+            displayName?: string;
+        }>;
+    };
+    /**
+     * Services offered (returned when readMask includes 'serviceItems')
+     */
+    serviceItems?: Array<{
+        structuredServiceItem?: {
+            serviceTypeId?: string;
+            description?: string;
+        };
+        freeFormServiceItem?: {
+            category?: string;
+            label?: {
+                displayName?: string;
+                languageCode?: string;
+            };
+        };
+        price?: {
+            currencyCode?: string;
+            units?: string;
+            nanos?: number;
+        };
+    }>;
 });
 
 export type GetGoogleBusinessLocationDetailsError = (ErrorResponse | {
@@ -3956,7 +3996,7 @@ export type GetGoogleBusinessLocationDetailsError = (ErrorResponse | {
 export type UpdateGoogleBusinessLocationDetailsData = {
     body: {
         /**
-         * Required. Comma-separated fields to update (e.g. 'regularHours', 'specialHours', 'profile.description')
+         * Required. Comma-separated fields to update (e.g. 'regularHours', 'specialHours', 'profile.description', 'categories', 'serviceItems'). Any valid Google Business Information API updateMask field is supported.
          */
         updateMask: string;
         regularHours?: {
@@ -3992,6 +4032,77 @@ export type UpdateGoogleBusinessLocationDetailsData = {
             primaryPhone?: string;
             additionalPhones?: Array<(string)>;
         };
+        /**
+         * Primary and additional business categories. Use updateMask='categories' to update.
+         */
+        categories?: {
+            primaryCategory?: {
+                /**
+                 * Category resource name (e.g. 'categories/gcid:laundromat'). Use Google's Categories API to look up valid IDs.
+                 */
+                name?: string;
+            };
+            additionalCategories?: Array<{
+                /**
+                 * Category resource name (e.g. 'categories/gcid:dry_cleaner')
+                 */
+                name?: string;
+            }>;
+        };
+        /**
+         * Services offered by the business. Use updateMask='serviceItems' to update.
+         */
+        serviceItems?: Array<{
+            /**
+             * A predefined service from Google's service type catalog
+             */
+            structuredServiceItem?: {
+                /**
+                 * Service type ID from Google's catalog (e.g. 'job_type_id:plumbing_drain_repair')
+                 */
+                serviceTypeId?: string;
+                /**
+                 * Optional description of the service
+                 */
+                description?: string;
+            };
+            /**
+             * A custom service not in Google's catalog
+             */
+            freeFormServiceItem?: {
+                /**
+                 * Category resource name this service belongs to (e.g. 'categories/gcid:laundromat')
+                 */
+                category?: string;
+                label?: {
+                    /**
+                     * Service name as displayed to users
+                     */
+                    displayName?: string;
+                    /**
+                     * Language code (e.g. 'en')
+                     */
+                    languageCode?: string;
+                };
+            };
+            /**
+             * Optional price for the service
+             */
+            price?: {
+                /**
+                 * ISO 4217 currency code (e.g. 'USD')
+                 */
+                currencyCode?: string;
+                /**
+                 * Whole units of the amount
+                 */
+                units?: string;
+                /**
+                 * Nano units (10^-9) of the amount
+                 */
+                nanos?: number;
+            };
+        }>;
     };
     path: {
         /**

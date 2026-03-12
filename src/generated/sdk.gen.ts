@@ -773,7 +773,7 @@ export const updateGoogleBusinessFoodMenus = <ThrowOnError extends boolean = fal
 
 /**
  * Get location details
- * Returns detailed GBP location info (hours, description, phone, website, categories). Use readMask to request specific fields.
+ * Returns detailed GBP location info (hours, description, phone, website, categories, services). Use readMask to request specific fields.
  */
 export const getGoogleBusinessLocationDetails = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetGoogleBusinessLocationDetailsData, ThrowOnError>) => {
     return (options?.client ?? client).get<GetGoogleBusinessLocationDetailsResponse, GetGoogleBusinessLocationDetailsError, ThrowOnError>({
@@ -784,7 +784,10 @@ export const getGoogleBusinessLocationDetails = <ThrowOnError extends boolean = 
 
 /**
  * Update location details
- * Updates GBP location details (hours, description, phone, website). The updateMask field is required and specifies which fields to update.
+ * Updates GBP location details. The updateMask field is required and specifies which fields to update.
+ * This endpoint proxies Google's Business Information API locations.patch, so any valid updateMask field is supported.
+ * Common fields: regularHours, specialHours, profile.description, websiteUri, phoneNumbers, categories, serviceItems.
+ *
  */
 export const updateGoogleBusinessLocationDetails = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<UpdateGoogleBusinessLocationDetailsData, ThrowOnError>) => {
     return (options?.client ?? client).put<UpdateGoogleBusinessLocationDetailsResponse, UpdateGoogleBusinessLocationDetailsError, ThrowOnError>({
