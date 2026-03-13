@@ -398,6 +398,16 @@ try {
 | `reviews.deleteInboxReviewReply()` | Delete review reply |
 | `reviews.replyToInboxReview()` | Reply to review |
 
+### Twitter Engagement
+| Method | Description |
+|--------|-------------|
+| `twitterEngagement.bookmarkPost()` | Bookmark a tweet |
+| `twitterEngagement.followUser()` | Follow a user |
+| `twitterEngagement.removeBookmark()` | Remove bookmark |
+| `twitterEngagement.retweetPost()` | Retweet a post |
+| `twitterEngagement.undoRetweet()` | Undo retweet |
+| `twitterEngagement.unfollowUser()` | Unfollow a user |
+
 ### Validate
 | Method | Description |
 |--------|-------------|

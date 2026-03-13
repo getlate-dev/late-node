@@ -1,6 +1,7 @@
 import {
   client,
   addWhatsAppBroadcastRecipients,
+  bookmarkPost,
   bulkDeleteWhatsAppContacts,
   bulkUpdateWhatsAppContacts,
   bulkUploadPosts,
@@ -47,6 +48,7 @@ import {
   downloadTwitterMedia,
   downloadYouTubeVideo,
   editInboxMessage,
+  followUser,
   getAccountHealth,
   getAllAccountsHealth,
   getAnalytics,
@@ -130,11 +132,13 @@ import {
   previewQueue,
   purchaseWhatsAppPhoneNumber,
   releaseWhatsAppPhoneNumber,
+  removeBookmark,
   removeWhatsAppBroadcastRecipients,
   renameWhatsAppGroup,
   replyToInboxPost,
   replyToInboxReview,
   retryPost,
+  retweetPost,
   scheduleWhatsAppBroadcast,
   searchReddit,
   selectFacebookPage,
@@ -150,6 +154,8 @@ import {
   setMessengerMenu,
   setTelegramCommands,
   testWebhook,
+  undoRetweet,
+  unfollowUser,
   unhideInboxComment,
   unlikeInboxComment,
   unpublishPost,
@@ -541,6 +547,18 @@ export class Late {
     likeInboxComment: likeInboxComment,
     unlikeInboxComment: unlikeInboxComment,
     sendPrivateReplyToComment: sendPrivateReplyToComment,
+  };
+
+  /**
+   * twitterengagement API
+   */
+  twitterengagement = {
+    retweetPost: retweetPost,
+    undoRetweet: undoRetweet,
+    bookmarkPost: bookmarkPost,
+    removeBookmark: removeBookmark,
+    followUser: followUser,
+    unfollowUser: unfollowUser,
   };
 
   /**

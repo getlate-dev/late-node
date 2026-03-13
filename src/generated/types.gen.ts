@@ -6982,6 +6982,145 @@ export type SendPrivateReplyToCommentError = ({
     error?: string;
 } | unknown);
 
+export type RetweetPostData = {
+    body: {
+        /**
+         * The social account ID
+         */
+        accountId: string;
+        /**
+         * The ID of the tweet to retweet
+         */
+        tweetId: string;
+    };
+};
+
+export type RetweetPostResponse = ({
+    status?: string;
+    tweetId?: string;
+    retweeted?: boolean;
+    platform?: string;
+});
+
+export type RetweetPostError = (unknown | {
+    error?: string;
+});
+
+export type UndoRetweetData = {
+    query: {
+        accountId: string;
+        /**
+         * The ID of the original tweet to un-retweet
+         */
+        tweetId: string;
+    };
+};
+
+export type UndoRetweetResponse = ({
+    status?: string;
+    tweetId?: string;
+    retweeted?: boolean;
+    platform?: string;
+});
+
+export type UndoRetweetError = (unknown | {
+    error?: string;
+});
+
+export type BookmarkPostData = {
+    body: {
+        /**
+         * The social account ID
+         */
+        accountId: string;
+        /**
+         * The ID of the tweet to bookmark
+         */
+        tweetId: string;
+    };
+};
+
+export type BookmarkPostResponse = ({
+    status?: string;
+    tweetId?: string;
+    bookmarked?: boolean;
+    platform?: string;
+});
+
+export type BookmarkPostError = (unknown | {
+    error?: string;
+});
+
+export type RemoveBookmarkData = {
+    query: {
+        accountId: string;
+        /**
+         * The ID of the tweet to unbookmark
+         */
+        tweetId: string;
+    };
+};
+
+export type RemoveBookmarkResponse = ({
+    status?: string;
+    tweetId?: string;
+    bookmarked?: boolean;
+    platform?: string;
+});
+
+export type RemoveBookmarkError = (unknown | {
+    error?: string;
+});
+
+export type FollowUserData = {
+    body: {
+        /**
+         * The social account ID
+         */
+        accountId: string;
+        /**
+         * The Twitter ID of the user to follow
+         */
+        targetUserId: string;
+    };
+};
+
+export type FollowUserResponse = ({
+    status?: string;
+    targetUserId?: string;
+    following?: boolean;
+    /**
+     * True if the target account is protected and a follow request was sent
+     */
+    pending_follow?: boolean;
+    platform?: string;
+});
+
+export type FollowUserError = (unknown | {
+    error?: string;
+});
+
+export type UnfollowUserData = {
+    query: {
+        accountId: string;
+        /**
+         * The Twitter ID of the user to unfollow
+         */
+        targetUserId: string;
+    };
+};
+
+export type UnfollowUserResponse = ({
+    status?: string;
+    targetUserId?: string;
+    following?: boolean;
+    platform?: string;
+});
+
+export type UnfollowUserError = (unknown | {
+    error?: string;
+});
+
 export type ListInboxReviewsData = {
     query?: {
         /**
