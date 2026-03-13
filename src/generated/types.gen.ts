@@ -98,8 +98,21 @@ export type AnalyticsListResponse = {
         platformPostUrl?: string;
         isExternal?: boolean;
         thumbnailUrl?: string;
-        mediaType?: 'image' | 'video' | 'gif' | 'document';
-        mediaItems?: Array<MediaItem>;
+        mediaType?: 'image' | 'video' | 'gif' | 'document' | 'carousel' | 'text';
+        /**
+         * All media items for this post. Carousel posts contain one entry per slide.
+         */
+        mediaItems?: Array<{
+            type?: 'image' | 'video';
+            /**
+             * Direct URL to the media
+             */
+            url?: string;
+            /**
+             * Thumbnail URL (same as url for images)
+             */
+            thumbnail?: string;
+        }>;
     }>;
     pagination?: Pagination;
     /**
@@ -130,7 +143,25 @@ export type AnalyticsSinglePostResponse = {
     platform?: string;
     platformPostUrl?: string;
     isExternal?: boolean;
+    thumbnailUrl?: (string) | null;
+    mediaType?: ('image' | 'video' | 'carousel' | 'text') | null;
+    /**
+     * All media items for this post. Carousel posts contain one entry per slide.
+     */
+    mediaItems?: Array<{
+        type?: 'image' | 'video';
+        /**
+         * Direct URL to the media
+         */
+        url?: string;
+        /**
+         * Thumbnail URL (same as url for images)
+         */
+        thumbnail?: string;
+    }>;
 };
+
+export type mediaType = 'image' | 'video' | 'carousel' | 'text';
 
 export type ApiKey = {
     id?: string;
@@ -1368,7 +1399,7 @@ export type commercialContentType = 'none' | 'brand_organic' | 'brand_content';
 /**
  * Optional override. Defaults based on provided media items.
  */
-export type mediaType = 'video' | 'photo';
+export type mediaType2 = 'video' | 'photo';
 
 export type TranscriptResponse = {
     transcript?: string;
