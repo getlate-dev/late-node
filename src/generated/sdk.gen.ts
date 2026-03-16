@@ -196,7 +196,8 @@ export const validateSubreddit = <ThrowOnError extends boolean = false>(options:
 /**
  * Get post analytics
  * Returns analytics for posts. With postId, returns a single post. Without it, returns a paginated list with overview stats.
- * Accepts both Late Post IDs and External Post IDs (auto-resolved). Data is cached and refreshed at most once per hour. For follower stats, use /v1/accounts/follower-stats.
+ * Accepts both Late Post IDs and External Post IDs (auto-resolved). fromDate defaults to 90 days ago if omitted, max range 366 days.
+ * Single post lookups may return 202 (sync pending) or 424 (all platforms failed). For follower stats, use /v1/accounts/follower-stats.
  *
  */
 export const getAnalytics = <ThrowOnError extends boolean = false>(options?: OptionsLegacyParser<GetAnalyticsData, ThrowOnError>) => {

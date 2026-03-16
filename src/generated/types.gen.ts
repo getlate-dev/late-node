@@ -88,6 +88,10 @@ export type AnalyticsListResponse = {
     overview?: AnalyticsOverview;
     posts?: Array<{
         _id?: string;
+        /**
+         * Original Late post ID if scheduled via Late
+         */
+        latePostId?: (string) | null;
         content?: string;
         scheduledFor?: string;
         publishedAt?: string;
@@ -97,6 +101,7 @@ export type AnalyticsListResponse = {
         platform?: string;
         platformPostUrl?: string;
         isExternal?: boolean;
+        profileId?: (string) | null;
         thumbnailUrl?: string;
         mediaType?: 'image' | 'video' | 'gif' | 'document' | 'carousel' | 'text';
         /**
@@ -129,20 +134,45 @@ export type AnalyticsOverview = {
     totalPosts?: number;
     publishedPosts?: number;
     scheduledPosts?: number;
-    lastSync?: string;
+    lastSync?: (string) | null;
+    dataStaleness?: {
+        /**
+         * Number of accounts with stale analytics data
+         */
+        staleAccountCount?: number;
+        /**
+         * Whether a background sync was triggered for stale accounts
+         */
+        syncTriggered?: boolean;
+    };
 };
 
 export type AnalyticsSinglePostResponse = {
     postId?: string;
-    status?: string;
+    /**
+     * Original Late post ID if scheduled via Late
+     */
+    latePostId?: (string) | null;
+    /**
+     * Overall post status. "partial" when some platforms published and others failed.
+     */
+    status?: 'published' | 'failed' | 'partial';
     content?: string;
     scheduledFor?: string;
-    publishedAt?: string;
+    publishedAt?: (string) | null;
     analytics?: PostAnalytics;
     platformAnalytics?: Array<PlatformAnalytics>;
     platform?: string;
-    platformPostUrl?: string;
+    platformPostUrl?: (string) | null;
     isExternal?: boolean;
+    /**
+     * Overall sync state across all platforms
+     */
+    syncStatus?: 'synced' | 'pending' | 'partial' | 'unavailable';
+    /**
+     * Human-readable status message for pending, partial, or failed states
+     */
+    message?: (string) | null;
     thumbnailUrl?: (string) | null;
     mediaType?: ('image' | 'video' | 'carousel' | 'text') | null;
     /**
@@ -160,6 +190,16 @@ export type AnalyticsSinglePostResponse = {
         thumbnail?: string;
     }>;
 };
+
+/**
+ * Overall post status. "partial" when some platforms published and others failed.
+ */
+export type status = 'published' | 'failed' | 'partial';
+
+/**
+ * Overall sync state across all platforms
+ */
+export type syncStatus = 'synced' | 'pending' | 'partial' | 'unavailable';
 
 export type mediaType = 'image' | 'video' | 'carousel' | 'text';
 
@@ -491,7 +531,7 @@ export type HashtagInfo = {
     postCount?: number;
 };
 
-export type status = 'safe' | 'banned' | 'restricted' | 'unknown';
+export type status2 = 'safe' | 'banned' | 'restricted' | 'unknown';
 
 /**
  * Feed aspect ratio 0.8-1.91, carousels up to 10 items, stories require media (no captions). User tag coordinates 0.0-1.0 from top-left. Images over 8 MB and videos over platform limits are auto-compressed.
@@ -770,22 +810,27 @@ export type PinterestPlatformData = {
 
 export type PlatformAnalytics = {
     platform?: string;
-    status?: string;
+    status?: 'published' | 'failed';
     accountId?: string;
-    accountUsername?: string;
-    analytics?: PostAnalytics;
-    accountMetrics?: {
-        /**
-         * Followers/fans count (e.g., Instagram, Facebook Pages, Twitter)
-         */
-        followers?: (number) | null;
-        /**
-         * Subscribers count (e.g., YouTube)
-         */
-        subscribers?: (number) | null;
-        lastUpdated?: (string) | null;
-    } | null;
+    accountUsername?: (string) | null;
+    analytics?: (PostAnalytics) | null;
+    /**
+     * Sync state of analytics for this platform
+     */
+    syncStatus?: 'synced' | 'pending' | 'unavailable';
+    platformPostUrl?: (string) | null;
+    /**
+     * Error details when status is failed
+     */
+    errorMessage?: (string) | null;
 };
+
+export type status3 = 'published' | 'failed';
+
+/**
+ * Sync state of analytics for this platform
+ */
+export type syncStatus2 = 'synced' | 'pending' | 'unavailable';
 
 export type PlatformTarget = {
     /**
@@ -887,7 +932,7 @@ export type Post = {
     updatedAt?: string;
 };
 
-export type status2 = 'draft' | 'scheduled' | 'publishing' | 'published' | 'failed' | 'partial';
+export type status4 = 'draft' | 'scheduled' | 'publishing' | 'published' | 'failed' | 'partial';
 
 export type visibility = 'public' | 'private' | 'unlisted';
 
@@ -1003,7 +1048,7 @@ export type PostLog = {
  */
 export type action = 'publish' | 'retry' | 'media_upload' | 'rate_limit_pause' | 'token_refresh' | 'cancelled';
 
-export type status3 = 'success' | 'failed' | 'pending' | 'skipped';
+export type status5 = 'success' | 'failed' | 'pending' | 'skipped';
 
 export type PostRetryResponse = {
     message?: string;
@@ -1453,7 +1498,7 @@ export type UploadTokenResponse = {
     status?: 'pending' | 'completed' | 'expired';
 };
 
-export type status4 = 'pending' | 'completed' | 'expired';
+export type status6 = 'pending' | 'completed' | 'expired';
 
 export type UploadTokenStatusResponse = {
     token?: string;
@@ -1592,7 +1637,7 @@ export type WebhookLog = {
 
 export type event = 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'comment.received' | 'webhook.test';
 
-export type status5 = 'success' | 'failed';
+export type status7 = 'success' | 'failed';
 
 /**
  * Webhook payload for account connected events
@@ -1838,7 +1883,7 @@ export type platform3 = 'instagram' | 'facebook' | 'telegram' | 'bluesky' | 'red
 
 export type direction = 'incoming';
 
-export type status6 = 'active' | 'archived';
+export type status8 = 'active' | 'archived';
 
 /**
  * Webhook payload for post events
@@ -2310,7 +2355,7 @@ export type ValidateSubredditError = unknown;
 export type GetAnalyticsData = {
     query?: {
         /**
-         * Inclusive lower bound
+         * Inclusive lower bound (YYYY-MM-DD). Defaults to 90 days ago if omitted. Max range is 366 days.
          */
         fromDate?: string;
         /**
@@ -2338,28 +2383,36 @@ export type GetAnalyticsData = {
          */
         profileId?: string;
         /**
-         * Sort by date or engagement
+         * Sort by date, engagement, or a specific metric
          */
-        sortBy?: 'date' | 'engagement';
+        sortBy?: 'date' | 'engagement' | 'impressions' | 'reach' | 'likes' | 'comments' | 'shares' | 'saves' | 'clicks' | 'views';
         /**
          * Filter by post source: late (posted via Late API), external (synced from platform), all (default)
          */
         source?: 'all' | 'late' | 'external';
         /**
-         * Inclusive upper bound
+         * Inclusive upper bound (YYYY-MM-DD). Defaults to today if omitted.
          */
         toDate?: string;
     };
 };
 
-export type GetAnalyticsResponse = ((AnalyticsSinglePostResponse | AnalyticsListResponse));
+export type GetAnalyticsResponse = ((AnalyticsSinglePostResponse | AnalyticsListResponse) | AnalyticsSinglePostResponse);
 
 export type GetAnalyticsError = ({
+    error?: string;
+    /**
+     * Detailed validation errors
+     */
+    details?: {
+        [key: string]: unknown;
+    };
+} | {
     error?: string;
 } | {
     error?: string;
     code?: string;
-} | ErrorResponse);
+} | AnalyticsSinglePostResponse | ErrorResponse);
 
 export type GetYouTubeDailyViewsData = {
     query: {
