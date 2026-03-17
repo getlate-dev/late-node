@@ -1,13 +1,13 @@
 <p align="center">
-  <a href="https://getlate.dev">
-    <img src="https://getlate.dev/images/icon_light.svg" alt="Late" width="60">
+  <a href="https://zernio.com">
+    <img src="https://zernio.com/images/icon_light.svg" alt="Zernio" width="60">
   </a>
 </p>
 
-<h1 align="center">Late Node.js SDK</h1>
+<h1 align="center">Zernio Node.js SDK</h1>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/@getlatedev/node"><img src="https://img.shields.io/npm/v/@getlatedev/node.svg" alt="npm version"></a>
+  <a href="https://www.npmjs.com/package/@zernio/node"><img src="https://img.shields.io/npm/v/@zernio/node.svg" alt="npm version"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg" alt="License"></a>
 </p>
 
@@ -15,25 +15,25 @@
   <strong>One API to post everywhere. 14 platforms, zero headaches.</strong>
 </p>
 
-The official Node.js SDK for the [Late API](https://getlate.dev) — schedule and publish social media posts across Instagram, TikTok, YouTube, LinkedIn, X/Twitter, Facebook, Pinterest, Threads, Bluesky, Reddit, Snapchat, Telegram, WhatsApp, and Google Business Profile with a single integration.
+The official Node.js SDK for the [Zernio API](https://zernio.com) — schedule and publish social media posts across Instagram, TikTok, YouTube, LinkedIn, X/Twitter, Facebook, Pinterest, Threads, Bluesky, Reddit, Snapchat, Telegram, WhatsApp, and Google Business Profile with a single integration.
 
 ## Installation
 
 ```bash
-npm install @getlatedev/node
+npm install @zernio/node
 ```
 
 ## Quick Start
 
 ```typescript
-import Late from '@getlatedev/node';
+import Late from '@zernio/node';
 
 const late = new Late(); // Uses LATE_API_KEY env var
 
 // Publish to multiple platforms with one call
 const { data: post } = await late.posts.createPost({
   body: {
-    content: 'Hello world from Late!',
+    content: 'Hello world from Zernio!',
     platforms: [
       { platform: 'twitter', accountId: 'acc_xxx' },
       { platform: 'linkedin', accountId: 'acc_yyy' },
@@ -51,7 +51,7 @@ console.log(`Published to ${post.platforms.length} platforms!`);
 ```typescript
 const late = new Late({
   apiKey: 'your-api-key', // Defaults to process.env['LATE_API_KEY']
-  baseURL: 'https://getlate.dev/api',
+  baseURL: 'https://zernio.com/api',
   timeout: 60000,
 });
 ```
@@ -149,7 +149,7 @@ for (const account of data.accounts) {
 ## Error Handling
 
 ```typescript
-import Late, { LateApiError, RateLimitError, ValidationError } from '@getlatedev/node';
+import Late, { LateApiError, RateLimitError, ValidationError } from '@zernio/node';
 
 try {
   await late.posts.createPost({ body: { /* ... */ } });
@@ -468,13 +468,13 @@ try {
 ## Requirements
 
 - Node.js 18+
-- [Late API key](https://getlate.dev) (free tier available)
+- [Zernio API key](https://zernio.com) (free tier available)
 
 ## Links
 
-- [Documentation](https://docs.getlate.dev)
-- [Dashboard](https://getlate.dev/dashboard)
-- [Changelog](https://docs.getlate.dev/changelog)
+- [Documentation](https://docs.zernio.com)
+- [Dashboard](https://zernio.com/dashboard)
+- [Changelog](https://docs.zernio.com/changelog)
 
 ## License
 
