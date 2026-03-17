@@ -210,11 +210,11 @@ export interface ClientOptions {
   defaultHeaders?: Record<string, string>;
 }
 /**
- * API Client for the Late API.
+ * API Client for the Zernio API.
  *
  * @example
  * ```typescript
- * import Late from '@getlatedev/node';
+ * import Late from '@zernio/node';
  *
  * const late = new Late({
  *   apiKey: process.env['LATE_API_KEY'], // This is the default and can be omitted
@@ -223,7 +223,7 @@ export interface ClientOptions {
  * async function main() {
  *   const post = await late.posts.create({
  *     body: {
- *       content: 'Hello from the Late SDK!',
+ *       content: 'Hello from the Zernio SDK!',
  *       platforms: [{ platform: 'twitter', accountId: 'acc_123' }],
  *       publishNow: true,
  *     },
