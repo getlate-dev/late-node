@@ -34,7 +34,7 @@ jobs:
 
       - name: Fetch latest OpenAPI spec
         run: |
-          curl -f -o openapi.yaml https://getlate.dev/openapi.yaml
+          curl -f -o openapi.yaml https://zernio.com/openapi.yaml
           echo "Fetched OpenAPI spec:"
           head -20 openapi.yaml
 
