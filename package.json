@@ -55,15 +55,15 @@
     "snapchat",
     "telegram"
   ],
-  "author": "Late <support@getlate.dev>",
+  "author": "Late <support@zernio.com>",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/getlatedev/late-node.git"
+    "url": "git+https://github.com/zernio-dev/zernio-node.git"
   },
-  "homepage": "https://getlate.dev/docs/api",
+  "homepage": "https://zernio.com/docs/api",
   "bugs": {
-    "url": "https://github.com/getlatedev/late-node/issues"
+    "url": "https://github.com/zernio-dev/zernio-node/issues"
   },
   "engines": {
     "node": ">=18"

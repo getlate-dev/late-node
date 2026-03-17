@@ -19,7 +19,7 @@ describe('Late Client', () => {
 
   it('should use default base URL', () => {
     const client = new Late({ apiKey: 'test_key' });
-    expect(client.baseURL).toBe('https://getlate.dev/api');
+    expect(client.baseURL).toBe('https://zernio.com/api');
   });
 
   it('should allow custom base URL', () => {

@@ -194,7 +194,7 @@ export interface ClientOptions {
 
   /**
    * Override the default base URL for the API.
-   * @default "https://getlate.dev/api"
+   * @default "https://zernio.com/api"
    */
   baseURL?: string | null | undefined;
 
@@ -635,7 +635,7 @@ export class Late {
     }
 
     this.apiKey = apiKey;
-    this.baseURL = options.baseURL ?? 'https://getlate.dev/api';
+    this.baseURL = options.baseURL ?? 'https://zernio.com/api';
     this._options = options;
 
     // Configure the generated client
