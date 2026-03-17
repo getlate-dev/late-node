@@ -715,7 +715,7 @@ export type LinkedInPlatformData = {
 };
 
 /**
- * Media referenced in posts. URLs must be publicly reachable over HTTPS. Use POST /v1/media/presign for uploads up to 5GB. Late auto-compresses images and videos that exceed platform limits (videos over 200 MB may not be compressed).
+ * Media referenced in posts. URLs must be publicly reachable over HTTPS. Use POST /v1/media/presign for uploads up to 5GB. Zernio auto-compresses images and videos that exceed platform limits (videos over 200 MB may not be compressed).
  */
 export type MediaItem = {
     type?: 'image' | 'video' | 'gif' | 'document';
@@ -872,22 +872,22 @@ export type PlatformTarget = {
      */
     errorMessage?: string;
     /**
-     * Error category for programmatic handling: auth_expired (token expired/revoked), user_content (wrong format/too long), user_abuse (rate limits/spam), account_issue (config problems), platform_rejected (policy violation), platform_error (5xx/maintenance), system_error (Late infra), unknown
+     * Error category for programmatic handling: auth_expired (token expired/revoked), user_content (wrong format/too long), user_abuse (rate limits/spam), account_issue (config problems), platform_rejected (policy violation), platform_error (5xx/maintenance), system_error (Zernio infra), unknown
      */
     errorCategory?: 'auth_expired' | 'user_content' | 'user_abuse' | 'account_issue' | 'platform_rejected' | 'platform_error' | 'system_error' | 'unknown';
     /**
-     * Who caused the error: user (fix content/reconnect), platform (outage/API change), system (Late issue, rare)
+     * Who caused the error: user (fix content/reconnect), platform (outage/API change), system (Zernio issue, rare)
      */
     errorSource?: 'user' | 'platform' | 'system';
 };
 
 /**
- * Error category for programmatic handling: auth_expired (token expired/revoked), user_content (wrong format/too long), user_abuse (rate limits/spam), account_issue (config problems), platform_rejected (policy violation), platform_error (5xx/maintenance), system_error (Late infra), unknown
+ * Error category for programmatic handling: auth_expired (token expired/revoked), user_content (wrong format/too long), user_abuse (rate limits/spam), account_issue (config problems), platform_rejected (policy violation), platform_error (5xx/maintenance), system_error (Zernio infra), unknown
  */
 export type errorCategory = 'auth_expired' | 'user_content' | 'user_abuse' | 'account_issue' | 'platform_rejected' | 'platform_error' | 'system_error' | 'unknown';
 
 /**
- * Who caused the error: user (fix content/reconnect), platform (outage/API change), system (Late issue, rare)
+ * Who caused the error: user (fix content/reconnect), platform (outage/API change), system (Zernio issue, rare)
  */
 export type errorSource = 'user' | 'platform' | 'system';
 
@@ -2375,7 +2375,7 @@ export type GetAnalyticsData = {
          */
         platform?: string;
         /**
-         * Returns analytics for a single post. Accepts both Late Post IDs and External Post IDs. Late IDs are auto-resolved to External Post analytics.
+         * Returns analytics for a single post. Accepts both Zernio Post IDs and External Post IDs. Zernio IDs are auto-resolved to External Post analytics.
          */
         postId?: string;
         /**
@@ -2387,7 +2387,7 @@ export type GetAnalyticsData = {
          */
         sortBy?: 'date' | 'engagement' | 'impressions' | 'reach' | 'likes' | 'comments' | 'shares' | 'saves' | 'clicks' | 'views';
         /**
-         * Filter by post source: late (posted via Late API), external (synced from platform), all (default)
+         * Filter by post source: late (posted via Zernio API), external (synced from platform), all (default)
          */
         source?: 'all' | 'late' | 'external';
         /**
@@ -2417,7 +2417,7 @@ export type GetAnalyticsError = ({
 export type GetYouTubeDailyViewsData = {
     query: {
         /**
-         * The Late account ID for the YouTube account
+         * The Zernio account ID for the YouTube account
          */
         accountId: string;
         /**
@@ -2462,7 +2462,7 @@ export type GetDailyMetricsData = {
          */
         profileId?: string;
         /**
-         * Filter by post origin. "late" for posts published via Late, "external" for posts imported from platforms.
+         * Filter by post origin. "late" for posts published via Zernio, "external" for posts imported from platforms.
          */
         source?: 'all' | 'late' | 'external';
         /**
@@ -2522,7 +2522,7 @@ export type GetBestTimeToPostData = {
          */
         profileId?: string;
         /**
-         * Filter by post origin. "late" for posts published via Late, "external" for posts imported from platforms.
+         * Filter by post origin. "late" for posts published via Zernio, "external" for posts imported from platforms.
          */
         source?: 'all' | 'late' | 'external';
     };
@@ -2567,7 +2567,7 @@ export type GetContentDecayData = {
          */
         profileId?: string;
         /**
-         * Filter by post origin. "late" for posts published via Late, "external" for posts imported from platforms.
+         * Filter by post origin. "late" for posts published via Zernio, "external" for posts imported from platforms.
          */
         source?: 'all' | 'late' | 'external';
     };
@@ -2612,7 +2612,7 @@ export type GetPostingFrequencyData = {
          */
         profileId?: string;
         /**
-         * Filter by post origin. "late" for posts published via Late, "external" for posts imported from platforms.
+         * Filter by post origin. "late" for posts published via Zernio, "external" for posts imported from platforms.
          */
         source?: 'all' | 'late' | 'external';
     };
@@ -2654,7 +2654,7 @@ export type GetPostTimelineData = {
          */
         fromDate?: string;
         /**
-         * The post to fetch timeline for. Accepts an ExternalPost ID, a platformPostId, or a Late Post ID.
+         * The post to fetch timeline for. Accepts an ExternalPost ID, a platformPostId, or a Zernio Post ID.
          *
          */
         postId: string;
@@ -3565,11 +3565,11 @@ export type GetConnectUrlData = {
     };
     query: {
         /**
-         * When true, the user is redirected to your redirect_url with raw OAuth data (code, state) instead of Late's default account selection UI. Use this to build a custom connect experience.
+         * When true, the user is redirected to your redirect_url with raw OAuth data (code, state) instead of Zernio's default account selection UI. Use this to build a custom connect experience.
          */
         headless?: boolean;
         /**
-         * Your Late profile ID (get from /v1/profiles)
+         * Your Zernio profile ID (get from /v1/profiles)
          */
         profileId: string;
         /**
@@ -3823,7 +3823,7 @@ export type SelectGoogleBusinessLocationError = (unknown | {
 export type GetGoogleBusinessReviewsData = {
     path: {
         /**
-         * The Late account ID (from /v1/accounts)
+         * The Zernio account ID (from /v1/accounts)
          */
         accountId: string;
     };
@@ -3904,7 +3904,7 @@ export type GetGoogleBusinessReviewsError = (ErrorResponse | {
 export type GetGoogleBusinessFoodMenusData = {
     path: {
         /**
-         * The Late account ID (from /v1/accounts)
+         * The Zernio account ID (from /v1/accounts)
          */
         accountId: string;
     };
@@ -3944,7 +3944,7 @@ export type UpdateGoogleBusinessFoodMenusData = {
     };
     path: {
         /**
-         * The Late account ID (from /v1/accounts)
+         * The Zernio account ID (from /v1/accounts)
          */
         accountId: string;
     };
@@ -3971,7 +3971,7 @@ export type UpdateGoogleBusinessFoodMenusError = (ErrorResponse | {
 export type GetGoogleBusinessLocationDetailsData = {
     path: {
         /**
-         * The Late account ID (from /v1/accounts)
+         * The Zernio account ID (from /v1/accounts)
          */
         accountId: string;
     };
@@ -4193,7 +4193,7 @@ export type UpdateGoogleBusinessLocationDetailsData = {
     };
     path: {
         /**
-         * The Late account ID (from /v1/accounts)
+         * The Zernio account ID (from /v1/accounts)
          */
         accountId: string;
     };
@@ -4504,7 +4504,7 @@ export type GetPendingOAuthDataResponse = ({
      */
     platform?: string;
     /**
-     * The Late profile ID
+     * The Zernio profile ID
      */
     profileId?: string;
     /**
@@ -4640,7 +4640,7 @@ export type ListPinterestBoardsForSelectionData = {
     };
     query: {
         /**
-         * Your Late profile ID
+         * Your Zernio profile ID
          */
         profileId: string;
         /**
@@ -4678,7 +4678,7 @@ export type ListPinterestBoardsForSelectionError = (unknown | {
 export type SelectPinterestBoardData = {
     body: {
         /**
-         * Your Late profile ID
+         * Your Zernio profile ID
          */
         profileId: string;
         /**
@@ -4747,7 +4747,7 @@ export type ListSnapchatProfilesData = {
     };
     query: {
         /**
-         * Your Late profile ID
+         * Your Zernio profile ID
          */
         profileId: string;
         /**
@@ -4789,7 +4789,7 @@ export type ListSnapchatProfilesError = (unknown | {
 export type SelectSnapchatProfileData = {
     body: {
         /**
-         * Your Late profile ID
+         * Your Zernio profile ID
          */
         profileId: string;
         /**
@@ -6714,7 +6714,7 @@ export type ListInboxCommentsError = ({
 export type GetInboxPostCommentsData = {
     path: {
         /**
-         * Late post ID or platform-specific post ID. Late IDs are auto-resolved. LinkedIn third-party posts accept full activity URN or numeric ID.
+         * Zernio post ID or platform-specific post ID. Zernio IDs are auto-resolved. LinkedIn third-party posts accept full activity URN or numeric ID.
          */
         postId: string;
     };
@@ -6847,7 +6847,7 @@ export type ReplyToInboxPostData = {
     };
     path: {
         /**
-         * Late post ID or platform-specific post ID. LinkedIn third-party posts accept full activity URN or numeric ID.
+         * Zernio post ID or platform-specific post ID. LinkedIn third-party posts accept full activity URN or numeric ID.
          */
         postId: string;
     };
@@ -6872,7 +6872,7 @@ export type ReplyToInboxPostError = ({
 export type DeleteInboxCommentData = {
     path: {
         /**
-         * Late post ID or platform-specific post ID. LinkedIn third-party posts accept full activity URN or numeric ID.
+         * Zernio post ID or platform-specific post ID. LinkedIn third-party posts accept full activity URN or numeric ID.
          */
         postId: string;
     };

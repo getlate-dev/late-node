@@ -196,7 +196,7 @@ export const validateSubreddit = <ThrowOnError extends boolean = false>(options:
 /**
  * Get post analytics
  * Returns analytics for posts. With postId, returns a single post. Without it, returns a paginated list with overview stats.
- * Accepts both Late Post IDs and External Post IDs (auto-resolved). fromDate defaults to 90 days ago if omitted, max range 366 days.
+ * Accepts both Zernio Post IDs and External Post IDs (auto-resolved). fromDate defaults to 90 days ago if omitted, max range 366 days.
  * Single post lookups may return 202 (sync pending) or 424 (all platforms failed). For follower stats, use /v1/accounts/follower-stats.
  *
  */
@@ -282,7 +282,7 @@ export const getPostingFrequency = <ThrowOnError extends boolean = false>(option
  * Get post analytics timeline
  * Returns a daily timeline of analytics metrics for a specific post, showing how impressions, likes,
  * and other metrics evolved day-by-day since publishing. Each row represents one day of data per platform.
- * For multi-platform Late posts, returns separate rows for each platform. Requires the Analytics add-on.
+ * For multi-platform Zernio posts, returns separate rows for each platform. Requires the Analytics add-on.
  *
  */
 export const getPostTimeline = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetPostTimelineData, ThrowOnError>) => {
@@ -431,7 +431,7 @@ export const updatePost = <ThrowOnError extends boolean = false>(options: Option
 
 /**
  * Delete post
- * Delete a draft or scheduled post from Late. Published posts cannot be deleted; use the Unpublish endpoint instead. Upload quota is automatically refunded.
+ * Delete a draft or scheduled post from Zernio. Published posts cannot be deleted; use the Unpublish endpoint instead. Upload quota is automatically refunded.
  */
 export const deletePost = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<DeletePostData, ThrowOnError>) => {
     return (options?.client ?? client).delete<DeletePostResponse, DeletePostError, ThrowOnError>({
@@ -469,7 +469,7 @@ export const retryPost = <ThrowOnError extends boolean = false>(options: Options
 
 /**
  * Unpublish post
- * Deletes a published post from the specified platform. The post record in Late is kept but its status is updated to cancelled.
+ * Deletes a published post from the specified platform. The post record in Zernio is kept but its status is updated to cancelled.
  * Not supported on Instagram, TikTok, or Snapchat. Threaded posts delete all items. YouTube deletion is permanent.
  *
  */
@@ -674,7 +674,7 @@ export const createInviteToken = <ThrowOnError extends boolean = false>(options:
 /**
  * Get OAuth connect URL
  * Initiate an OAuth connection flow. Returns an authUrl to redirect the user to.
- * Standard flow: Late hosts the selection UI, then redirects to your redirect_url. Headless mode (headless=true): user is redirected to your redirect_url with OAuth data for custom UI. Use the platform-specific selection endpoints to complete.
+ * Standard flow: Zernio hosts the selection UI, then redirects to your redirect_url. Headless mode (headless=true): user is redirected to your redirect_url with OAuth data for custom UI. Use the platform-specific selection endpoints to complete.
  *
  */
 export const getConnectUrl = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetConnectUrlData, ThrowOnError>) => {
