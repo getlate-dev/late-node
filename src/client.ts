@@ -87,6 +87,7 @@ import {
   getRedditSubreddits,
   getTelegramCommands,
   getTelegramConnectStatus,
+  getTikTokCreatorInfo,
   getUsageStats,
   getUser,
   getWebhookLogs,
@@ -363,6 +364,7 @@ export class Zernio {
     deleteAccount: deleteAccount,
     getAllAccountsHealth: getAllAccountsHealth,
     getAccountHealth: getAccountHealth,
+    getTikTokCreatorInfo: getTikTokCreatorInfo,
     getGoogleBusinessReviews: getGoogleBusinessReviews,
     getLinkedInMentions: getLinkedInMentions,
   };

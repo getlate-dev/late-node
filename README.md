@@ -187,6 +187,7 @@ try {
 | `accounts.getFollowerStats()` | Get follower stats |
 | `accounts.getGoogleBusinessReviews()` | Get reviews |
 | `accounts.getLinkedInMentions()` | Resolve LinkedIn mention |
+| `accounts.getTikTokCreatorInfo()` | Get TikTok creator info |
 | `accounts.updateAccount()` | Update account |
 | `accounts.deleteAccount()` | Disconnect account |
 

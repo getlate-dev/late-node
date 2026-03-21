@@ -65,6 +65,11 @@ describe('Endpoint Methods', () => {
       expect(client.accounts.getAccountHealth).toBeTypeOf('function');
     });
 
+    it('should have getTikTokCreatorInfo method', () => {
+      expect(client.accounts.getTikTokCreatorInfo).toBeDefined();
+      expect(client.accounts.getTikTokCreatorInfo).toBeTypeOf('function');
+    });
+
     it('should have getGoogleBusinessReviews method', () => {
       expect(client.accounts.getGoogleBusinessReviews).toBeDefined();
       expect(client.accounts.getGoogleBusinessReviews).toBeTypeOf('function');

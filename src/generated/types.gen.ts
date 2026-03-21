@@ -1415,9 +1415,13 @@ export type TikTokPlatformData = {
      */
     mediaType?: 'video' | 'photo';
     /**
-     * Optional for video posts. Timestamp in milliseconds to select which frame to use as thumbnail (defaults to 1000ms/1 second).
+     * Optional for video posts. Timestamp in milliseconds to select which frame to use as thumbnail (defaults to 1000ms/1 second). Ignored when videoCoverImageUrl is provided.
      */
     videoCoverTimestampMs?: number;
+    /**
+     * Optional for video posts. URL of a custom thumbnail image (JPG, PNG, or WebP, max 20MB). The image is prepended as a 1-second still frame to the video and used as the cover. Overrides videoCoverTimestampMs when provided.
+     */
+    videoCoverImageUrl?: string;
     /**
      * Optional for photo carousels. Index of image to use as cover, 0-based (defaults to 0/first image).
      */
@@ -3475,6 +3479,79 @@ export type GetAccountHealthResponse = ({
 });
 
 export type GetAccountHealthError = ({
+    error?: string;
+});
+
+export type GetTikTokCreatorInfoData = {
+    path: {
+        /**
+         * The TikTok account ID
+         */
+        accountId: string;
+    };
+    query?: {
+        /**
+         * The media type to get creator info for (affects available interaction settings)
+         */
+        mediaType?: 'video' | 'photo';
+    };
+};
+
+export type GetTikTokCreatorInfoResponse = ({
+    creator?: {
+        /**
+         * Creator display name
+         */
+        nickname?: string;
+        /**
+         * Creator avatar URL
+         */
+        avatarUrl?: string;
+        /**
+         * Whether the creator is verified
+         */
+        isVerified?: boolean;
+        /**
+         * Whether the creator can publish more posts right now
+         */
+        canPostMore?: boolean;
+    };
+    /**
+     * Available privacy level options for this creator
+     */
+    privacyLevels?: Array<{
+        /**
+         * Privacy level value to use when creating posts (e.g. PUBLIC_TO_EVERYONE, MUTUAL_FOLLOW_FRIENDS, FOLLOWER_OF_CREATOR, SELF_ONLY)
+         */
+        value?: string;
+        /**
+         * Human-readable label
+         */
+        label?: string;
+    }>;
+    postingLimits?: {
+        /**
+         * Maximum video duration in seconds
+         */
+        maxVideoDurationSec?: number;
+        /**
+         * Available interaction toggles (comment, duet, stitch) and their defaults
+         */
+        interactionSettings?: {
+            [key: string]: unknown;
+        };
+    };
+    /**
+     * Available commercial content disclosure options
+     */
+    commercialContentTypes?: Array<{
+        value?: string;
+        label?: string;
+        requires?: Array<(string)>;
+    }>;
+});
+
+export type GetTikTokCreatorInfoError = ({
     error?: string;
 });
 
