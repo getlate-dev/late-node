@@ -207,6 +207,8 @@ try {
 | `analytics.getBestTimeToPost()` | Get best times to post |
 | `analytics.getContentDecay()` | Get content performance decay |
 | `analytics.getDailyMetrics()` | Get daily aggregated metrics |
+| `analytics.getInstagramAccountInsights()` | Get Instagram account-level insights |
+| `analytics.getInstagramDemographics()` | Get Instagram audience demographics |
 | `analytics.getLinkedInAggregateAnalytics()` | Get LinkedIn aggregate stats |
 | `analytics.getLinkedInPostAnalytics()` | Get LinkedIn post stats |
 | `analytics.getLinkedInPostReactions()` | Get LinkedIn post reactions |

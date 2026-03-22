@@ -93,6 +93,16 @@ describe('Endpoint Methods', () => {
       expect(client.analytics.getYouTubeDailyViews).toBeTypeOf('function');
     });
 
+    it('should have getInstagramAccountInsights method', () => {
+      expect(client.analytics.getInstagramAccountInsights).toBeDefined();
+      expect(client.analytics.getInstagramAccountInsights).toBeTypeOf('function');
+    });
+
+    it('should have getInstagramDemographics method', () => {
+      expect(client.analytics.getInstagramDemographics).toBeDefined();
+      expect(client.analytics.getInstagramDemographics).toBeTypeOf('function');
+    });
+
     it('should have getDailyMetrics method', () => {
       expect(client.analytics.getDailyMetrics).toBeDefined();
       expect(client.analytics.getDailyMetrics).toBeTypeOf('function');

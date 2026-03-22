@@ -66,6 +66,8 @@ import {
   getInboxConversation,
   getInboxConversationMessages,
   getInboxPostComments,
+  getInstagramAccountInsights,
+  getInstagramDemographics,
   getInstagramIceBreakers,
   getLinkedInAggregateAnalytics,
   getLinkedInMentions,
@@ -279,6 +281,8 @@ export class Zernio {
   analytics = {
     getAnalytics: getAnalytics,
     getYouTubeDailyViews: getYouTubeDailyViews,
+    getInstagramAccountInsights: getInstagramAccountInsights,
+    getInstagramDemographics: getInstagramDemographics,
     getDailyMetrics: getDailyMetrics,
     getBestTimeToPost: getBestTimeToPost,
     getContentDecay: getContentDecay,

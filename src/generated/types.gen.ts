@@ -533,6 +533,91 @@ export type HashtagInfo = {
 
 export type status2 = 'safe' | 'banned' | 'restricted' | 'unknown';
 
+export type InstagramAccountInsightsResponse = {
+    success?: boolean;
+    /**
+     * The Zernio SocialAccount ID
+     */
+    accountId?: string;
+    platform?: string;
+    dateRange?: {
+        since?: string;
+        until?: string;
+    };
+    metricType?: 'time_series' | 'total_value';
+    /**
+     * Breakdown dimension used (only present when breakdown was requested)
+     */
+    breakdown?: string;
+    /**
+     * Object keyed by metric name. For time_series: each metric has "total" (number) and "values" (array of {date, value}).
+     * For total_value: each metric has "total" (number) and optionally "breakdowns" (array of {dimension, value}).
+     *
+     */
+    metrics?: {
+        [key: string]: {
+            /**
+             * Sum or aggregate value for the metric
+             */
+            total?: number;
+            /**
+             * Daily values (only for time_series)
+             */
+            values?: Array<{
+                date?: string;
+                value?: number;
+            }>;
+            /**
+             * Breakdown values (only for total_value with breakdown)
+             */
+            breakdowns?: Array<{
+                dimension?: string;
+                value?: number;
+            }>;
+        };
+    };
+    dataDelay?: string;
+};
+
+export type metricType = 'time_series' | 'total_value';
+
+export type InstagramDemographicsResponse = {
+    success?: boolean;
+    /**
+     * The Zernio SocialAccount ID
+     */
+    accountId?: string;
+    platform?: string;
+    metric?: 'follower_demographics' | 'engaged_audience_demographics';
+    /**
+     * The timeframe used for demographic data
+     */
+    timeframe?: 'this_week' | 'this_month';
+    /**
+     * Object keyed by breakdown dimension (age, city, country, gender)
+     */
+    demographics?: {
+        [key: string]: Array<{
+            /**
+             * The dimension value (e.g., "25-34", "US", "M")
+             */
+            dimension?: string;
+            /**
+             * Count of accounts in this dimension
+             */
+            value?: number;
+        }>;
+    };
+    note?: string;
+};
+
+export type metric = 'follower_demographics' | 'engaged_audience_demographics';
+
+/**
+ * The timeframe used for demographic data
+ */
+export type timeframe = 'this_week' | 'this_month';
+
 /**
  * Feed aspect ratio 0.8-1.91, carousels up to 10 items, stories require media (no captions). User tag coordinates 0.0-1.0 from top-left. Images over 8 MB and videos over platform limits are auto-compressed.
  */
@@ -2449,6 +2534,86 @@ export type GetYouTubeDailyViewsError = ({
 } | YouTubeScopeMissingResponse | {
     success?: boolean;
     error?: string;
+});
+
+export type GetInstagramAccountInsightsData = {
+    query: {
+        /**
+         * The Zernio SocialAccount ID for the Instagram account
+         */
+        accountId: string;
+        /**
+         * Breakdown dimension (only valid with metricType=total_value).
+         * Valid values depend on the metric: media_product_type, follow_type, follower_type, contact_button_type.
+         *
+         */
+        breakdown?: string;
+        /**
+         * Comma-separated list of metrics. Defaults to "reach,views,accounts_engaged,total_interactions".
+         * Valid metrics: reach, views, accounts_engaged, total_interactions, comments, likes, saves, shares,
+         * replies, reposts, follows_and_unfollows, profile_links_taps.
+         * Note: only "reach" supports metricType=time_series. All other metrics are total_value only.
+         *
+         */
+        metrics?: string;
+        /**
+         * "total_value" (default) returns aggregated totals and supports breakdowns.
+         * "time_series" returns daily values but only works with the "reach" metric.
+         *
+         */
+        metricType?: 'time_series' | 'total_value';
+        /**
+         * Start date (YYYY-MM-DD). Defaults to 30 days ago.
+         */
+        since?: string;
+        /**
+         * End date (YYYY-MM-DD). Defaults to today.
+         */
+        until?: string;
+    };
+};
+
+export type GetInstagramAccountInsightsResponse = (InstagramAccountInsightsResponse);
+
+export type GetInstagramAccountInsightsError = ({
+    error?: string;
+} | {
+    error?: string;
+    code?: string;
+});
+
+export type GetInstagramDemographicsData = {
+    query: {
+        /**
+         * The Zernio SocialAccount ID for the Instagram account
+         */
+        accountId: string;
+        /**
+         * Comma-separated list of demographic dimensions: age, city, country, gender.
+         * Defaults to all four if omitted.
+         *
+         */
+        breakdown?: string;
+        /**
+         * "follower_demographics" for follower audience data, or "engaged_audience_demographics" for engaged viewers.
+         *
+         */
+        metric?: 'follower_demographics' | 'engaged_audience_demographics';
+        /**
+         * Time period for demographic data. Defaults to "this_month".
+         *
+         */
+        timeframe?: 'this_week' | 'this_month';
+    };
+};
+
+export type GetInstagramDemographicsResponse = (InstagramDemographicsResponse);
+
+export type GetInstagramDemographicsError = ({
+    error?: string;
+} | {
+    error?: string;
+    code?: string;
 });
 
 export type GetDailyMetricsData = {
