@@ -9411,6 +9411,18 @@ export type CreateSequenceData = {
             template?: {
                 name?: string;
                 language?: string;
+                /**
+                 * Maps template variable positions to contact fields. Keys are position strings ("1", "2"), values are objects with field and optional customValue
+                 */
+                variableMapping?: {
+                    [key: string]: {
+                        field?: 'name' | 'phone' | 'email' | 'company' | 'custom';
+                        /**
+                         * Static value when field is "custom"
+                         */
+                        customValue?: string;
+                    };
+                };
             };
         }>;
         exitOnReply?: boolean;
