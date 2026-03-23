@@ -3126,6 +3126,9 @@ export type CreatePostData = {
             type?: 'image' | 'video' | 'gif' | 'document';
             url?: string;
         }>;
+        /**
+         * Target platforms and accounts for this post. Required for non-draft posts (returns 400 if empty). Drafts can omit platforms.
+         */
         platforms?: Array<{
             platform?: string;
             accountId?: string;
