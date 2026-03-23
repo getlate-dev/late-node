@@ -1,23 +1,33 @@
 import {
   client,
+  activateSequence,
+  addBroadcastRecipients,
   addWhatsAppBroadcastRecipients,
   bookmarkPost,
+  bulkCreateContacts,
   bulkDeleteWhatsAppContacts,
   bulkUpdateWhatsAppContacts,
   bulkUploadPosts,
+  cancelBroadcast,
   cancelWhatsAppBroadcastSchedule,
   checkInstagramHashtags,
+  clearContactFieldValue,
   completeTelegramConnect,
   connectBlueskyCredentials,
   connectWhatsAppCredentials,
   createAccountGroup,
   createApiKey,
+  createBroadcast,
+  createCommentAutomation,
+  createContact,
+  createCustomField,
   createGoogleBusinessMedia,
   createGoogleBusinessPlaceAction,
   createInviteToken,
   createPost,
   createProfile,
   createQueueSlot,
+  createSequence,
   createWebhookSettings,
   createWhatsAppBroadcast,
   createWhatsAppContact,
@@ -25,6 +35,10 @@ import {
   deleteAccount,
   deleteAccountGroup,
   deleteApiKey,
+  deleteBroadcast,
+  deleteCommentAutomation,
+  deleteContact,
+  deleteCustomField,
   deleteGoogleBusinessMedia,
   deleteGoogleBusinessPlaceAction,
   deleteInboxComment,
@@ -34,6 +48,7 @@ import {
   deletePost,
   deleteProfile,
   deleteQueueSlot,
+  deleteSequence,
   deleteTelegramCommands,
   deleteWebhookSettings,
   deleteWhatsAppBroadcast,
@@ -48,12 +63,17 @@ import {
   downloadTwitterMedia,
   downloadYouTubeVideo,
   editInboxMessage,
+  enrollContacts,
   followUser,
   getAccountHealth,
   getAllAccountsHealth,
   getAnalytics,
   getBestTimeToPost,
+  getBroadcast,
+  getCommentAutomation,
   getConnectUrl,
+  getContact,
+  getContactChannels,
   getContentDecay,
   getDailyMetrics,
   getFacebookPages,
@@ -87,6 +107,7 @@ import {
   getRedditFeed,
   getRedditFlairs,
   getRedditSubreddits,
+  getSequence,
   getTelegramCommands,
   getTelegramConnectStatus,
   getTikTokCreatorInfo,
@@ -116,7 +137,13 @@ import {
   listAccountGroups,
   listAccounts,
   listApiKeys,
+  listBroadcastRecipients,
+  listBroadcasts,
+  listCommentAutomationLogs,
+  listCommentAutomations,
   listConnectionLogs,
+  listContacts,
+  listCustomFields,
   listFacebookPages,
   listGoogleBusinessLocations,
   listGoogleBusinessMedia,
@@ -130,8 +157,11 @@ import {
   listPostsLogs,
   listProfiles,
   listQueueSlots,
+  listSequenceEnrollments,
+  listSequences,
   listSnapchatProfiles,
   listUsers,
+  pauseSequence,
   previewQueue,
   purchaseWhatsAppPhoneNumber,
   releaseWhatsAppPhoneNumber,
@@ -142,6 +172,7 @@ import {
   replyToInboxReview,
   retryPost,
   retweetPost,
+  scheduleBroadcast,
   scheduleWhatsAppBroadcast,
   searchReddit,
   selectFacebookPage,
@@ -149,21 +180,28 @@ import {
   selectLinkedInOrganization,
   selectPinterestBoard,
   selectSnapchatProfile,
+  sendBroadcast,
   sendInboxMessage,
   sendPrivateReplyToComment,
   sendWhatsAppBroadcast,
   sendWhatsAppBulk,
+  setContactFieldValue,
   setInstagramIceBreakers,
   setMessengerMenu,
   setTelegramCommands,
   testWebhook,
   undoRetweet,
+  unenrollContact,
   unfollowUser,
   unhideInboxComment,
   unlikeInboxComment,
   unpublishPost,
   updateAccount,
   updateAccountGroup,
+  updateBroadcast,
+  updateCommentAutomation,
+  updateContact,
+  updateCustomField,
   updateFacebookPage,
   updateGmbLocation,
   updateGoogleBusinessAttributes,
@@ -176,6 +214,7 @@ import {
   updateProfile,
   updateQueueSlot,
   updateRedditSubreddits,
+  updateSequence,
   updateWebhookSettings,
   updateWhatsAppBusinessProfile,
   updateWhatsAppContact,
@@ -622,6 +661,75 @@ export class Zernio {
     purchaseWhatsAppPhoneNumber: purchaseWhatsAppPhoneNumber,
     getWhatsAppPhoneNumber: getWhatsAppPhoneNumber,
     releaseWhatsAppPhoneNumber: releaseWhatsAppPhoneNumber,
+  };
+
+  /**
+   * contacts API
+   */
+  contacts = {
+    listContacts: listContacts,
+    createContact: createContact,
+    getContact: getContact,
+    updateContact: updateContact,
+    deleteContact: deleteContact,
+    getContactChannels: getContactChannels,
+    bulkCreateContacts: bulkCreateContacts,
+  };
+
+  /**
+   * customfields API
+   */
+  customfields = {
+    setContactFieldValue: setContactFieldValue,
+    clearContactFieldValue: clearContactFieldValue,
+    listCustomFields: listCustomFields,
+    createCustomField: createCustomField,
+    updateCustomField: updateCustomField,
+    deleteCustomField: deleteCustomField,
+  };
+
+  /**
+   * broadcasts API
+   */
+  broadcasts = {
+    listBroadcasts: listBroadcasts,
+    createBroadcast: createBroadcast,
+    getBroadcast: getBroadcast,
+    updateBroadcast: updateBroadcast,
+    deleteBroadcast: deleteBroadcast,
+    sendBroadcast: sendBroadcast,
+    scheduleBroadcast: scheduleBroadcast,
+    cancelBroadcast: cancelBroadcast,
+    listBroadcastRecipients: listBroadcastRecipients,
+    addBroadcastRecipients: addBroadcastRecipients,
+  };
+
+  /**
+   * sequences API
+   */
+  sequences = {
+    listSequences: listSequences,
+    createSequence: createSequence,
+    getSequence: getSequence,
+    updateSequence: updateSequence,
+    deleteSequence: deleteSequence,
+    activateSequence: activateSequence,
+    pauseSequence: pauseSequence,
+    enrollContacts: enrollContacts,
+    unenrollContact: unenrollContact,
+    listSequenceEnrollments: listSequenceEnrollments,
+  };
+
+  /**
+   * commentautomations API
+   */
+  commentautomations = {
+    listCommentAutomations: listCommentAutomations,
+    createCommentAutomation: createCommentAutomation,
+    getCommentAutomation: getCommentAutomation,
+    updateCommentAutomation: updateCommentAutomation,
+    deleteCommentAutomation: deleteCommentAutomation,
+    listCommentAutomationLogs: listCommentAutomationLogs,
   };
 
   /**

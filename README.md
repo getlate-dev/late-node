@@ -339,6 +339,30 @@ try {
 | `accountSettings.setMessengerMenu()` | Set FB persistent menu |
 | `accountSettings.setTelegramCommands()` | Set TG bot commands |
 
+### Broadcasts
+| Method | Description |
+|--------|-------------|
+| `broadcasts.listBroadcastRecipients()` | List broadcast recipients |
+| `broadcasts.listBroadcasts()` | List broadcasts |
+| `broadcasts.createBroadcast()` | Create a broadcast draft |
+| `broadcasts.getBroadcast()` | Get broadcast details |
+| `broadcasts.updateBroadcast()` | Update a broadcast |
+| `broadcasts.deleteBroadcast()` | Delete a broadcast (draft only) |
+| `broadcasts.addBroadcastRecipients()` | Add recipients to a broadcast |
+| `broadcasts.cancelBroadcast()` | Cancel a broadcast |
+| `broadcasts.scheduleBroadcast()` | Schedule broadcast for later |
+| `broadcasts.sendBroadcast()` | Trigger immediate send |
+
+### Comment Automations
+| Method | Description |
+|--------|-------------|
+| `commentAutomations.listCommentAutomationLogs()` | List trigger logs for an automation |
+| `commentAutomations.listCommentAutomations()` | List comment-to-DM automations |
+| `commentAutomations.createCommentAutomation()` | Create a comment-to-DM automation |
+| `commentAutomations.getCommentAutomation()` | Get automation details with recent logs |
+| `commentAutomations.updateCommentAutomation()` | Update automation settings |
+| `commentAutomations.deleteCommentAutomation()` | Delete automation and all logs |
+
 ### Comments (Inbox)
 | Method | Description |
 |--------|-------------|
@@ -351,6 +375,27 @@ try {
 | `comments.sendPrivateReplyToComment()` | Send private reply |
 | `comments.unhideInboxComment()` | Unhide comment |
 | `comments.unlikeInboxComment()` | Unlike comment |
+
+### Contacts
+| Method | Description |
+|--------|-------------|
+| `contacts.listContacts()` | List contacts |
+| `contacts.bulkCreateContacts()` | Bulk create contacts |
+| `contacts.createContact()` | Create a contact |
+| `contacts.getContact()` | Get contact with channels |
+| `contacts.getContactChannels()` | List channels for a contact |
+| `contacts.updateContact()` | Update a contact |
+| `contacts.deleteContact()` | Delete a contact |
+
+### Custom Fields
+| Method | Description |
+|--------|-------------|
+| `customFields.listCustomFields()` | List custom field definitions |
+| `customFields.createCustomField()` | Create a custom field definition |
+| `customFields.updateCustomField()` | Update a custom field definition |
+| `customFields.deleteCustomField()` | Delete a custom field definition |
+| `customFields.clearContactFieldValue()` | Clear a custom field value |
+| `customFields.setContactFieldValue()` | Set a custom field value |
 
 ### GMB Attributes
 | Method | Description |
@@ -400,6 +445,20 @@ try {
 | `reviews.listInboxReviews()` | List reviews |
 | `reviews.deleteInboxReviewReply()` | Delete review reply |
 | `reviews.replyToInboxReview()` | Reply to review |
+
+### Sequences
+| Method | Description |
+|--------|-------------|
+| `sequences.listSequenceEnrollments()` | List enrollments for a sequence |
+| `sequences.listSequences()` | List sequences |
+| `sequences.createSequence()` | Create a sequence |
+| `sequences.getSequence()` | Get sequence with steps |
+| `sequences.updateSequence()` | Update a sequence |
+| `sequences.deleteSequence()` | Delete a sequence |
+| `sequences.activateSequence()` | Activate a sequence |
+| `sequences.enrollContacts()` | Enroll contacts in a sequence |
+| `sequences.pauseSequence()` | Pause a sequence |
+| `sequences.unenrollContact()` | Unenroll a contact from a sequence |
 
 ### Twitter Engagement
 | Method | Description |

@@ -8969,3 +8969,685 @@ export type ReleaseWhatsAppPhoneNumberResponse = ({
 export type ReleaseWhatsAppPhoneNumberError = (unknown | {
     error?: string;
 });
+
+export type ListContactsData = {
+    query: {
+        isSubscribed?: 'true' | 'false';
+        limit?: number;
+        platform?: 'instagram' | 'facebook' | 'telegram' | 'twitter' | 'bluesky' | 'reddit' | 'whatsapp';
+        profileId: string;
+        search?: string;
+        skip?: number;
+        tag?: string;
+    };
+};
+
+export type ListContactsResponse = (unknown);
+
+export type ListContactsError = ({
+    error?: string;
+});
+
+export type CreateContactData = {
+    body: {
+        profileId: string;
+        name: string;
+        email?: string;
+        company?: string;
+        tags?: Array<(string)>;
+        isSubscribed?: boolean;
+        notes?: string;
+        /**
+         * Optional. Creates a channel if provided with platform + platformIdentifier
+         */
+        accountId?: string;
+        platform?: string;
+        platformIdentifier?: string;
+        displayIdentifier?: string;
+    };
+};
+
+export type CreateContactResponse = (unknown);
+
+export type CreateContactError = ({
+    error?: string;
+} | unknown);
+
+export type GetContactData = {
+    path: {
+        contactId: string;
+    };
+};
+
+export type GetContactResponse = (unknown);
+
+export type GetContactError = ({
+    error?: string;
+});
+
+export type UpdateContactData = {
+    body?: {
+        name?: string;
+        email?: string;
+        company?: string;
+        avatarUrl?: string;
+        tags?: Array<(string)>;
+        isSubscribed?: boolean;
+        isBlocked?: boolean;
+        notes?: string;
+    };
+    path: {
+        contactId: string;
+    };
+};
+
+export type UpdateContactResponse = (unknown);
+
+export type UpdateContactError = ({
+    error?: string;
+});
+
+export type DeleteContactData = {
+    path: {
+        contactId: string;
+    };
+};
+
+export type DeleteContactResponse = (unknown);
+
+export type DeleteContactError = ({
+    error?: string;
+});
+
+export type GetContactChannelsData = {
+    path: {
+        contactId: string;
+    };
+};
+
+export type GetContactChannelsResponse = (unknown);
+
+export type GetContactChannelsError = ({
+    error?: string;
+});
+
+export type BulkCreateContactsData = {
+    body: {
+        profileId: string;
+        accountId: string;
+        platform: string;
+        contacts: Array<{
+            name: string;
+            platformIdentifier: string;
+            displayIdentifier?: string;
+            email?: string;
+            company?: string;
+            tags?: Array<(string)>;
+        }>;
+    };
+};
+
+export type BulkCreateContactsResponse = (unknown);
+
+export type BulkCreateContactsError = ({
+    error?: string;
+});
+
+export type SetContactFieldValueData = {
+    body: {
+        /**
+         * Field value (type depends on field definition)
+         */
+        value: unknown;
+    };
+    path: {
+        contactId: string;
+        slug: string;
+    };
+};
+
+export type SetContactFieldValueResponse = (unknown);
+
+export type SetContactFieldValueError = ({
+    error?: string;
+});
+
+export type ClearContactFieldValueData = {
+    path: {
+        contactId: string;
+        slug: string;
+    };
+};
+
+export type ClearContactFieldValueResponse = (unknown);
+
+export type ClearContactFieldValueError = ({
+    error?: string;
+});
+
+export type ListCustomFieldsData = {
+    query: {
+        profileId: string;
+    };
+};
+
+export type ListCustomFieldsResponse = (unknown);
+
+export type ListCustomFieldsError = ({
+    error?: string;
+});
+
+export type CreateCustomFieldData = {
+    body: {
+        profileId: string;
+        name: string;
+        /**
+         * Auto-generated from name if not provided
+         */
+        slug?: string;
+        type: 'text' | 'number' | 'date' | 'boolean' | 'select';
+        /**
+         * Required for select type
+         */
+        options?: Array<(string)>;
+    };
+};
+
+export type CreateCustomFieldResponse = (unknown);
+
+export type CreateCustomFieldError = ({
+    error?: string;
+} | unknown);
+
+export type UpdateCustomFieldData = {
+    body?: {
+        name?: string;
+        options?: Array<(string)>;
+    };
+    path: {
+        fieldId: string;
+    };
+};
+
+export type UpdateCustomFieldResponse = (unknown);
+
+export type UpdateCustomFieldError = ({
+    error?: string;
+});
+
+export type DeleteCustomFieldData = {
+    path: {
+        fieldId: string;
+    };
+};
+
+export type DeleteCustomFieldResponse = (unknown);
+
+export type DeleteCustomFieldError = ({
+    error?: string;
+});
+
+export type ListBroadcastsData = {
+    query: {
+        limit?: number;
+        platform?: string;
+        profileId: string;
+        skip?: number;
+        status?: 'draft' | 'scheduled' | 'sending' | 'completed' | 'failed' | 'cancelled';
+    };
+};
+
+export type ListBroadcastsResponse = (unknown);
+
+export type ListBroadcastsError = ({
+    error?: string;
+});
+
+export type CreateBroadcastData = {
+    body: {
+        profileId: string;
+        accountId: string;
+        platform: 'instagram' | 'facebook' | 'telegram' | 'twitter' | 'bluesky' | 'reddit' | 'whatsapp';
+        name: string;
+        description?: string;
+        message?: {
+            text?: string;
+            attachments?: Array<{
+                type?: string;
+                url?: string;
+                filename?: string;
+            }>;
+        };
+        /**
+         * WhatsApp template (required when platform is whatsapp)
+         */
+        template?: {
+            name?: string;
+            language?: string;
+            components?: unknown[];
+        };
+        segmentFilters?: {
+            tags?: Array<(string)>;
+            isSubscribed?: boolean;
+        };
+    };
+};
+
+export type CreateBroadcastResponse = (unknown);
+
+export type CreateBroadcastError = ({
+    error?: string;
+});
+
+export type GetBroadcastData = {
+    path: {
+        broadcastId: string;
+    };
+};
+
+export type GetBroadcastResponse = (unknown);
+
+export type GetBroadcastError = ({
+    error?: string;
+});
+
+export type UpdateBroadcastData = {
+    path: {
+        broadcastId: string;
+    };
+};
+
+export type UpdateBroadcastResponse = (unknown);
+
+export type UpdateBroadcastError = ({
+    error?: string;
+});
+
+export type DeleteBroadcastData = {
+    path: {
+        broadcastId: string;
+    };
+};
+
+export type DeleteBroadcastResponse = (unknown);
+
+export type DeleteBroadcastError = ({
+    error?: string;
+});
+
+export type SendBroadcastData = {
+    path: {
+        broadcastId: string;
+    };
+};
+
+export type SendBroadcastResponse = (unknown);
+
+export type SendBroadcastError = (unknown | {
+    error?: string;
+});
+
+export type ScheduleBroadcastData = {
+    body: {
+        scheduledAt: string;
+    };
+    path: {
+        broadcastId: string;
+    };
+};
+
+export type ScheduleBroadcastResponse = (unknown);
+
+export type ScheduleBroadcastError = (unknown | {
+    error?: string;
+});
+
+export type CancelBroadcastData = {
+    path: {
+        broadcastId: string;
+    };
+};
+
+export type CancelBroadcastResponse = (unknown);
+
+export type CancelBroadcastError = (unknown | {
+    error?: string;
+});
+
+export type ListBroadcastRecipientsData = {
+    path: {
+        broadcastId: string;
+    };
+    query?: {
+        limit?: number;
+        skip?: number;
+        status?: 'pending' | 'sent' | 'delivered' | 'read' | 'failed';
+    };
+};
+
+export type ListBroadcastRecipientsResponse = (unknown);
+
+export type ListBroadcastRecipientsError = ({
+    error?: string;
+});
+
+export type AddBroadcastRecipientsData = {
+    body: {
+        /**
+         * Specific contact IDs to add
+         */
+        contactIds?: Array<(string)>;
+        /**
+         * Auto-populate from broadcast segment filters
+         */
+        useSegment?: boolean;
+    };
+    path: {
+        broadcastId: string;
+    };
+};
+
+export type AddBroadcastRecipientsResponse = (unknown);
+
+export type AddBroadcastRecipientsError = ({
+    error?: string;
+});
+
+export type ListSequencesData = {
+    query: {
+        limit?: number;
+        profileId: string;
+        skip?: number;
+        status?: 'draft' | 'active' | 'paused';
+    };
+};
+
+export type ListSequencesResponse = (unknown);
+
+export type ListSequencesError = ({
+    error?: string;
+});
+
+export type CreateSequenceData = {
+    body: {
+        profileId: string;
+        accountId: string;
+        platform: 'instagram' | 'facebook' | 'telegram' | 'twitter' | 'bluesky' | 'reddit' | 'whatsapp';
+        name: string;
+        description?: string;
+        steps?: Array<{
+            order: number;
+            delayMinutes: number;
+            message?: {
+                text?: string;
+            };
+            template?: {
+                name?: string;
+                language?: string;
+            };
+        }>;
+        exitOnReply?: boolean;
+        exitOnUnsubscribe?: boolean;
+    };
+};
+
+export type CreateSequenceResponse = (unknown);
+
+export type CreateSequenceError = ({
+    error?: string;
+});
+
+export type GetSequenceData = {
+    path: {
+        sequenceId: string;
+    };
+};
+
+export type GetSequenceResponse = (unknown);
+
+export type GetSequenceError = ({
+    error?: string;
+});
+
+export type UpdateSequenceData = {
+    path: {
+        sequenceId: string;
+    };
+};
+
+export type UpdateSequenceResponse = (unknown);
+
+export type UpdateSequenceError = ({
+    error?: string;
+});
+
+export type DeleteSequenceData = {
+    path: {
+        sequenceId: string;
+    };
+};
+
+export type DeleteSequenceResponse = (unknown);
+
+export type DeleteSequenceError = ({
+    error?: string;
+});
+
+export type ActivateSequenceData = {
+    path: {
+        sequenceId: string;
+    };
+};
+
+export type ActivateSequenceResponse = (unknown);
+
+export type ActivateSequenceError = (unknown | {
+    error?: string;
+});
+
+export type PauseSequenceData = {
+    path: {
+        sequenceId: string;
+    };
+};
+
+export type PauseSequenceResponse = (unknown);
+
+export type PauseSequenceError = (unknown | {
+    error?: string;
+});
+
+export type EnrollContactsData = {
+    body: {
+        contactIds: Array<(string)>;
+        /**
+         * Optional. Auto-detected if not provided.
+         */
+        channelIds?: Array<(string)>;
+    };
+    path: {
+        sequenceId: string;
+    };
+};
+
+export type EnrollContactsResponse = (unknown);
+
+export type EnrollContactsError = ({
+    error?: string;
+});
+
+export type UnenrollContactData = {
+    path: {
+        contactId: string;
+        sequenceId: string;
+    };
+};
+
+export type UnenrollContactResponse = (unknown);
+
+export type UnenrollContactError = ({
+    error?: string;
+});
+
+export type ListSequenceEnrollmentsData = {
+    path: {
+        sequenceId: string;
+    };
+    query?: {
+        limit?: number;
+        skip?: number;
+        status?: 'active' | 'completed' | 'exited' | 'paused';
+    };
+};
+
+export type ListSequenceEnrollmentsResponse = (unknown);
+
+export type ListSequenceEnrollmentsError = ({
+    error?: string;
+});
+
+export type ListCommentAutomationsData = {
+    query: {
+        /**
+         * Profile ID
+         */
+        profileId: string;
+    };
+};
+
+export type ListCommentAutomationsResponse = ({
+    success?: boolean;
+    automations?: Array<{
+        id?: string;
+        name?: string;
+        platform?: 'instagram' | 'facebook';
+        accountId?: string;
+        platformPostId?: string;
+        postTitle?: string;
+        keywords?: Array<(string)>;
+        matchMode?: 'exact' | 'contains';
+        dmMessage?: string;
+        commentReply?: string;
+        isActive?: boolean;
+        stats?: {
+            triggered?: number;
+            dmsSent?: number;
+            dmsFailed?: number;
+            uniqueContacts?: number;
+        };
+        createdAt?: string;
+    }>;
+});
+
+export type ListCommentAutomationsError = ({
+    error?: string;
+});
+
+export type CreateCommentAutomationData = {
+    body: {
+        profileId: string;
+        /**
+         * Instagram or Facebook account ID
+         */
+        accountId: string;
+        /**
+         * Platform media/post ID
+         */
+        platformPostId: string;
+        /**
+         * Zernio post ID (optional)
+         */
+        postId?: string;
+        /**
+         * Post content snippet for display
+         */
+        postTitle?: string;
+        /**
+         * Automation label
+         */
+        name: string;
+        /**
+         * Trigger keywords (empty = any comment triggers)
+         */
+        keywords?: Array<(string)>;
+        matchMode?: 'exact' | 'contains';
+        /**
+         * DM text to send to commenter
+         */
+        dmMessage: string;
+        /**
+         * Optional public reply to the comment
+         */
+        commentReply?: string;
+    };
+};
+
+export type CreateCommentAutomationResponse = (unknown);
+
+export type CreateCommentAutomationError = (unknown | {
+    error?: string;
+});
+
+export type GetCommentAutomationData = {
+    path: {
+        automationId: string;
+    };
+};
+
+export type GetCommentAutomationResponse = (unknown);
+
+export type GetCommentAutomationError = ({
+    error?: string;
+});
+
+export type UpdateCommentAutomationData = {
+    body?: {
+        name?: string;
+        keywords?: Array<(string)>;
+        matchMode?: 'exact' | 'contains';
+        dmMessage?: string;
+        commentReply?: string;
+        isActive?: boolean;
+    };
+    path: {
+        automationId: string;
+    };
+};
+
+export type UpdateCommentAutomationResponse = (unknown);
+
+export type UpdateCommentAutomationError = ({
+    error?: string;
+});
+
+export type DeleteCommentAutomationData = {
+    path: {
+        automationId: string;
+    };
+};
+
+export type DeleteCommentAutomationResponse = (unknown);
+
+export type DeleteCommentAutomationError = ({
+    error?: string;
+});
+
+export type ListCommentAutomationLogsData = {
+    path: {
+        automationId: string;
+    };
+    query?: {
+        limit?: number;
+        skip?: number;
+        /**
+         * Filter by result status
+         */
+        status?: 'sent' | 'failed' | 'skipped';
+    };
+};
+
+export type ListCommentAutomationLogsResponse = (unknown);
+
+export type ListCommentAutomationLogsError = ({
+    error?: string;
+});
