@@ -2457,6 +2457,10 @@ export type ValidateSubredditError = unknown;
 export type GetAnalyticsData = {
     query?: {
         /**
+         * Filter by social account ID
+         */
+        accountId?: string;
+        /**
          * Inclusive lower bound (YYYY-MM-DD). Defaults to 90 days ago if omitted. Max range is 366 days.
          */
         fromDate?: string;
@@ -2631,6 +2635,10 @@ export type GetInstagramDemographicsError = ({
 
 export type GetDailyMetricsData = {
     query?: {
+        /**
+         * Filter by social account ID
+         */
+        accountId?: string;
         /**
          * Inclusive start date (ISO 8601). Defaults to 180 days ago.
          */
