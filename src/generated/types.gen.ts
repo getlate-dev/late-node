@@ -8339,6 +8339,10 @@ export type GetWhatsAppBroadcastsResponse = ({
             language?: string;
         };
         status?: 'draft' | 'scheduled' | 'sending' | 'completed' | 'failed' | 'cancelled';
+        /**
+         * Template name or message text snippet
+         */
+        messagePreview?: string;
         recipientCount?: number;
         scheduledAt?: string;
         startedAt?: string;
