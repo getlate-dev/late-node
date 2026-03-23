@@ -9358,6 +9358,10 @@ export type AddBroadcastRecipientsData = {
          */
         contactIds?: Array<(string)>;
         /**
+         * Raw phone numbers (auto-creates contacts). Useful for WhatsApp/Telegram manual entry
+         */
+        phones?: Array<(string)>;
+        /**
          * Auto-populate from broadcast segment filters
          */
         useSegment?: boolean;
