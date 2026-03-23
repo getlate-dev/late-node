@@ -1563,6 +1563,19 @@ export type TwitterPlatformData = {
         content?: string;
         mediaItems?: Array<MediaItem>;
     }>;
+    /**
+     * Create a poll with this tweet. Mutually exclusive with media attachments and threads.
+     */
+    poll?: {
+        /**
+         * Poll options (2-4 choices, max 25 characters each)
+         */
+        options: Array<(string)>;
+        /**
+         * Poll duration in minutes (5 min to 7 days)
+         */
+        duration_minutes: number;
+    };
 };
 
 /**
