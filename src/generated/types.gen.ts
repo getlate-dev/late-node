@@ -9302,7 +9302,37 @@ export type GetBroadcastData = {
     };
 };
 
-export type GetBroadcastResponse = (unknown);
+export type GetBroadcastResponse = ({
+    success?: boolean;
+    broadcast?: {
+        id?: string;
+        name?: string;
+        description?: string;
+        platform?: string;
+        accountId?: string;
+        message?: {
+            text?: string;
+        };
+        template?: {
+            name?: string;
+            language?: string;
+        };
+        segmentFilters?: {
+            tags?: Array<(string)>;
+        };
+        status?: 'draft' | 'scheduled' | 'sending' | 'completed' | 'failed' | 'cancelled';
+        scheduledAt?: string;
+        startedAt?: string;
+        completedAt?: string;
+        recipientCount?: number;
+        sentCount?: number;
+        deliveredCount?: number;
+        readCount?: number;
+        failedCount?: number;
+        createdAt?: string;
+        updatedAt?: string;
+    };
+});
 
 export type GetBroadcastError = ({
     error?: string;
@@ -9314,7 +9344,16 @@ export type UpdateBroadcastData = {
     };
 };
 
-export type UpdateBroadcastResponse = (unknown);
+export type UpdateBroadcastResponse = ({
+    success?: boolean;
+    broadcast?: {
+        id?: string;
+        name?: string;
+        description?: string;
+        status?: string;
+        updatedAt?: string;
+    };
+});
 
 export type UpdateBroadcastError = ({
     error?: string;
@@ -9371,7 +9410,14 @@ export type ScheduleBroadcastData = {
     };
 };
 
-export type ScheduleBroadcastResponse = (unknown);
+export type ScheduleBroadcastResponse = ({
+    success?: boolean;
+    broadcast?: {
+        id?: string;
+        status?: string;
+        scheduledAt?: string;
+    };
+});
 
 export type ScheduleBroadcastError = (unknown | {
     error?: string;
@@ -9383,7 +9429,13 @@ export type CancelBroadcastData = {
     };
 };
 
-export type CancelBroadcastResponse = (unknown);
+export type CancelBroadcastResponse = ({
+    success?: boolean;
+    broadcast?: {
+        id?: string;
+        status?: string;
+    };
+});
 
 export type CancelBroadcastError = (unknown | {
     error?: string;
@@ -9400,7 +9452,28 @@ export type ListBroadcastRecipientsData = {
     };
 };
 
-export type ListBroadcastRecipientsResponse = (unknown);
+export type ListBroadcastRecipientsResponse = ({
+    success?: boolean;
+    recipients?: Array<{
+        id?: string;
+        contactId?: string;
+        channelId?: string;
+        platformIdentifier?: string;
+        contactName?: string;
+        status?: 'pending' | 'sent' | 'delivered' | 'read' | 'failed';
+        messageId?: string;
+        error?: string;
+        sentAt?: string;
+        deliveredAt?: string;
+        readAt?: string;
+    }>;
+    pagination?: {
+        total?: number;
+        limit?: number;
+        skip?: number;
+        hasMore?: boolean;
+    };
+});
 
 export type ListBroadcastRecipientsError = ({
     error?: string;
@@ -9426,7 +9499,17 @@ export type AddBroadcastRecipientsData = {
     };
 };
 
-export type AddBroadcastRecipientsResponse = (unknown);
+export type AddBroadcastRecipientsResponse = ({
+    success?: boolean;
+    /**
+     * Number of recipients successfully added
+     */
+    added?: number;
+    /**
+     * Number skipped (duplicates or missing channels)
+     */
+    skipped?: number;
+});
 
 export type AddBroadcastRecipientsError = ({
     error?: string;
@@ -9528,7 +9611,38 @@ export type GetSequenceData = {
     };
 };
 
-export type GetSequenceResponse = (unknown);
+export type GetSequenceResponse = ({
+    success?: boolean;
+    sequence?: {
+        id?: string;
+        name?: string;
+        description?: string;
+        platform?: string;
+        accountId?: string;
+        status?: 'draft' | 'active' | 'paused';
+        steps?: Array<{
+            order?: number;
+            delayMinutes?: number;
+            message?: {
+                text?: string;
+            };
+            template?: {
+                name?: string;
+                language?: string;
+                variableMapping?: {
+                    [key: string]: unknown;
+                };
+            };
+        }>;
+        exitOnReply?: boolean;
+        exitOnUnsubscribe?: boolean;
+        totalEnrolled?: number;
+        totalCompleted?: number;
+        totalExited?: number;
+        createdAt?: string;
+        updatedAt?: string;
+    };
+});
 
 export type GetSequenceError = ({
     error?: string;
@@ -9540,7 +9654,21 @@ export type UpdateSequenceData = {
     };
 };
 
-export type UpdateSequenceResponse = (unknown);
+export type UpdateSequenceResponse = ({
+    success?: boolean;
+    sequence?: {
+        id?: string;
+        name?: string;
+        description?: string;
+        status?: string;
+        steps?: Array<{
+            [key: string]: unknown;
+        }>;
+        exitOnReply?: boolean;
+        exitOnUnsubscribe?: boolean;
+        updatedAt?: string;
+    };
+});
 
 export type UpdateSequenceError = ({
     error?: string;
@@ -9564,7 +9692,13 @@ export type ActivateSequenceData = {
     };
 };
 
-export type ActivateSequenceResponse = (unknown);
+export type ActivateSequenceResponse = ({
+    success?: boolean;
+    sequence?: {
+        id?: string;
+        status?: string;
+    };
+});
 
 export type ActivateSequenceError = (unknown | {
     error?: string;
@@ -9576,7 +9710,13 @@ export type PauseSequenceData = {
     };
 };
 
-export type PauseSequenceResponse = (unknown);
+export type PauseSequenceResponse = ({
+    success?: boolean;
+    sequence?: {
+        id?: string;
+        status?: string;
+    };
+});
 
 export type PauseSequenceError = (unknown | {
     error?: string;
@@ -9595,7 +9735,17 @@ export type EnrollContactsData = {
     };
 };
 
-export type EnrollContactsResponse = (unknown);
+export type EnrollContactsResponse = ({
+    success?: boolean;
+    /**
+     * Number of contacts successfully enrolled
+     */
+    enrolled?: number;
+    /**
+     * Number skipped (already enrolled or missing channel)
+     */
+    skipped?: number;
+});
 
 export type EnrollContactsError = ({
     error?: string;
@@ -9625,7 +9775,29 @@ export type ListSequenceEnrollmentsData = {
     };
 };
 
-export type ListSequenceEnrollmentsResponse = (unknown);
+export type ListSequenceEnrollmentsResponse = ({
+    success?: boolean;
+    enrollments?: Array<{
+        id?: string;
+        contactId?: string;
+        channelId?: string;
+        platformIdentifier?: string;
+        contactName?: string;
+        currentStepIndex?: number;
+        status?: 'active' | 'completed' | 'exited' | 'paused';
+        exitReason?: string;
+        nextStepAt?: string;
+        stepsSent?: number;
+        lastStepSentAt?: string;
+        createdAt?: string;
+    }>;
+    pagination?: {
+        total?: number;
+        limit?: number;
+        skip?: number;
+        hasMore?: boolean;
+    };
+});
 
 export type ListSequenceEnrollmentsError = ({
     error?: string;
