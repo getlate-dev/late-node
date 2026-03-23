@@ -9221,7 +9221,40 @@ export type ListBroadcastsData = {
     };
 };
 
-export type ListBroadcastsResponse = (unknown);
+export type ListBroadcastsResponse = ({
+    success?: boolean;
+    broadcasts?: Array<{
+        id?: string;
+        name?: string;
+        description?: string;
+        platform?: string;
+        accountId?: string;
+        /**
+         * Display name of the sending account
+         */
+        accountName?: string;
+        status?: 'draft' | 'scheduled' | 'sending' | 'completed' | 'failed' | 'cancelled';
+        /**
+         * Template name or message text snippet
+         */
+        messagePreview?: string;
+        scheduledAt?: string;
+        startedAt?: string;
+        completedAt?: string;
+        recipientCount?: number;
+        sentCount?: number;
+        deliveredCount?: number;
+        readCount?: number;
+        failedCount?: number;
+        createdAt?: string;
+    }>;
+    pagination?: {
+        total?: number;
+        limit?: number;
+        skip?: number;
+        hasMore?: boolean;
+    };
+});
 
 export type ListBroadcastsError = ({
     error?: string;
@@ -9305,7 +9338,25 @@ export type SendBroadcastData = {
     };
 };
 
-export type SendBroadcastResponse = (unknown);
+export type SendBroadcastResponse = ({
+    success?: boolean;
+    /**
+     * Current broadcast status after processing first batch
+     */
+    status?: 'sending' | 'completed' | 'failed';
+    /**
+     * Recipients sent in this batch
+     */
+    sent?: number;
+    /**
+     * Recipients failed in this batch
+     */
+    failed?: number;
+    /**
+     * Total recipient count
+     */
+    recipientCount?: number;
+});
 
 export type SendBroadcastError = (unknown | {
     error?: string;
@@ -9393,7 +9444,38 @@ export type ListSequencesData = {
     };
 };
 
-export type ListSequencesResponse = (unknown);
+export type ListSequencesResponse = ({
+    success?: boolean;
+    sequences?: Array<{
+        id?: string;
+        name?: string;
+        description?: string;
+        platform?: string;
+        accountId?: string;
+        /**
+         * Display name of the sending account
+         */
+        accountName?: string;
+        /**
+         * First step template name or message text snippet
+         */
+        messagePreview?: string;
+        status?: 'draft' | 'active' | 'paused';
+        stepsCount?: number;
+        exitOnReply?: boolean;
+        exitOnUnsubscribe?: boolean;
+        totalEnrolled?: number;
+        totalCompleted?: number;
+        totalExited?: number;
+        createdAt?: string;
+    }>;
+    pagination?: {
+        total?: number;
+        limit?: number;
+        skip?: number;
+        hasMore?: boolean;
+    };
+});
 
 export type ListSequencesError = ({
     error?: string;
