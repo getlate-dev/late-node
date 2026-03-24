@@ -995,6 +995,9 @@ export type Post = {
      */
     tags?: Array<(string)>;
     hashtags?: Array<(string)>;
+    /**
+     * Stored for reference only. This field does NOT automatically create @mentions when publishing. For LinkedIn @mentions, use the /v1/accounts/{accountId}/linkedin-mentions endpoint to resolve profile URLs to URNs, then embed the returned mentionFormat directly in the post content field.
+     */
     mentions?: Array<(string)>;
     visibility?: 'public' | 'private' | 'unlisted';
     metadata?: {
@@ -1948,6 +1951,10 @@ export type WebhookPayloadMessage = {
         participantName?: string;
         participantUsername?: string;
         participantPicture?: string;
+        /**
+         * X/Twitter verified badge type. Only present for Twitter/X conversations.
+         */
+        participantVerifiedType?: ('blue' | 'government' | 'business' | 'none') | null;
         status?: 'active' | 'archived';
     };
     account?: {
@@ -1988,6 +1995,11 @@ export type event5 = 'message.received';
 export type platform3 = 'instagram' | 'facebook' | 'telegram' | 'bluesky' | 'reddit';
 
 export type direction = 'incoming';
+
+/**
+ * X/Twitter verified badge type. Only present for Twitter/X conversations.
+ */
+export type participantVerifiedType = 'blue' | 'government' | 'business' | 'none';
 
 export type status8 = 'active' | 'archived';
 
@@ -3162,6 +3174,9 @@ export type CreatePostData = {
          */
         tags?: Array<(string)>;
         hashtags?: Array<(string)>;
+        /**
+         * Stored for reference only. This field does NOT automatically create @mentions when publishing. For LinkedIn @mentions, use the /v1/accounts/{accountId}/linkedin-mentions endpoint to resolve profile URLs to URNs, then embed the returned mentionFormat directly in the post content field.
+         */
         mentions?: Array<(string)>;
         crosspostingEnabled?: boolean;
         metadata?: {
@@ -6329,6 +6344,10 @@ export type ListInboxConversationsResponse = ({
         participantId?: string;
         participantName?: string;
         participantPicture?: (string) | null;
+        /**
+         * X/Twitter verified badge type. Only present for Twitter/X conversations.
+         */
+        participantVerifiedType?: ('blue' | 'government' | 'business' | 'none') | null;
         lastMessage?: string;
         updatedTime?: string;
         status?: 'active' | 'archived';
@@ -6419,6 +6438,10 @@ export type GetInboxConversationResponse = ({
         status?: 'active' | 'archived';
         participantName?: string;
         participantId?: string;
+        /**
+         * X/Twitter verified badge type. Only present for Twitter/X conversations.
+         */
+        participantVerifiedType?: ('blue' | 'government' | 'business' | 'none') | null;
         lastMessage?: string;
         lastMessageAt?: string;
         updatedTime?: string;
@@ -6514,6 +6537,10 @@ export type GetInboxConversationMessagesResponse = ({
         message?: string;
         senderId?: string;
         senderName?: (string) | null;
+        /**
+         * X/Twitter verified badge type. Only present for Twitter/X messages.
+         */
+        senderVerifiedType?: ('blue' | 'government' | 'business' | 'none') | null;
         direction?: 'incoming' | 'outgoing';
         createdAt?: string;
         attachments?: Array<{
@@ -7029,6 +7056,10 @@ export type GetInboxPostCommentsResponse = ({
             username?: string;
             picture?: (string) | null;
             isOwner?: boolean;
+            /**
+             * X/Twitter verified badge type. Only present for Twitter/X comments.
+             */
+            verifiedType?: ('blue' | 'government' | 'business' | 'none') | null;
         };
         likeCount?: number;
         replyCount?: number;

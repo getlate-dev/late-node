@@ -1170,7 +1170,25 @@ export const updateLinkedInOrganization = <ThrowOnError extends boolean = false>
 
 /**
  * Resolve LinkedIn mention
- * Converts a LinkedIn profile or company URL to a URN for @mentions in posts. Person mentions require org admin access. Use the returned mentionFormat in post content.
+ * Converts a LinkedIn profile or company URL to a URN for @mentions in posts.
+ *
+ * **How to use LinkedIn @mentions (2-step workflow):**
+ *
+ * 1. Call this endpoint with the LinkedIn profile/company URL to get the mention URN and format.
+ * 2. Embed the returned `mentionFormat` (e.g. `@[Vincent Jong](urn:li:person:xxx)`) directly in your post's `content` field.
+ *
+ * **Example:**
+ * - Resolve: `GET /v1/accounts/{id}/linkedin-mentions?url=linkedin.com/in/vincentjong&displayName=Vincent Jong`
+ * - Returns: `mentionFormat: "@[Vincent Jong](urn:li:person:xxx)"`
+ * - Use in post content: `"Great talk with @[Vincent Jong](urn:li:person:xxx) today!"`
+ *
+ * **Important:** The `mentions` array field in POST /v1/posts is stored for reference only and does NOT trigger @mentions on LinkedIn. You must embed the mention format directly in the content text.
+ *
+ * **Requirements:**
+ * - Person mentions require the LinkedIn account to be admin of at least one organization.
+ * - Organization mentions (e.g. @Microsoft) work without this requirement.
+ * - For person mentions to be clickable, the `displayName` parameter must exactly match the name shown on their LinkedIn profile.
+ *
  */
 export const getLinkedInMentions = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetLinkedInMentionsData, ThrowOnError>) => {
     return (options?.client ?? client).get<GetLinkedInMentionsResponse, GetLinkedInMentionsError, ThrowOnError>({
