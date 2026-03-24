@@ -89,7 +89,7 @@ export type AnalyticsListResponse = {
     posts?: Array<{
         _id?: string;
         /**
-         * Original Late post ID if scheduled via Late
+         * Original Zernio post ID if scheduled via Zernio
          */
         latePostId?: (string) | null;
         content?: string;
@@ -150,7 +150,7 @@ export type AnalyticsOverview = {
 export type AnalyticsSinglePostResponse = {
     postId?: string;
     /**
-     * Original Late post ID if scheduled via Late
+     * Original Zernio post ID if scheduled via Zernio
      */
     latePostId?: (string) | null;
     /**
@@ -5190,7 +5190,7 @@ export type ConnectBlueskyCredentialsError = (unknown | {
 export type ConnectWhatsAppCredentialsData = {
     body: {
         /**
-         * Your Late profile ID
+         * Your Zernio profile ID
          */
         profileId: string;
         /**
