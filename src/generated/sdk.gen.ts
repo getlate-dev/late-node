@@ -511,9 +511,15 @@ export const unpublishPost = <ThrowOnError extends boolean = false>(options: Opt
 
 /**
  * Update post metadata
- * Updates metadata of an already-published post on the specified platform without re-uploading the media.
- * Currently only supported for YouTube videos (title, description, tags, category, privacy status).
- * The post must have "published" status on the target platform. At least one updatable field is required.
+ * Updates metadata of a published video on the specified platform without re-uploading.
+ * Currently only supported for YouTube. At least one updatable field is required.
+ *
+ * **Two modes:**
+ *
+ * 1. **Post-based** (video published through Zernio): pass the Zernio postId in the URL and `platform` in the body.
+ * 2. **Direct video ID** (video uploaded outside Zernio, e.g. directly to YouTube): use `_` as the postId,
+ * and pass `videoId` + `accountId` + `platform` in the body. The accountId is the Zernio social account ID
+ * for the connected YouTube channel.
  *
  */
 export const updatePostMetadata = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<UpdatePostMetadataData, ThrowOnError>) => {

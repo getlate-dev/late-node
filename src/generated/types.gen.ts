@@ -3343,6 +3343,14 @@ export type UpdatePostMetadataData = {
          */
         platform: 'youtube';
         /**
+         * YouTube video ID (required for direct mode, ignored for post-based mode)
+         */
+        videoId?: string;
+        /**
+         * Zernio social account ID (required for direct mode, ignored for post-based mode)
+         */
+        accountId?: string;
+        /**
          * New video title (max 100 characters for YouTube)
          */
         title?: string;
@@ -3364,6 +3372,9 @@ export type UpdatePostMetadataData = {
         privacyStatus?: 'public' | 'private' | 'unlisted';
     };
     path: {
+        /**
+         * Zernio post ID, or "_" when using direct video ID mode
+         */
         postId: string;
     };
 };
@@ -3371,6 +3382,10 @@ export type UpdatePostMetadataData = {
 export type UpdatePostMetadataResponse = ({
     success?: boolean;
     message?: string;
+    /**
+     * Only present in direct video ID mode
+     */
+    videoId?: string;
     updatedFields?: Array<(string)>;
 });
 
