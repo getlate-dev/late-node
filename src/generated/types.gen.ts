@@ -673,9 +673,17 @@ export type InstagramPlatformData = {
      */
     audioName?: string;
     /**
-     * Millisecond offset from video start for the Reel thumbnail. Ignored if a custom thumbnail URL is provided. Defaults to 0.
+     * Millisecond offset from video start for the Reel cover frame. Ignored when instagramThumbnail or reelCover is provided. Defaults to 0.
      */
     thumbOffset?: number;
+    /**
+     * Custom cover image URL for Instagram Reels (JPG or PNG, publicly accessible). Overrides thumbOffset when provided. Also accepted as reelCover (alias).
+     */
+    instagramThumbnail?: string;
+    /**
+     * Alias for instagramThumbnail. If both are provided, instagramThumbnail takes priority.
+     */
+    reelCover?: string;
 };
 
 /**
@@ -823,7 +831,7 @@ export type MediaItem = {
      */
     thumbnail?: string;
     /**
-     * Optional custom cover image URL for Instagram Reels
+     * Custom cover image URL for Instagram Reels. Can also be set via platformSpecificData.instagramThumbnail or platformSpecificData.reelCover. Resolution order: this field > platformSpecificData.instagramThumbnail > platformSpecificData.reelCover > platformSpecificData.thumbnailUrl (legacy).
      */
     instagramThumbnail?: string;
     /**
