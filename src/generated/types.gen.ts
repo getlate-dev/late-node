@@ -2065,7 +2065,7 @@ export type WebhookPayloadTest = {
 export type event7 = 'webhook.test';
 
 export type WhatsAppBodyComponent = {
-    type: 'BODY';
+    type: 'body';
     /**
      * Body text with optional {{n}} variables
      */
@@ -2082,17 +2082,13 @@ export type WhatsAppBodyComponent = {
     };
 };
 
-export type type4 = 'BODY';
-
 export type WhatsAppButtonsComponent = {
-    type: 'BUTTONS';
+    type: 'buttons';
     buttons: Array<WhatsAppTemplateButton>;
 };
 
-export type type5 = 'BUTTONS';
-
 export type WhatsAppFooterComponent = {
-    type: 'FOOTER';
+    type: 'footer';
     /**
      * Static footer text
      */
@@ -2103,11 +2099,9 @@ export type WhatsAppFooterComponent = {
     code_expiration_minutes?: number;
 };
 
-export type type6 = 'FOOTER';
-
 export type WhatsAppHeaderComponent = {
-    type: 'HEADER';
-    format: 'TEXT' | 'IMAGE' | 'VIDEO' | 'GIF' | 'DOCUMENT' | 'LOCATION';
+    type: 'header';
+    format: 'text' | 'image' | 'video' | 'gif' | 'document' | 'location';
     /**
      * Header text (may include {{1}} variable). Used when format is TEXT.
      */
@@ -2118,7 +2112,7 @@ export type WhatsAppHeaderComponent = {
          */
         header_text?: Array<(string)>;
         /**
-         * When the header format is a media type (IMAGE, VIDEO, GIF, DOCUMENT), provide a public URL here. Zernio will download and upload it to WhatsApp on your behalf, replacing it with the internal file handle before creating the template.
+         * When the header format is a media type (image, video, gif, document), provide a public URL here. Zernio will download and upload it to WhatsApp on your behalf, replacing it with the internal file handle before creating the template.
          */
         header_handle?: [
             string
@@ -2126,12 +2120,10 @@ export type WhatsAppHeaderComponent = {
     };
 };
 
-export type type7 = 'HEADER';
-
-export type format = 'TEXT' | 'IMAGE' | 'VIDEO' | 'GIF' | 'DOCUMENT' | 'LOCATION';
+export type format = 'text' | 'image' | 'video' | 'gif' | 'document' | 'location';
 
 export type WhatsAppTemplateButton = {
-    type: 'QUICK_REPLY' | 'URL' | 'PHONE_NUMBER' | 'OTP' | 'FLOW' | 'MPM' | 'CATALOG';
+    type: 'quick_reply' | 'url' | 'phone_number' | 'otp' | 'flow' | 'mpm' | 'catalog';
     text: string;
     /**
      * Required when type is URL
@@ -2142,13 +2134,13 @@ export type WhatsAppTemplateButton = {
      */
     example?: Array<(string)>;
     /**
-     * Required when type is PHONE_NUMBER
+     * Required when type is phone_number
      */
     phone_number?: string;
     /**
-     * Required when type is OTP
+     * Required when type is otp
      */
-    otp_type?: 'COPY_CODE' | 'ONE_TAP' | 'ZERO_TAP';
+    otp_type?: 'copy_code' | 'one_tap' | 'zero_tap';
     autofill_text?: string;
     package_name?: string;
     signature_hash?: string;
@@ -2159,12 +2151,12 @@ export type WhatsAppTemplateButton = {
     navigate_screen?: string;
 };
 
-export type type8 = 'QUICK_REPLY' | 'URL' | 'PHONE_NUMBER' | 'OTP' | 'FLOW' | 'MPM' | 'CATALOG';
+export type type4 = 'quick_reply' | 'url' | 'phone_number' | 'otp' | 'flow' | 'mpm' | 'catalog';
 
 /**
- * Required when type is OTP
+ * Required when type is otp
  */
-export type otp_type = 'COPY_CODE' | 'ONE_TAP' | 'ZERO_TAP';
+export type otp_type = 'copy_code' | 'one_tap' | 'zero_tap';
 
 export type WhatsAppTemplateComponent = WhatsAppHeaderComponent | WhatsAppBodyComponent | WhatsAppFooterComponent | WhatsAppButtonsComponent;
 
@@ -8584,7 +8576,7 @@ export type CreateWhatsAppTemplateData = {
          */
         language: string;
         /**
-         * Template components (HEADER, BODY, FOOTER, BUTTONS). Required for custom templates, omit when using library_template_name.
+         * Template components (header, body, footer, buttons). Required for custom templates, omit when using library_template_name.
          */
         components?: Array<WhatsAppTemplateComponent>;
         /**
@@ -8609,7 +8601,7 @@ export type CreateWhatsAppTemplateData = {
          *
          */
         library_template_button_inputs?: Array<{
-            type?: 'QUICK_REPLY' | 'URL' | 'PHONE_NUMBER';
+            type?: 'quick_reply' | 'url' | 'phone_number';
             url?: {
                 base_url?: string;
             };
