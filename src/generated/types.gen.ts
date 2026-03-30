@@ -2064,6 +2064,102 @@ export type WebhookPayloadTest = {
 
 export type event7 = 'webhook.test';
 
+export type WhatsAppBodyComponent = {
+    type: 'BODY';
+    /**
+     * Body text with optional {{n}} variables
+     */
+    text: string;
+    /**
+     * Add security recommendation text (authentication templates only)
+     */
+    add_security_recommendation?: boolean;
+    example?: {
+        /**
+         * Sample values for body variables (array of arrays)
+         */
+        body_text?: Array<Array<(string)>>;
+    };
+};
+
+export type WhatsAppButtonsComponent = {
+    type: 'BUTTONS';
+    buttons: Array<WhatsAppTemplateButton>;
+};
+
+export type WhatsAppFooterComponent = {
+    type: 'FOOTER';
+    /**
+     * Static footer text
+     */
+    text?: string;
+    /**
+     * OTP code expiry in minutes (authentication templates only)
+     */
+    code_expiration_minutes?: number;
+};
+
+export type WhatsAppHeaderComponent = {
+    type: 'HEADER';
+    format: 'TEXT' | 'IMAGE' | 'VIDEO' | 'GIF' | 'DOCUMENT' | 'LOCATION';
+    /**
+     * Header text (may include {{1}} variable). Used when format is TEXT.
+     */
+    text?: string;
+    example?: {
+        /**
+         * Sample values for header text variables
+         */
+        header_text?: Array<(string)>;
+        /**
+         * When the header format is a media type (IMAGE, VIDEO, GIF, DOCUMENT), provide a public URL here. Zernio will download and upload it to WhatsApp on your behalf, replacing it with the internal file handle before creating the template.
+         */
+        header_handle?: [
+            string
+        ];
+    };
+};
+
+export type format = 'TEXT' | 'IMAGE' | 'VIDEO' | 'GIF' | 'DOCUMENT' | 'LOCATION';
+
+export type WhatsAppTemplateButton = {
+    type: 'QUICK_REPLY' | 'URL' | 'PHONE_NUMBER' | 'OTP' | 'FLOW' | 'MPM' | 'CATALOG';
+    text: string;
+    /**
+     * Required when type is URL
+     */
+    url?: string;
+    /**
+     * Example values for URL suffix variables
+     */
+    example?: Array<(string)>;
+    /**
+     * Required when type is PHONE_NUMBER
+     */
+    phone_number?: string;
+    /**
+     * Required when type is OTP
+     */
+    otp_type?: 'COPY_CODE' | 'ONE_TAP' | 'ZERO_TAP';
+    autofill_text?: string;
+    package_name?: string;
+    signature_hash?: string;
+    flow_id?: string;
+    flow_name?: string;
+    flow_json?: string;
+    flow_action?: string;
+    navigate_screen?: string;
+};
+
+export type type4 = 'QUICK_REPLY' | 'URL' | 'PHONE_NUMBER' | 'OTP' | 'FLOW' | 'MPM' | 'CATALOG';
+
+/**
+ * Required when type is OTP
+ */
+export type otp_type = 'COPY_CODE' | 'ONE_TAP' | 'ZERO_TAP';
+
+export type WhatsAppTemplateComponent = WhatsAppHeaderComponent | WhatsAppBodyComponent | WhatsAppFooterComponent | WhatsAppButtonsComponent;
+
 export type YouTubeDailyViewsResponse = {
     success?: boolean;
     /**
@@ -8480,11 +8576,9 @@ export type CreateWhatsAppTemplateData = {
          */
         language: string;
         /**
-         * Template components (header, body, footer, buttons). Required for custom templates, omit when using library_template_name.
+         * Template components (HEADER, BODY, FOOTER, BUTTONS). Required for custom templates, omit when using library_template_name.
          */
-        components?: Array<{
-            [key: string]: unknown;
-        }>;
+        components?: Array<WhatsAppTemplateComponent>;
         /**
          * Name of a pre-built template from Meta's template library (e.g., "appointment_reminder",
          * "auto_pay_reminder_1", "address_update"). When provided, the template is pre-approved
@@ -8576,9 +8670,7 @@ export type UpdateWhatsAppTemplateData = {
         /**
          * Updated template components
          */
-        components: Array<{
-            [key: string]: unknown;
-        }>;
+        components: Array<WhatsAppTemplateComponent>;
     };
     path: {
         /**
