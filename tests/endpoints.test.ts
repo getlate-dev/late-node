@@ -214,6 +214,16 @@ describe('Endpoint Methods', () => {
       expect(client.connect.updatePinterestBoards).toBeTypeOf('function');
     });
 
+    it('should have getYoutubePlaylists method', () => {
+      expect(client.connect.getYoutubePlaylists).toBeDefined();
+      expect(client.connect.getYoutubePlaylists).toBeTypeOf('function');
+    });
+
+    it('should have updateYoutubeDefaultPlaylist method', () => {
+      expect(client.connect.updateYoutubeDefaultPlaylist).toBeDefined();
+      expect(client.connect.updateYoutubeDefaultPlaylist).toBeTypeOf('function');
+    });
+
     it('should have getGmbLocations method', () => {
       expect(client.connect.getGmbLocations).toBeDefined();
       expect(client.connect.getGmbLocations).toBeTypeOf('function');

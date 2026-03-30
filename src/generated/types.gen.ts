@@ -2129,6 +2129,10 @@ export type YouTubePlatformData = {
      * YouTube video category ID. Defaults to 22 (People & Blogs). Common: 1 (Film), 2 (Autos), 10 (Music), 15 (Pets), 17 (Sports), 20 (Gaming), 23 (Comedy), 24 (Entertainment), 25 (News), 26 (Howto), 27 (Education), 28 (Science & Tech).
      */
     categoryId?: string;
+    /**
+     * Optional YouTube playlist ID to add the video to after upload (e.g. 'PLxxxxxxxxxxxxx'). Use GET /v1/accounts/{id}/youtube-playlists to list available playlists. Works for both immediate and scheduled uploads. Quota cost: 50 YouTube API units per call.
+     */
+    playlistId?: string;
 };
 
 export type YouTubeScopeMissingResponse = {
@@ -5802,6 +5806,46 @@ export type UpdatePinterestBoardsResponse = ({
 });
 
 export type UpdatePinterestBoardsError = (unknown | {
+    error?: string;
+});
+
+export type GetYoutubePlaylistsData = {
+    path: {
+        accountId: string;
+    };
+};
+
+export type GetYoutubePlaylistsResponse = ({
+    playlists?: Array<{
+        id?: string;
+        title?: string;
+        description?: string;
+        privacy?: 'public' | 'private' | 'unlisted';
+        itemCount?: number;
+        thumbnailUrl?: string;
+    }>;
+    defaultPlaylistId?: (string) | null;
+});
+
+export type GetYoutubePlaylistsError = (unknown | {
+    error?: string;
+});
+
+export type UpdateYoutubeDefaultPlaylistData = {
+    body: {
+        defaultPlaylistId: string;
+        defaultPlaylistName?: string;
+    };
+    path: {
+        accountId: string;
+    };
+};
+
+export type UpdateYoutubeDefaultPlaylistResponse = ({
+    success?: boolean;
+});
+
+export type UpdateYoutubeDefaultPlaylistError = (unknown | {
     error?: string;
 });
 

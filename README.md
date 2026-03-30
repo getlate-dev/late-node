@@ -305,11 +305,13 @@ try {
 | `connect.getRedditFlairs()` | List subreddit flairs |
 | `connect.getRedditSubreddits()` | List Reddit subreddits |
 | `connect.getTelegramConnectStatus()` | Generate Telegram code |
+| `connect.getYoutubePlaylists()` | List YouTube playlists |
 | `connect.updateFacebookPage()` | Update Facebook page |
 | `connect.updateGmbLocation()` | Update GBP location |
 | `connect.updateLinkedInOrganization()` | Switch LinkedIn account type |
 | `connect.updatePinterestBoards()` | Set default Pinterest board |
 | `connect.updateRedditSubreddits()` | Set default subreddit |
+| `connect.updateYoutubeDefaultPlaylist()` | Set default YouTube playlist |
 | `connect.completeTelegramConnect()` | Check Telegram status |
 | `connect.connectBlueskyCredentials()` | Connect Bluesky account |
 | `connect.connectWhatsAppCredentials()` | Connect WhatsApp via credentials |
