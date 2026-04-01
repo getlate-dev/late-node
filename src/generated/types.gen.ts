@@ -11286,7 +11286,7 @@ export type GetAdAnalyticsResponse = ({
 
 export type GetAdAnalyticsError = ({
     error?: string;
-});
+} | unknown);
 
 export type ListAdAccountsData = {
     query: {
@@ -11311,7 +11311,7 @@ export type ListAdAccountsResponse = ({
 
 export type ListAdAccountsError = ({
     error?: string;
-});
+} | unknown);
 
 export type BoostPostData = {
     body: {
@@ -11354,6 +11354,21 @@ export type BoostPostData = {
             countries?: Array<(string)>;
             interests?: Array<(string)>;
         };
+        /**
+         * Max bid cap (Meta only)
+         */
+        bidAmount?: number;
+        /**
+         * Meta only. Tracking specs (pixel, URL tags).
+         */
+        tracking?: {
+            pixelId?: string;
+            urlTags?: string;
+        };
+        /**
+         * Meta only. Required for housing, employment, credit, or political ads.
+         */
+        specialAdCategories?: Array<('HOUSING' | 'EMPLOYMENT' | 'CREDIT' | 'ISSUES_ELECTIONS_POLITICS')>;
     };
 };
 
@@ -11380,6 +11395,10 @@ export type CreateStandaloneAdData = {
          */
         headline?: string;
         /**
+         * Google Display only
+         */
+        longHeadline?: string;
+        /**
          * Max: Google=90, Pinterest=500
          */
         body: string;
@@ -11389,9 +11408,17 @@ export type CreateStandaloneAdData = {
         callToAction?: 'LEARN_MORE' | 'SHOP_NOW' | 'SIGN_UP' | 'BOOK_TRAVEL' | 'CONTACT_US' | 'DOWNLOAD' | 'GET_OFFER' | 'GET_QUOTE' | 'SUBSCRIBE' | 'WATCH_MORE';
         linkUrl?: string;
         /**
-         * Image URL (or video URL for TikTok)
+         * Image URL (or video URL for TikTok). Not required for Google Search campaigns.
          */
-        imageUrl: string;
+        imageUrl?: string;
+        /**
+         * Google Display only
+         */
+        businessName?: string;
+        /**
+         * Pinterest only. Board ID (auto-creates if not provided).
+         */
+        boardId?: string;
         countries?: Array<(string)>;
         ageMin?: number;
         ageMax?: number;
@@ -11412,6 +11439,14 @@ export type CreateStandaloneAdData = {
          * Google Search only
          */
         keywords?: Array<(string)>;
+        /**
+         * Google Search RSA only. Extra headlines.
+         */
+        additionalHeadlines?: Array<(string)>;
+        /**
+         * Google Search RSA only. Extra descriptions.
+         */
+        additionalDescriptions?: Array<(string)>;
     };
 };
 
@@ -11467,7 +11502,7 @@ export type SearchAdInterestsResponse = ({
 
 export type SearchAdInterestsError = ({
     error?: string;
-});
+} | unknown);
 
 export type ListAdAudiencesData = {
     query: {
@@ -11530,6 +11565,16 @@ export type CreateAdAudienceData = {
          * Required for lookalike audiences
          */
         ratio?: number;
+        /**
+         * Pixel event rule for website audiences (optional)
+         */
+        rule?: {
+            [key: string]: unknown;
+        };
+        /**
+         * Data source declaration for GDPR compliance (customer_list only)
+         */
+        customerFileSource?: string;
     };
 };
 
@@ -11564,7 +11609,7 @@ export type GetAdAudienceResponse = ({
 
 export type GetAdAudienceError = ({
     error?: string;
-});
+} | unknown);
 
 export type DeleteAdAudienceData = {
     path: {
@@ -11578,7 +11623,7 @@ export type DeleteAdAudienceResponse = ({
 
 export type DeleteAdAudienceError = ({
     error?: string;
-});
+} | unknown);
 
 export type AddUsersToAdAudienceData = {
     body: {
