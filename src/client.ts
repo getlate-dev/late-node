@@ -3,10 +3,12 @@ import {
   activateSequence,
   addBroadcastRecipients,
   addMessageReaction,
+  addUsersToAdAudience,
   addWhatsAppBroadcastRecipients,
   addWhatsAppGroupParticipants,
   approveWhatsAppGroupJoinRequests,
   bookmarkPost,
+  boostPost,
   bulkCreateContacts,
   bulkDeleteWhatsAppContacts,
   bulkUpdateWhatsAppContacts,
@@ -19,6 +21,7 @@ import {
   connectBlueskyCredentials,
   connectWhatsAppCredentials,
   createAccountGroup,
+  createAdAudience,
   createApiKey,
   createBroadcast,
   createCommentAutomation,
@@ -31,6 +34,7 @@ import {
   createProfile,
   createQueueSlot,
   createSequence,
+  createStandaloneAd,
   createWebhookSettings,
   createWhatsAppBroadcast,
   createWhatsAppContact,
@@ -39,6 +43,8 @@ import {
   createWhatsAppTemplate,
   deleteAccount,
   deleteAccountGroup,
+  deleteAd,
+  deleteAdAudience,
   deleteApiKey,
   deleteBroadcast,
   deleteCommentAutomation,
@@ -73,6 +79,9 @@ import {
   enrollContacts,
   followUser,
   getAccountHealth,
+  getAd,
+  getAdAnalytics,
+  getAdAudience,
   getAllAccountsHealth,
   getAnalytics,
   getBestTimeToPost,
@@ -145,6 +154,10 @@ import {
   likeInboxComment,
   listAccountGroups,
   listAccounts,
+  listAdAccounts,
+  listAdAudiences,
+  listAdCampaigns,
+  listAds,
   listApiKeys,
   listBroadcastRecipients,
   listBroadcasts,
@@ -188,6 +201,7 @@ import {
   retweetPost,
   scheduleBroadcast,
   scheduleWhatsAppBroadcast,
+  searchAdInterests,
   searchReddit,
   selectFacebookPage,
   selectGoogleBusinessLocation,
@@ -204,6 +218,7 @@ import {
   setInstagramIceBreakers,
   setMessengerMenu,
   setTelegramCommands,
+  syncExternalAds,
   testWebhook,
   undoRetweet,
   unenrollContact,
@@ -213,6 +228,8 @@ import {
   unpublishPost,
   updateAccount,
   updateAccountGroup,
+  updateAd,
+  updateAdCampaignStatus,
   updateBroadcast,
   updateCommentAutomation,
   updateContact,
@@ -768,6 +785,41 @@ export class Zernio {
     updateCommentAutomation: updateCommentAutomation,
     deleteCommentAutomation: deleteCommentAutomation,
     listCommentAutomationLogs: listCommentAutomationLogs,
+  };
+
+  /**
+   * ads API
+   */
+  ads = {
+    listAds: listAds,
+    getAd: getAd,
+    updateAd: updateAd,
+    deleteAd: deleteAd,
+    getAdAnalytics: getAdAnalytics,
+    listAdAccounts: listAdAccounts,
+    boostPost: boostPost,
+    createStandaloneAd: createStandaloneAd,
+    syncExternalAds: syncExternalAds,
+    searchAdInterests: searchAdInterests,
+  };
+
+  /**
+   * adcampaigns API
+   */
+  adcampaigns = {
+    listAdCampaigns: listAdCampaigns,
+    updateAdCampaignStatus: updateAdCampaignStatus,
+  };
+
+  /**
+   * adaudiences API
+   */
+  adaudiences = {
+    listAdAudiences: listAdAudiences,
+    createAdAudience: createAdAudience,
+    getAdAudience: getAdAudience,
+    deleteAdAudience: deleteAdAudience,
+    addUsersToAdAudience: addUsersToAdAudience,
   };
 
   /**

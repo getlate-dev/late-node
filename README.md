@@ -342,6 +342,35 @@ try {
 | `accountSettings.setMessengerMenu()` | Set FB persistent menu |
 | `accountSettings.setTelegramCommands()` | Set TG bot commands |
 
+### Ad Audiences
+| Method | Description |
+|--------|-------------|
+| `adAudiences.listAdAudiences()` | List custom audiences |
+| `adAudiences.createAdAudience()` | Create a custom audience (Meta only) |
+| `adAudiences.getAdAudience()` | Get audience details |
+| `adAudiences.deleteAdAudience()` | Delete a custom audience |
+| `adAudiences.addUsersToAdAudience()` | Add users to a customer list audience |
+
+### Ad Campaigns
+| Method | Description |
+|--------|-------------|
+| `adCampaigns.listAdCampaigns()` | List campaigns with aggregate metrics |
+| `adCampaigns.updateAdCampaignStatus()` | Pause or resume a campaign |
+
+### Ads
+| Method | Description |
+|--------|-------------|
+| `ads.listAdAccounts()` | List ad accounts for a social account |
+| `ads.listAds()` | List ads |
+| `ads.createStandaloneAd()` | Create a standalone ad with custom creative |
+| `ads.getAd()` | Get ad details |
+| `ads.getAdAnalytics()` | Get ad analytics with daily breakdown |
+| `ads.updateAd()` | Update ad (pause/resume, budget, targeting, name) |
+| `ads.deleteAd()` | Cancel an ad |
+| `ads.boostPost()` | Boost an existing post as a paid ad |
+| `ads.searchAdInterests()` | Search targeting interests |
+| `ads.syncExternalAds()` | Sync external ads from platform ad managers |
+
 ### Broadcasts
 | Method | Description |
 |--------|-------------|

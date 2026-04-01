@@ -84,6 +84,98 @@ export type AccountWithFollowerStats = SocialAccount & {
     };
 };
 
+export type Ad = {
+    _id?: string;
+    name?: string;
+    platform?: 'facebook' | 'instagram' | 'tiktok' | 'linkedin' | 'pinterest' | 'google' | 'twitter';
+    status?: 'active' | 'paused' | 'pending_review' | 'rejected' | 'completed' | 'cancelled' | 'error';
+    adType?: 'boost' | 'standalone';
+    goal?: 'engagement' | 'traffic' | 'awareness' | 'video_views';
+    /**
+     * True for ads synced from platform ad managers
+     */
+    isExternal?: boolean;
+    budget?: {
+        amount?: number;
+        type?: 'daily' | 'lifetime';
+    } | null;
+    metrics?: ((AdMetrics) | null);
+    platformAdId?: string;
+    platformAdAccountId?: string;
+    platformCampaignId?: string;
+    platformAdSetId?: string;
+    campaignName?: string;
+    adSetName?: string;
+    /**
+     * Platform-specific creative data
+     */
+    creative?: {
+        [key: string]: unknown;
+    };
+    targeting?: {
+        [key: string]: unknown;
+    };
+    schedule?: {
+        startDate?: string;
+        endDate?: string;
+    } | null;
+    rejectionReason?: string;
+    createdAt?: string;
+    updatedAt?: string;
+};
+
+export type platform = 'facebook' | 'instagram' | 'tiktok' | 'linkedin' | 'pinterest' | 'google' | 'twitter';
+
+export type status = 'active' | 'paused' | 'pending_review' | 'rejected' | 'completed' | 'cancelled' | 'error';
+
+export type adType = 'boost' | 'standalone';
+
+export type goal = 'engagement' | 'traffic' | 'awareness' | 'video_views';
+
+export type type = 'daily' | 'lifetime';
+
+export type AdCampaign = {
+    platformCampaignId?: string;
+    platform?: 'facebook' | 'instagram' | 'tiktok' | 'linkedin' | 'pinterest' | 'google' | 'twitter';
+    campaignName?: string;
+    /**
+     * Derived from child ad statuses
+     */
+    status?: 'active' | 'paused' | 'pending_review' | 'rejected' | 'completed' | 'cancelled' | 'error';
+    adCount?: number;
+    budget?: {
+        amount?: number;
+        type?: 'daily' | 'lifetime';
+    } | null;
+    metrics?: AdMetrics;
+    platformAdAccountId?: string;
+    accountId?: string;
+    profileId?: string;
+    earliestAd?: string;
+    latestAd?: string;
+};
+
+export type AdMetrics = {
+    spend?: number;
+    impressions?: number;
+    reach?: number;
+    clicks?: number;
+    /**
+     * Click-through rate (%)
+     */
+    ctr?: number;
+    /**
+     * Cost per click
+     */
+    cpc?: number;
+    /**
+     * Cost per 1000 impressions
+     */
+    cpm?: number;
+    engagement?: number;
+    lastSyncedAt?: string;
+};
+
 export type AnalyticsListResponse = {
     overview?: AnalyticsOverview;
     posts?: Array<{
@@ -194,7 +286,7 @@ export type AnalyticsSinglePostResponse = {
 /**
  * Overall post status. "partial" when some platforms published and others failed.
  */
-export type status = 'published' | 'failed' | 'partial';
+export type status2 = 'published' | 'failed' | 'partial';
 
 /**
  * Overall sync state across all platforms
@@ -343,7 +435,7 @@ export type ConnectionLog = {
     createdAt?: string;
 };
 
-export type platform = 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat';
+export type platform2 = 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat';
 
 /**
  * Type of connection event: connect_success, connect_failed, disconnect, reconnect_success, reconnect_failed
@@ -519,7 +611,7 @@ export type GoogleBusinessPlatformData = {
 /**
  * Button action type: LEARN_MORE, BOOK, ORDER, SHOP, SIGN_UP, CALL
  */
-export type type = 'LEARN_MORE' | 'BOOK' | 'ORDER' | 'SHOP' | 'SIGN_UP' | 'CALL';
+export type type2 = 'LEARN_MORE' | 'BOOK' | 'ORDER' | 'SHOP' | 'SIGN_UP' | 'CALL';
 
 export type HashtagCheckResponse = {
     hashtags?: Array<HashtagInfo>;
@@ -531,7 +623,7 @@ export type HashtagInfo = {
     postCount?: number;
 };
 
-export type status2 = 'safe' | 'banned' | 'restricted' | 'unknown';
+export type status3 = 'safe' | 'banned' | 'restricted' | 'unknown';
 
 export type InstagramAccountInsightsResponse = {
     success?: boolean;
@@ -840,7 +932,7 @@ export type MediaItem = {
     tiktokProcessed?: boolean;
 };
 
-export type type2 = 'image' | 'video' | 'gif' | 'document';
+export type type3 = 'image' | 'video' | 'gif' | 'document';
 
 export type MediaUploadResponse = {
     files?: Array<UploadedFile>;
@@ -918,7 +1010,7 @@ export type PlatformAnalytics = {
     errorMessage?: (string) | null;
 };
 
-export type status3 = 'published' | 'failed';
+export type status4 = 'published' | 'failed';
 
 /**
  * Sync state of analytics for this platform
@@ -1028,7 +1120,7 @@ export type Post = {
     updatedAt?: string;
 };
 
-export type status4 = 'draft' | 'scheduled' | 'publishing' | 'published' | 'failed' | 'partial';
+export type status5 = 'draft' | 'scheduled' | 'publishing' | 'published' | 'failed' | 'partial';
 
 export type visibility = 'public' | 'private' | 'unlisted';
 
@@ -1144,7 +1236,7 @@ export type PostLog = {
  */
 export type action = 'publish' | 'retry' | 'media_upload' | 'rate_limit_pause' | 'token_refresh' | 'cancelled';
 
-export type status5 = 'success' | 'failed' | 'pending' | 'skipped';
+export type status6 = 'success' | 'failed' | 'pending' | 'skipped';
 
 export type PostRetryResponse = {
     message?: string;
@@ -1620,7 +1712,7 @@ export type UploadedFile = {
     mimeType?: string;
 };
 
-export type type3 = 'image' | 'video' | 'document';
+export type type4 = 'image' | 'video' | 'document';
 
 export type UploadTokenResponse = {
     token?: string;
@@ -1629,7 +1721,7 @@ export type UploadTokenResponse = {
     status?: 'pending' | 'completed' | 'expired';
 };
 
-export type status6 = 'pending' | 'completed' | 'expired';
+export type status7 = 'pending' | 'completed' | 'expired';
 
 export type UploadTokenStatusResponse = {
     token?: string;
@@ -1768,7 +1860,7 @@ export type WebhookLog = {
 
 export type event = 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'comment.received' | 'webhook.test';
 
-export type status7 = 'success' | 'failed';
+export type status8 = 'success' | 'failed';
 
 /**
  * Webhook payload for account connected events
@@ -1906,7 +1998,7 @@ export type WebhookPayloadComment = {
 
 export type event4 = 'comment.received';
 
-export type platform2 = 'instagram' | 'facebook' | 'twitter' | 'youtube' | 'linkedin' | 'bluesky' | 'reddit';
+export type platform3 = 'instagram' | 'facebook' | 'twitter' | 'youtube' | 'linkedin' | 'bluesky' | 'reddit';
 
 /**
  * Webhook payload for message received events
@@ -2026,11 +2118,11 @@ export type WebhookPayloadMessage = {
 
 export type event5 = 'message.received';
 
-export type platform3 = 'instagram' | 'facebook' | 'telegram' | 'whatsapp';
+export type platform4 = 'instagram' | 'facebook' | 'telegram' | 'whatsapp';
 
 export type direction = 'incoming' | 'outgoing';
 
-export type status8 = 'active' | 'archived';
+export type status9 = 'active' | 'archived';
 
 /**
  * Webhook payload for post events
@@ -2165,7 +2257,7 @@ export type WhatsAppTemplateButton = {
     navigate_screen?: string;
 };
 
-export type type4 = 'quick_reply' | 'url' | 'phone_number' | 'otp' | 'flow' | 'mpm' | 'catalog';
+export type type5 = 'quick_reply' | 'url' | 'phone_number' | 'otp' | 'flow' | 'mpm' | 'catalog';
 
 /**
  * Required when type is otp
@@ -10991,5 +11083,521 @@ export type ListCommentAutomationLogsResponse = ({
 });
 
 export type ListCommentAutomationLogsError = ({
+    error?: string;
+});
+
+export type ListAdsData = {
+    query?: {
+        /**
+         * Social account ID
+         */
+        accountId?: string;
+        /**
+         * Platform campaign ID (filter ads within a campaign)
+         */
+        campaignId?: string;
+        limit?: number;
+        /**
+         * Page number (1-based)
+         */
+        page?: number;
+        platform?: 'facebook' | 'instagram' | 'tiktok' | 'linkedin' | 'pinterest' | 'google' | 'twitter';
+        /**
+         * Profile ID
+         */
+        profileId?: string;
+        /**
+         * zernio = Zernio-created only, all = include external ads
+         */
+        source?: 'zernio' | 'all';
+        status?: 'active' | 'paused' | 'pending_review' | 'rejected' | 'completed' | 'cancelled' | 'error';
+    };
+};
+
+export type ListAdsResponse = ({
+    ads?: Array<Ad>;
+    pagination?: Pagination;
+});
+
+export type ListAdsError = ({
+    error?: string;
+} | unknown);
+
+export type ListAdCampaignsData = {
+    query?: {
+        /**
+         * Social account ID
+         */
+        accountId?: string;
+        /**
+         * Platform ad account ID (e.g. act_123 for Meta)
+         */
+        adAccountId?: string;
+        limit?: number;
+        /**
+         * Page number (1-based)
+         */
+        page?: number;
+        platform?: 'facebook' | 'instagram' | 'tiktok' | 'linkedin' | 'pinterest' | 'google' | 'twitter';
+        /**
+         * Profile ID
+         */
+        profileId?: string;
+        source?: 'zernio' | 'all';
+        /**
+         * Filter by derived campaign status (post-aggregation)
+         */
+        status?: 'active' | 'paused' | 'pending_review' | 'rejected' | 'completed' | 'cancelled' | 'error';
+    };
+};
+
+export type ListAdCampaignsResponse = ({
+    campaigns?: Array<AdCampaign>;
+    pagination?: Pagination;
+});
+
+export type ListAdCampaignsError = ({
+    error?: string;
+} | unknown);
+
+export type UpdateAdCampaignStatusData = {
+    body: {
+        status: 'active' | 'paused';
+        platform: 'facebook' | 'instagram' | 'tiktok' | 'linkedin' | 'pinterest' | 'google' | 'twitter';
+    };
+    path: {
+        /**
+         * Platform campaign ID
+         */
+        campaignId: string;
+    };
+};
+
+export type UpdateAdCampaignStatusResponse = ({
+    /**
+     * Number of ads updated
+     */
+    updated?: number;
+    /**
+     * Number of ads skipped
+     */
+    skipped?: number;
+    skippedReasons?: Array<(string)>;
+});
+
+export type UpdateAdCampaignStatusError = (unknown | {
+    error?: string;
+});
+
+export type GetAdData = {
+    path: {
+        adId: string;
+    };
+};
+
+export type GetAdResponse = ({
+    ad?: Ad;
+});
+
+export type GetAdError = ({
+    error?: string;
+});
+
+export type UpdateAdData = {
+    body: {
+        status?: 'active' | 'paused';
+        budget?: {
+            /**
+             * Minimum varies by platform: TikTok=$20, Pinterest=$5, others=$1
+             */
+            amount?: number;
+            type?: 'daily' | 'lifetime';
+        };
+        /**
+         * Meta-only. Targeting updates for other platforms are not supported after creation.
+         */
+        targeting?: {
+            ageMin?: number;
+            ageMax?: number;
+            countries?: Array<(string)>;
+            interests?: Array<(string)>;
+        };
+        name?: string;
+    };
+    path: {
+        adId: string;
+    };
+};
+
+export type UpdateAdResponse = ({
+    ad?: Ad;
+    message?: string;
+});
+
+export type UpdateAdError = (unknown | {
+    error?: string;
+});
+
+export type DeleteAdData = {
+    path: {
+        adId: string;
+    };
+};
+
+export type DeleteAdResponse = ({
+    message?: string;
+});
+
+export type DeleteAdError = ({
+    error?: string;
+});
+
+export type GetAdAnalyticsData = {
+    path: {
+        adId: string;
+    };
+    query?: {
+        /**
+         * Comma-separated breakdown dimensions. Meta: age, gender, country, publisher_platform, device_platform, region. TikTok: gender, age, country_code, platform, ac, language.
+         */
+        breakdowns?: string;
+    };
+};
+
+export type GetAdAnalyticsResponse = ({
+    ad?: {
+        id?: string;
+        name?: string;
+        platform?: string;
+        status?: string;
+    };
+    analytics?: {
+        summary?: AdMetrics;
+        daily?: Array<(AdMetrics & {
+    date?: string;
+})>;
+        breakdowns?: {
+            [key: string]: Array<{
+                [key: string]: unknown;
+            }>;
+        };
+    };
+});
+
+export type GetAdAnalyticsError = ({
+    error?: string;
+});
+
+export type ListAdAccountsData = {
+    query: {
+        /**
+         * Social account ID
+         */
+        accountId: string;
+    };
+};
+
+export type ListAdAccountsResponse = ({
+    accounts?: Array<{
+        /**
+         * Platform ad account ID (e.g. act_123)
+         */
+        id?: string;
+        name?: string;
+        currency?: string;
+        status?: string;
+    }>;
+});
+
+export type ListAdAccountsError = ({
+    error?: string;
+});
+
+export type BoostPostData = {
+    body: {
+        /**
+         * Zernio post ID (provide this or platformPostId)
+         */
+        postId?: string;
+        /**
+         * Platform post ID (alternative to postId)
+         */
+        platformPostId?: string;
+        /**
+         * Social account ID
+         */
+        accountId: string;
+        /**
+         * Platform ad account ID
+         */
+        adAccountId: string;
+        name: string;
+        goal: 'engagement' | 'traffic' | 'awareness' | 'video_views';
+        budget: {
+            /**
+             * Minimum varies: TikTok=$20, Pinterest=$5, others=$1
+             */
+            amount: number;
+            type: 'daily' | 'lifetime';
+        };
+        currency?: string;
+        schedule?: {
+            startDate?: string;
+            /**
+             * Required for lifetime budgets
+             */
+            endDate?: string;
+        };
+        targeting?: {
+            ageMin?: number;
+            ageMax?: number;
+            countries?: Array<(string)>;
+            interests?: Array<(string)>;
+        };
+    };
+};
+
+export type BoostPostResponse = ({
+    ad?: Ad;
+    message?: string;
+});
+
+export type BoostPostError = (unknown | {
+    error?: string;
+});
+
+export type CreateStandaloneAdData = {
+    body: {
+        accountId: string;
+        adAccountId: string;
+        name: string;
+        goal: 'engagement' | 'traffic' | 'awareness' | 'video_views';
+        budgetAmount: number;
+        budgetType: 'daily' | 'lifetime';
+        currency?: string;
+        /**
+         * Required for most platforms. Max: Meta=255, Google=30, Pinterest=100
+         */
+        headline?: string;
+        /**
+         * Max: Google=90, Pinterest=500
+         */
+        body: string;
+        /**
+         * Meta only
+         */
+        callToAction?: 'LEARN_MORE' | 'SHOP_NOW' | 'SIGN_UP' | 'BOOK_TRAVEL' | 'CONTACT_US' | 'DOWNLOAD' | 'GET_OFFER' | 'GET_QUOTE' | 'SUBSCRIBE' | 'WATCH_MORE';
+        linkUrl?: string;
+        /**
+         * Image URL (or video URL for TikTok)
+         */
+        imageUrl: string;
+        countries?: Array<(string)>;
+        ageMin?: number;
+        ageMax?: number;
+        interests?: Array<(string)>;
+        /**
+         * Required for lifetime budgets
+         */
+        endDate?: string;
+        /**
+         * Custom audience ID for targeting
+         */
+        audienceId?: string;
+        /**
+         * Google only
+         */
+        campaignType?: 'display' | 'search';
+        /**
+         * Google Search only
+         */
+        keywords?: Array<(string)>;
+    };
+};
+
+export type CreateStandaloneAdResponse = ({
+    ad?: Ad;
+    message?: string;
+});
+
+export type CreateStandaloneAdError = (unknown | {
+    error?: string;
+});
+
+export type SyncExternalAdsResponse = ({
+    success?: boolean;
+    /**
+     * New ads imported
+     */
+    synced?: number;
+    /**
+     * Already-synced ads updated
+     */
+    skipped?: number;
+    /**
+     * Failed ad imports
+     */
+    errors?: number;
+});
+
+export type SyncExternalAdsError = ({
+    error?: string;
+} | unknown);
+
+export type SearchAdInterestsData = {
+    query: {
+        /**
+         * Social account ID
+         */
+        accountId: string;
+        /**
+         * Search query
+         */
+        q: string;
+    };
+};
+
+export type SearchAdInterestsResponse = ({
+    interests?: Array<{
+        id?: string;
+        name?: string;
+        category?: string;
+    }>;
+});
+
+export type SearchAdInterestsError = ({
+    error?: string;
+});
+
+export type ListAdAudiencesData = {
+    query: {
+        /**
+         * Social account ID
+         */
+        accountId: string;
+        /**
+         * Platform ad account ID
+         */
+        adAccountId: string;
+        platform?: 'facebook' | 'instagram' | 'googleads' | 'tiktok' | 'pinterest';
+    };
+};
+
+export type ListAdAudiencesResponse = ({
+    audiences?: Array<{
+        id?: (string) | null;
+        platformAudienceId?: string;
+        name?: string;
+        description?: string;
+        type?: 'customer_list' | 'website' | 'lookalike';
+        platform?: string;
+        size?: number;
+        status?: string;
+    }>;
+});
+
+export type ListAdAudiencesError = ({
+    error?: string;
+});
+
+export type CreateAdAudienceData = {
+    body: {
+        accountId: string;
+        /**
+         * Must start with act_
+         */
+        adAccountId: string;
+        name: string;
+        description?: string;
+        type: 'customer_list' | 'website' | 'lookalike';
+        /**
+         * Required for website audiences
+         */
+        pixelId?: string;
+        /**
+         * Required for website audiences
+         */
+        retentionDays?: number;
+        /**
+         * Required for lookalike audiences
+         */
+        sourceAudienceId?: string;
+        /**
+         * 2-letter code, required for lookalike audiences
+         */
+        country?: string;
+        /**
+         * Required for lookalike audiences
+         */
+        ratio?: number;
+    };
+};
+
+export type CreateAdAudienceResponse = ({
+    audience?: {
+        [key: string]: unknown;
+    };
+    message?: string;
+});
+
+export type CreateAdAudienceError = (unknown | {
+    error?: string;
+});
+
+export type GetAdAudienceData = {
+    path: {
+        audienceId: string;
+    };
+};
+
+export type GetAdAudienceResponse = ({
+    audience?: {
+        [key: string]: unknown;
+    };
+    /**
+     * Fresh data from Meta API
+     */
+    metaData?: {
+        [key: string]: unknown;
+    } | null;
+});
+
+export type GetAdAudienceError = ({
+    error?: string;
+});
+
+export type DeleteAdAudienceData = {
+    path: {
+        audienceId: string;
+    };
+};
+
+export type DeleteAdAudienceResponse = ({
+    message?: string;
+});
+
+export type DeleteAdAudienceError = ({
+    error?: string;
+});
+
+export type AddUsersToAdAudienceData = {
+    body: {
+        users: Array<{
+            email?: string;
+            phone?: string;
+        }>;
+    };
+    path: {
+        audienceId: string;
+    };
+};
+
+export type AddUsersToAdAudienceResponse = ({
+    message?: string;
+    numReceived?: number;
+    numInvalid?: number;
+});
+
+export type AddUsersToAdAudienceError = (unknown | {
     error?: string;
 });
