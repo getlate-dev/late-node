@@ -11540,7 +11540,7 @@ export type ListAdAudiencesResponse = ({
 
 export type ListAdAudiencesError = ({
     error?: string;
-});
+} | unknown);
 
 export type CreateAdAudienceData = {
     body: {
