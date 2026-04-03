@@ -216,6 +216,7 @@ try {
 | `analytics.getPostingFrequency()` | Get posting frequency vs engagement |
 | `analytics.getPostTimeline()` | Get post analytics timeline |
 | `analytics.getYouTubeDailyViews()` | Get YouTube daily views |
+| `analytics.getYouTubeDemographics()` | Get YouTube audience demographics |
 
 ### Account Groups
 | Method | Description |
@@ -256,19 +257,6 @@ try {
 | Method | Description |
 |--------|-------------|
 | `media.getMediaPresignedUrl()` | Get presigned upload URL |
-
-### Tools
-| Method | Description |
-|--------|-------------|
-| `tools.getYouTubeTranscript()` | Get YouTube transcript |
-| `tools.checkInstagramHashtags()` | Check IG hashtag bans |
-| `tools.downloadBlueskyMedia()` | Download Bluesky media |
-| `tools.downloadFacebookVideo()` | Download Facebook video |
-| `tools.downloadInstagramMedia()` | Download Instagram media |
-| `tools.downloadLinkedInVideo()` | Download LinkedIn video |
-| `tools.downloadTikTokVideo()` | Download TikTok video |
-| `tools.downloadTwitterMedia()` | Download Twitter/X media |
-| `tools.downloadYouTubeVideo()` | Download YouTube video |
 
 ### Users
 | Method | Description |
@@ -355,6 +343,7 @@ try {
 | Method | Description |
 |--------|-------------|
 | `adCampaigns.listAdCampaigns()` | List campaigns with aggregate metrics |
+| `adCampaigns.getAdTree()` | Get nested campaign/ad-set/ad tree |
 | `adCampaigns.updateAdCampaignStatus()` | Pause or resume a campaign |
 
 ### Ads
@@ -561,6 +550,20 @@ try {
 | `whatsapp.sendWhatsAppBroadcast()` | Send broadcast |
 | `whatsapp.sendWhatsAppBulk()` | Bulk send template messages |
 | `whatsapp.uploadWhatsAppProfilePhoto()` | Upload profile picture |
+
+### WhatsApp Flows
+| Method | Description |
+|--------|-------------|
+| `whatsappFlows.listWhatsAppFlows()` | List flows |
+| `whatsappFlows.createWhatsAppFlow()` | Create flow |
+| `whatsappFlows.getWhatsAppFlow()` | Get flow |
+| `whatsappFlows.getWhatsAppFlowJson()` | Get flow JSON asset |
+| `whatsappFlows.updateWhatsAppFlow()` | Update flow |
+| `whatsappFlows.deleteWhatsAppFlow()` | Delete flow |
+| `whatsappFlows.deprecateWhatsAppFlow()` | Deprecate flow |
+| `whatsappFlows.publishWhatsAppFlow()` | Publish flow |
+| `whatsappFlows.sendWhatsAppFlowMessage()` | Send flow message |
+| `whatsappFlows.uploadWhatsAppFlowJson()` | Upload flow JSON |
 
 ### WhatsApp Phone Numbers
 | Method | Description |

@@ -107,11 +107,41 @@ export type Ad = {
     campaignName?: string;
     adSetName?: string;
     /**
-     * Platform-specific creative data
+     * Platform-specific creative data. Fields vary by platform.
      */
     creative?: {
-        [key: string]: unknown;
-    };
+        /**
+         * Primary thumbnail/image URL
+         */
+        thumbnailUrl?: string;
+        /**
+         * Alternative image URL
+         */
+        imageUrl?: string;
+        /**
+         * All media URLs for this ad (carousel images, multiple assets). Populated for Meta (carousel child_attachments), Google Ads (responsive display marketing_images), and LinkedIn (multi-image posts).
+         */
+        mediaUrls?: Array<(string)>;
+        /**
+         * Ad copy/text
+         */
+        body?: string;
+        /**
+         * Google Ads headline
+         */
+        googleHeadline?: string;
+        /**
+         * Google Ads description
+         */
+        googleDescription?: string;
+        /**
+         * Destination URL
+         */
+        linkUrl?: string;
+        pinterestImageUrl?: string;
+        pinterestTitle?: string;
+        pinterestDescription?: string;
+    } | null;
     targeting?: {
         [key: string]: unknown;
     };
@@ -177,6 +207,55 @@ export type AdMetrics = {
      * Present on individual ads only, not on campaign aggregations
      */
     lastSyncedAt?: string;
+};
+
+/**
+ * Ad set (or ad group/line item depending on platform) with rolled-up metrics and child ads
+ */
+export type AdTreeAdSet = {
+    platformAdSetId?: string;
+    adSetName?: string;
+    /**
+     * Derived from child ad statuses
+     */
+    status?: 'active' | 'paused' | 'pending_review' | 'rejected' | 'completed' | 'cancelled' | 'error';
+    adCount?: number;
+    budget?: {
+        amount?: number;
+        type?: 'daily' | 'lifetime';
+    } | null;
+    metrics?: AdMetrics;
+    /**
+     * Individual ads within this ad set (capped at 100). Returns a subset of Ad fields from the aggregation (core fields like _id, name, platform, status, budget, metrics, creative, goal are included; targeting and schedule may be absent).
+     */
+    ads?: Array<Ad>;
+};
+
+/**
+ * Campaign with nested ad sets and rolled-up metrics
+ */
+export type AdTreeCampaign = {
+    platformCampaignId?: string;
+    platform?: 'facebook' | 'instagram' | 'tiktok' | 'linkedin' | 'pinterest' | 'google' | 'twitter';
+    campaignName?: string;
+    /**
+     * Derived from child ad statuses
+     */
+    status?: 'active' | 'paused' | 'pending_review' | 'rejected' | 'completed' | 'cancelled' | 'error';
+    /**
+     * Total ads across all ad sets
+     */
+    adCount?: number;
+    adSetCount?: number;
+    budget?: {
+        amount?: number;
+        type?: 'daily' | 'lifetime';
+    } | null;
+    metrics?: AdMetrics;
+    platformAdAccountId?: string;
+    accountId?: string;
+    profileId?: string;
+    adSets?: Array<AdTreeAdSet>;
 };
 
 export type AnalyticsListResponse = {
@@ -350,10 +429,6 @@ export type BlueskyPlatformData = {
     }>;
 };
 
-export type CaptionResponse = {
-    caption?: string;
-};
-
 /**
  * Connection event log showing account connection/disconnection history
  */
@@ -449,22 +524,6 @@ export type eventType = 'connect_success' | 'connect_failed' | 'disconnect' | 'r
  * How the connection was initiated
  */
 export type connectionMethod = 'oauth' | 'credentials' | 'invitation';
-
-export type DownloadFormat = {
-    formatId?: string;
-    ext?: string;
-    resolution?: string;
-    filesize?: number;
-    quality?: string;
-};
-
-export type DownloadResponse = {
-    url?: string;
-    title?: string;
-    thumbnail?: string;
-    duration?: number;
-    formats?: Array<DownloadFormat>;
-};
 
 export type ErrorResponse = {
     error?: string;
@@ -615,18 +674,6 @@ export type GoogleBusinessPlatformData = {
  * Button action type: LEARN_MORE, BOOK, ORDER, SHOP, SIGN_UP, CALL
  */
 export type type2 = 'LEARN_MORE' | 'BOOK' | 'ORDER' | 'SHOP' | 'SIGN_UP' | 'CALL';
-
-export type HashtagCheckResponse = {
-    hashtags?: Array<HashtagInfo>;
-};
-
-export type HashtagInfo = {
-    hashtag?: string;
-    status?: 'safe' | 'banned' | 'restricted' | 'unknown';
-    postCount?: number;
-};
-
-export type status3 = 'safe' | 'banned' | 'restricted' | 'unknown';
 
 export type InstagramAccountInsightsResponse = {
     success?: boolean;
@@ -1013,7 +1060,7 @@ export type PlatformAnalytics = {
     errorMessage?: (string) | null;
 };
 
-export type status4 = 'published' | 'failed';
+export type status3 = 'published' | 'failed';
 
 /**
  * Sync state of analytics for this platform
@@ -1123,7 +1170,7 @@ export type Post = {
     updatedAt?: string;
 };
 
-export type status5 = 'draft' | 'scheduled' | 'publishing' | 'published' | 'failed' | 'partial';
+export type status4 = 'draft' | 'scheduled' | 'publishing' | 'published' | 'failed' | 'partial';
 
 export type visibility = 'public' | 'private' | 'unlisted';
 
@@ -1239,7 +1286,7 @@ export type PostLog = {
  */
 export type action = 'publish' | 'retry' | 'media_upload' | 'rate_limit_pause' | 'token_refresh' | 'cancelled';
 
-export type status6 = 'success' | 'failed' | 'pending' | 'skipped';
+export type status5 = 'success' | 'failed' | 'pending' | 'skipped';
 
 export type PostRetryResponse = {
     message?: string;
@@ -1659,18 +1706,6 @@ export type commercialContentType = 'none' | 'brand_organic' | 'brand_content';
  */
 export type mediaType2 = 'video' | 'photo';
 
-export type TranscriptResponse = {
-    transcript?: string;
-    segments?: Array<TranscriptSegment>;
-    language?: string;
-};
-
-export type TranscriptSegment = {
-    text?: string;
-    start?: number;
-    duration?: number;
-};
-
 export type TwitterPlatformData = {
     /**
      * ID of an existing tweet to reply to. The published tweet will appear as a reply in that tweet's thread. For threads, only the first tweet replies to the target; subsequent tweets chain normally.
@@ -1724,7 +1759,7 @@ export type UploadTokenResponse = {
     status?: 'pending' | 'completed' | 'expired';
 };
 
-export type status7 = 'pending' | 'completed' | 'expired';
+export type status6 = 'pending' | 'completed' | 'expired';
 
 export type UploadTokenStatusResponse = {
     token?: string;
@@ -1863,7 +1898,7 @@ export type WebhookLog = {
 
 export type event = 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'comment.received' | 'webhook.test';
 
-export type status8 = 'success' | 'failed';
+export type status7 = 'success' | 'failed';
 
 /**
  * Webhook payload for account connected events
@@ -2125,7 +2160,7 @@ export type platform4 = 'instagram' | 'facebook' | 'telegram' | 'whatsapp';
 
 export type direction = 'incoming' | 'outgoing';
 
-export type status9 = 'active' | 'archived';
+export type status8 = 'active' | 'archived';
 
 /**
  * Webhook payload for post events
@@ -2306,6 +2341,35 @@ export type YouTubeDailyViewsResponse = {
     };
 };
 
+export type YouTubeDemographicsResponse = {
+    success?: boolean;
+    /**
+     * The Zernio SocialAccount ID
+     */
+    accountId?: string;
+    platform?: string;
+    /**
+     * Object keyed by breakdown dimension (age, gender, country)
+     */
+    demographics?: {
+        [key: string]: Array<{
+            /**
+             * The dimension value (e.g., "25-34", "US", "male")
+             */
+            dimension?: string;
+            /**
+             * Viewer percentage (age/gender) or view count (country)
+             */
+            value?: number;
+        }>;
+    };
+    dateRange?: {
+        startDate?: string;
+        endDate?: string;
+    };
+    note?: string;
+};
+
 /**
  * Videos under 3 min auto-detected as Shorts. Custom thumbnails for regular videos only. Scheduled videos are uploaded immediately with the specified visibility.
  */
@@ -2353,219 +2417,6 @@ export type YouTubeScopeMissingResponse = {
         reauthorizeUrl?: string;
     };
 };
-
-export type DownloadYouTubeVideoData = {
-    query: {
-        /**
-         * Action to perform: 'download' returns download URL, 'formats' lists available formats
-         */
-        action?: 'download' | 'formats';
-        /**
-         * Desired format (when action=download)
-         */
-        format?: 'video' | 'audio';
-        /**
-         * Specific format ID from formats list
-         */
-        formatId?: string;
-        /**
-         * Desired quality (when action=download)
-         */
-        quality?: 'hd' | 'sd';
-        /**
-         * YouTube video URL or video ID
-         */
-        url: string;
-    };
-};
-
-export type DownloadYouTubeVideoResponse = ({
-    success?: boolean;
-    title?: string;
-    downloadUrl?: string;
-    formats?: Array<{
-        id?: string;
-        label?: string;
-        ext?: string;
-        type?: string;
-        height?: number;
-        width?: number;
-    }>;
-});
-
-export type DownloadYouTubeVideoError = ({
-    error?: string;
-} | unknown);
-
-export type GetYouTubeTranscriptData = {
-    query: {
-        /**
-         * Language code for transcript
-         */
-        lang?: string;
-        /**
-         * YouTube video URL or video ID
-         */
-        url: string;
-    };
-};
-
-export type GetYouTubeTranscriptResponse = ({
-    success?: boolean;
-    videoId?: string;
-    language?: string;
-    fullText?: string;
-    segments?: Array<{
-        text?: string;
-        start?: number;
-        duration?: number;
-    }>;
-});
-
-export type GetYouTubeTranscriptError = (unknown);
-
-export type DownloadInstagramMediaData = {
-    query: {
-        /**
-         * Instagram reel or post URL
-         */
-        url: string;
-    };
-};
-
-export type DownloadInstagramMediaResponse = ({
-    success?: boolean;
-    title?: string;
-    downloadUrl?: string;
-});
-
-export type DownloadInstagramMediaError = unknown;
-
-export type CheckInstagramHashtagsData = {
-    body: {
-        hashtags: Array<(string)>;
-    };
-};
-
-export type CheckInstagramHashtagsResponse = ({
-    success?: boolean;
-    results?: Array<{
-        hashtag?: string;
-        status?: 'banned' | 'restricted' | 'safe' | 'unknown';
-        reason?: string;
-        confidence?: number;
-    }>;
-    summary?: {
-        banned?: number;
-        restricted?: number;
-        safe?: number;
-    };
-});
-
-export type CheckInstagramHashtagsError = unknown;
-
-export type DownloadTikTokVideoData = {
-    query: {
-        /**
-         * 'formats' to list available formats
-         */
-        action?: 'download' | 'formats';
-        /**
-         * Specific format ID (0 = no watermark, etc.)
-         */
-        formatId?: string;
-        /**
-         * TikTok video URL or ID
-         */
-        url: string;
-    };
-};
-
-export type DownloadTikTokVideoResponse = ({
-    success?: boolean;
-    title?: string;
-    downloadUrl?: string;
-    formats?: Array<{
-        id?: string;
-        label?: string;
-        ext?: string;
-    }>;
-});
-
-export type DownloadTikTokVideoError = unknown;
-
-export type DownloadTwitterMediaData = {
-    query: {
-        action?: 'download' | 'formats';
-        formatId?: string;
-        /**
-         * Twitter/X post URL
-         */
-        url: string;
-    };
-};
-
-export type DownloadTwitterMediaResponse = ({
-    success?: boolean;
-    title?: string;
-    downloadUrl?: string;
-});
-
-export type DownloadTwitterMediaError = unknown;
-
-export type DownloadFacebookVideoData = {
-    query: {
-        /**
-         * Facebook video or reel URL
-         */
-        url: string;
-    };
-};
-
-export type DownloadFacebookVideoResponse = ({
-    success?: boolean;
-    title?: string;
-    downloadUrl?: string;
-    thumbnail?: string;
-});
-
-export type DownloadFacebookVideoError = unknown;
-
-export type DownloadLinkedInVideoData = {
-    query: {
-        /**
-         * LinkedIn post URL
-         */
-        url: string;
-    };
-};
-
-export type DownloadLinkedInVideoResponse = ({
-    success?: boolean;
-    title?: string;
-    downloadUrl?: string;
-});
-
-export type DownloadLinkedInVideoError = unknown;
-
-export type DownloadBlueskyMediaData = {
-    query: {
-        /**
-         * Bluesky post URL
-         */
-        url: string;
-    };
-};
-
-export type DownloadBlueskyMediaResponse = ({
-    success?: boolean;
-    title?: string;
-    text?: string;
-    downloadUrl?: string;
-    thumbnail?: string;
-});
-
-export type DownloadBlueskyMediaError = unknown;
 
 export type ValidatePostLengthData = {
     body: {
@@ -2894,6 +2745,49 @@ export type GetInstagramDemographicsError = ({
 } | {
     error?: string;
     code?: string;
+});
+
+export type GetYouTubeDemographicsData = {
+    query: {
+        /**
+         * The Zernio SocialAccount ID for the YouTube account
+         */
+        accountId: string;
+        /**
+         * Comma-separated list of demographic dimensions: age, gender, country.
+         * Defaults to all three if omitted.
+         *
+         */
+        breakdown?: string;
+        /**
+         * End date in YYYY-MM-DD format. Defaults to 3 days ago (YouTube data latency).
+         *
+         */
+        endDate?: string;
+        /**
+         * Start date in YYYY-MM-DD format. Defaults to 90 days ago.
+         *
+         */
+        startDate?: string;
+    };
+};
+
+export type GetYouTubeDemographicsResponse = (YouTubeDemographicsResponse);
+
+export type GetYouTubeDemographicsError = ({
+    error?: string;
+} | {
+    error?: string;
+    code?: string;
+} | {
+    success?: boolean;
+    error?: string;
+    code?: string;
+    scopeStatus?: {
+        hasAnalyticsScope?: boolean;
+        requiresReauthorization?: boolean;
+        reauthorizeUrl?: string;
+    };
 });
 
 export type GetDailyMetricsData = {
@@ -3779,6 +3673,14 @@ export type ListAccountsData = {
          */
         includeOverLimit?: boolean;
         /**
+         * Page size. Required alongside page for pagination.
+         */
+        limit?: number;
+        /**
+         * Page number (1-based). When provided with limit, enables server-side pagination. Omit for all accounts.
+         */
+        page?: number;
+        /**
          * Filter accounts by platform (e.g. "instagram", "twitter").
          */
         platform?: string;
@@ -3795,6 +3697,10 @@ export type ListAccountsResponse = ({
      * Whether user has analytics add-on access
      */
     hasAnalyticsAccess?: boolean;
+    /**
+     * Only present when page/limit params are provided
+     */
+    pagination?: Pagination;
 });
 
 export type ListAccountsError = ({
@@ -9867,6 +9773,346 @@ export type RejectWhatsAppGroupJoinRequestsError = ({
     error?: string;
 });
 
+export type ListWhatsAppFlowsData = {
+    query: {
+        /**
+         * WhatsApp social account ID
+         */
+        accountId: string;
+    };
+};
+
+export type ListWhatsAppFlowsResponse = ({
+    success?: boolean;
+    flows?: Array<{
+        id?: string;
+        name?: string;
+        status?: 'DRAFT' | 'PUBLISHED' | 'DEPRECATED' | 'BLOCKED' | 'THROTTLED';
+        categories?: Array<(string)>;
+        validation_errors?: Array<{
+            [key: string]: unknown;
+        }>;
+    }>;
+});
+
+export type ListWhatsAppFlowsError = (unknown | {
+    error?: string;
+});
+
+export type CreateWhatsAppFlowData = {
+    body: {
+        /**
+         * WhatsApp social account ID
+         */
+        accountId: string;
+        /**
+         * Flow display name
+         */
+        name: string;
+        /**
+         * Flow categories
+         */
+        categories: Array<('SIGN_UP' | 'SIGN_IN' | 'APPOINTMENT_BOOKING' | 'LEAD_GENERATION' | 'CONTACT_US' | 'CUSTOMER_SUPPORT' | 'SURVEY' | 'OTHER')>;
+        /**
+         * Optional: ID of an existing flow to clone
+         */
+        cloneFlowId?: string;
+    };
+};
+
+export type CreateWhatsAppFlowResponse = ({
+    success?: boolean;
+    flow?: {
+        id?: string;
+        name?: string;
+        status?: string;
+        categories?: Array<(string)>;
+    };
+});
+
+export type CreateWhatsAppFlowError = (unknown | {
+    error?: string;
+});
+
+export type GetWhatsAppFlowData = {
+    path: {
+        /**
+         * Flow ID
+         */
+        flowId: string;
+    };
+    query: {
+        /**
+         * WhatsApp social account ID
+         */
+        accountId: string;
+        /**
+         * Comma-separated fields to return (default: id,name,status,categories,validation_errors,json_version,preview,data_api_version,endpoint_uri)
+         */
+        fields?: string;
+    };
+};
+
+export type GetWhatsAppFlowResponse = ({
+    success?: boolean;
+    flow?: {
+        id?: string;
+        name?: string;
+        status?: string;
+        categories?: Array<(string)>;
+        validation_errors?: Array<{
+            [key: string]: unknown;
+        }>;
+        json_version?: string;
+        preview?: {
+            preview_url?: string;
+            expires_at?: string;
+        };
+    };
+});
+
+export type GetWhatsAppFlowError = ({
+    error?: string;
+} | unknown);
+
+export type UpdateWhatsAppFlowData = {
+    body: {
+        /**
+         * WhatsApp social account ID
+         */
+        accountId: string;
+        /**
+         * New flow name
+         */
+        name?: string;
+        categories?: Array<('SIGN_UP' | 'SIGN_IN' | 'APPOINTMENT_BOOKING' | 'LEAD_GENERATION' | 'CONTACT_US' | 'CUSTOMER_SUPPORT' | 'SURVEY' | 'OTHER')>;
+    };
+    path: {
+        /**
+         * Flow ID
+         */
+        flowId: string;
+    };
+};
+
+export type UpdateWhatsAppFlowResponse = ({
+    success?: boolean;
+});
+
+export type UpdateWhatsAppFlowError = (unknown | {
+    error?: string;
+});
+
+export type DeleteWhatsAppFlowData = {
+    path: {
+        /**
+         * Flow ID
+         */
+        flowId: string;
+    };
+    query: {
+        /**
+         * WhatsApp social account ID
+         */
+        accountId: string;
+    };
+};
+
+export type DeleteWhatsAppFlowResponse = ({
+    success?: boolean;
+});
+
+export type DeleteWhatsAppFlowError = (unknown | {
+    error?: string;
+});
+
+export type GetWhatsAppFlowJsonData = {
+    path: {
+        /**
+         * Flow ID
+         */
+        flowId: string;
+    };
+    query: {
+        /**
+         * WhatsApp social account ID
+         */
+        accountId: string;
+    };
+};
+
+export type GetWhatsAppFlowJsonResponse = ({
+    success?: boolean;
+    assets?: Array<{
+        name?: string;
+        asset_type?: string;
+        /**
+         * Temporary URL to download the flow JSON
+         */
+        download_url?: string;
+    }>;
+});
+
+export type GetWhatsAppFlowJsonError = ({
+    error?: string;
+} | unknown);
+
+export type UploadWhatsAppFlowJsonData = {
+    body: {
+        /**
+         * WhatsApp social account ID
+         */
+        accountId: string;
+        /**
+         * The Flow JSON content. Pass as a JSON object or a JSON string.
+         */
+        flow_json: ({
+    [key: string]: unknown;
+} | string);
+    };
+    path: {
+        /**
+         * Flow ID
+         */
+        flowId: string;
+    };
+};
+
+export type UploadWhatsAppFlowJsonResponse = ({
+    success?: boolean;
+    /**
+     * Empty array if valid; otherwise, contains validation error details from Meta
+     */
+    validation_errors?: Array<{
+        error?: string;
+        error_type?: string;
+        message?: string;
+        line_start?: number;
+        line_end?: number;
+        column_start?: number;
+        column_end?: number;
+    }>;
+});
+
+export type UploadWhatsAppFlowJsonError = (unknown | {
+    error?: string;
+});
+
+export type PublishWhatsAppFlowData = {
+    body: {
+        /**
+         * WhatsApp social account ID
+         */
+        accountId: string;
+    };
+    path: {
+        /**
+         * Flow ID
+         */
+        flowId: string;
+    };
+};
+
+export type PublishWhatsAppFlowResponse = ({
+    success?: boolean;
+});
+
+export type PublishWhatsAppFlowError = (unknown | {
+    error?: string;
+});
+
+export type DeprecateWhatsAppFlowData = {
+    body: {
+        /**
+         * WhatsApp social account ID
+         */
+        accountId: string;
+    };
+    path: {
+        /**
+         * Flow ID
+         */
+        flowId: string;
+    };
+};
+
+export type DeprecateWhatsAppFlowResponse = ({
+    success?: boolean;
+});
+
+export type DeprecateWhatsAppFlowError = (unknown | {
+    error?: string;
+});
+
+export type SendWhatsAppFlowMessageData = {
+    body: {
+        /**
+         * WhatsApp social account ID
+         */
+        accountId: string;
+        /**
+         * Recipient phone number (E.164 format, e.g. +1234567890)
+         */
+        to: string;
+        /**
+         * Published flow ID
+         */
+        flow_id: string;
+        /**
+         * CTA button text (e.g. 'Book Now', 'Sign Up')
+         */
+        flow_cta: string;
+        /**
+         * Action type: navigate opens a screen directly, data_exchange hits your endpoint first
+         */
+        flow_action?: 'navigate' | 'data_exchange';
+        /**
+         * Unique token to correlate responses. Auto-generated UUID if omitted.
+         */
+        flow_token?: string;
+        flow_action_payload?: {
+            /**
+             * First screen ID to navigate to
+             */
+            screen?: string;
+            /**
+             * Optional data to pass to the screen
+             */
+            data?: {
+                [key: string]: unknown;
+            };
+        };
+        /**
+         * Message body text
+         */
+        body: string;
+        header?: {
+            type?: 'text';
+            text?: string;
+        };
+        /**
+         * Optional footer text
+         */
+        footer?: string;
+        /**
+         * Set true to test an unpublished (DRAFT) flow
+         */
+        draft?: boolean;
+    };
+};
+
+export type SendWhatsAppFlowMessageResponse = ({
+    success?: boolean;
+    /**
+     * WhatsApp message ID (WAMID)
+     */
+    messageId?: string;
+});
+
+export type SendWhatsAppFlowMessageError = (unknown | {
+    error?: string;
+});
+
 export type ListContactsData = {
     query?: {
         isSubscribed?: 'true' | 'false';
@@ -11195,6 +11441,46 @@ export type UpdateAdCampaignStatusResponse = ({
 export type UpdateAdCampaignStatusError = (unknown | {
     error?: string;
 });
+
+export type GetAdTreeData = {
+    query?: {
+        /**
+         * Social account ID
+         */
+        accountId?: string;
+        /**
+         * Platform ad account ID
+         */
+        adAccountId?: string;
+        /**
+         * Campaigns per page
+         */
+        limit?: number;
+        /**
+         * Page number (1-based)
+         */
+        page?: number;
+        platform?: 'facebook' | 'instagram' | 'tiktok' | 'linkedin' | 'pinterest' | 'google' | 'twitter';
+        /**
+         * Profile ID
+         */
+        profileId?: string;
+        source?: 'zernio' | 'all';
+        /**
+         * Filter by derived campaign status (post-aggregation)
+         */
+        status?: 'active' | 'paused' | 'pending_review' | 'rejected' | 'completed' | 'cancelled' | 'error';
+    };
+};
+
+export type GetAdTreeResponse = ({
+    campaigns?: Array<AdTreeCampaign>;
+    pagination?: Pagination;
+});
+
+export type GetAdTreeError = ({
+    error?: string;
+} | unknown);
 
 export type GetAdData = {
     path: {

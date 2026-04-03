@@ -103,6 +103,11 @@ describe('Endpoint Methods', () => {
       expect(client.analytics.getInstagramDemographics).toBeTypeOf('function');
     });
 
+    it('should have getYouTubeDemographics method', () => {
+      expect(client.analytics.getYouTubeDemographics).toBeDefined();
+      expect(client.analytics.getYouTubeDemographics).toBeTypeOf('function');
+    });
+
     it('should have getDailyMetrics method', () => {
       expect(client.analytics.getDailyMetrics).toBeDefined();
       expect(client.analytics.getDailyMetrics).toBeTypeOf('function');

@@ -15,7 +15,6 @@ import {
   bulkUploadPosts,
   cancelBroadcast,
   cancelWhatsAppBroadcastSchedule,
-  checkInstagramHashtags,
   clearContactFieldValue,
   completeTelegramConnect,
   connectBlueskyCredentials,
@@ -38,6 +37,7 @@ import {
   createWebhookSettings,
   createWhatsAppBroadcast,
   createWhatsAppContact,
+  createWhatsAppFlow,
   createWhatsAppGroupChat,
   createWhatsAppGroupInviteLink,
   createWhatsAppTemplate,
@@ -65,16 +65,11 @@ import {
   deleteWebhookSettings,
   deleteWhatsAppBroadcast,
   deleteWhatsAppContact,
+  deleteWhatsAppFlow,
   deleteWhatsAppGroup,
   deleteWhatsAppGroupChat,
   deleteWhatsAppTemplate,
-  downloadBlueskyMedia,
-  downloadFacebookVideo,
-  downloadInstagramMedia,
-  downloadLinkedInVideo,
-  downloadTikTokVideo,
-  downloadTwitterMedia,
-  downloadYouTubeVideo,
+  deprecateWhatsAppFlow,
   editInboxMessage,
   enrollContacts,
   followUser,
@@ -82,6 +77,7 @@ import {
   getAd,
   getAdAnalytics,
   getAdAudience,
+  getAdTree,
   getAllAccountsHealth,
   getAnalytics,
   getBestTimeToPost,
@@ -138,6 +134,8 @@ import {
   getWhatsAppContact,
   getWhatsAppContacts,
   getWhatsAppDisplayName,
+  getWhatsAppFlow,
+  getWhatsAppFlowJson,
   getWhatsAppGroupChat,
   getWhatsAppGroups,
   getWhatsAppPhoneNumber,
@@ -145,7 +143,7 @@ import {
   getWhatsAppTemplate,
   getWhatsAppTemplates,
   getYouTubeDailyViews,
-  getYouTubeTranscript,
+  getYouTubeDemographics,
   getYoutubePlaylists,
   handleOAuthCallback,
   hideInboxComment,
@@ -183,10 +181,12 @@ import {
   listSequences,
   listSnapchatProfiles,
   listUsers,
+  listWhatsAppFlows,
   listWhatsAppGroupChats,
   listWhatsAppGroupJoinRequests,
   pauseSequence,
   previewQueue,
+  publishWhatsAppFlow,
   purchaseWhatsAppPhoneNumber,
   rejectWhatsAppGroupJoinRequests,
   releaseWhatsAppPhoneNumber,
@@ -214,6 +214,7 @@ import {
   sendTypingIndicator,
   sendWhatsAppBroadcast,
   sendWhatsAppBulk,
+  sendWhatsAppFlowMessage,
   setContactFieldValue,
   setInstagramIceBreakers,
   setMessengerMenu,
@@ -252,10 +253,12 @@ import {
   updateWhatsAppBusinessProfile,
   updateWhatsAppContact,
   updateWhatsAppDisplayName,
+  updateWhatsAppFlow,
   updateWhatsAppGroupChat,
   updateWhatsAppTemplate,
   updateYoutubeDefaultPlaylist,
   uploadMediaDirect,
+  uploadWhatsAppFlowJson,
   uploadWhatsAppProfilePhoto,
   validateMedia,
   validatePost,
@@ -326,21 +329,6 @@ export class Zernio {
   baseURL: string;
 
   /**
-   * Tools API - Media download and utilities
-   */
-  tools = {
-    downloadYouTubeVideo: downloadYouTubeVideo,
-    getYouTubeTranscript: getYouTubeTranscript,
-    downloadInstagramMedia: downloadInstagramMedia,
-    checkInstagramHashtags: checkInstagramHashtags,
-    downloadTikTokVideo: downloadTikTokVideo,
-    downloadTwitterMedia: downloadTwitterMedia,
-    downloadFacebookVideo: downloadFacebookVideo,
-    downloadLinkedInVideo: downloadLinkedInVideo,
-    downloadBlueskyMedia: downloadBlueskyMedia,
-  };
-
-  /**
    * validate API
    */
   validate = {
@@ -358,6 +346,7 @@ export class Zernio {
     getYouTubeDailyViews: getYouTubeDailyViews,
     getInstagramAccountInsights: getInstagramAccountInsights,
     getInstagramDemographics: getInstagramDemographics,
+    getYouTubeDemographics: getYouTubeDemographics,
     getDailyMetrics: getDailyMetrics,
     getBestTimeToPost: getBestTimeToPost,
     getContentDecay: getContentDecay,
@@ -719,6 +708,22 @@ export class Zernio {
   };
 
   /**
+   * whatsappflows API
+   */
+  whatsappflows = {
+    listWhatsAppFlows: listWhatsAppFlows,
+    createWhatsAppFlow: createWhatsAppFlow,
+    getWhatsAppFlow: getWhatsAppFlow,
+    updateWhatsAppFlow: updateWhatsAppFlow,
+    deleteWhatsAppFlow: deleteWhatsAppFlow,
+    getWhatsAppFlowJson: getWhatsAppFlowJson,
+    uploadWhatsAppFlowJson: uploadWhatsAppFlowJson,
+    publishWhatsAppFlow: publishWhatsAppFlow,
+    deprecateWhatsAppFlow: deprecateWhatsAppFlow,
+    sendWhatsAppFlowMessage: sendWhatsAppFlowMessage,
+  };
+
+  /**
    * contacts API
    */
   contacts = {
@@ -809,6 +814,7 @@ export class Zernio {
   adcampaigns = {
     listAdCampaigns: listAdCampaigns,
     updateAdCampaignStatus: updateAdCampaignStatus,
+    getAdTree: getAdTree,
   };
 
   /**
