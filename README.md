@@ -208,6 +208,8 @@ try {
 | `analytics.getBestTimeToPost()` | Get best times to post |
 | `analytics.getContentDecay()` | Get content performance decay |
 | `analytics.getDailyMetrics()` | Get daily aggregated metrics |
+| `analytics.getGoogleBusinessPerformance()` | Get Google Business Profile performance metrics |
+| `analytics.getGoogleBusinessSearchKeywords()` | Get Google Business Profile search keywords |
 | `analytics.getInstagramAccountInsights()` | Get Instagram account-level insights |
 | `analytics.getInstagramDemographics()` | Get Instagram audience demographics |
 | `analytics.getLinkedInAggregateAnalytics()` | Get LinkedIn aggregate stats |

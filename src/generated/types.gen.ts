@@ -3072,6 +3072,107 @@ export type GetPostTimelineError = ({
     code?: string;
 });
 
+export type GetGoogleBusinessPerformanceData = {
+    query: {
+        /**
+         * The Zernio SocialAccount ID for the Google Business Profile account.
+         */
+        accountId: string;
+        /**
+         * End date (YYYY-MM-DD). Defaults to today.
+         */
+        endDate?: string;
+        /**
+         * Comma-separated metric names. Defaults to all available metrics.
+         * Valid values: BUSINESS_IMPRESSIONS_DESKTOP_MAPS, BUSINESS_IMPRESSIONS_DESKTOP_SEARCH,
+         * BUSINESS_IMPRESSIONS_MOBILE_MAPS, BUSINESS_IMPRESSIONS_MOBILE_SEARCH,
+         * BUSINESS_CONVERSATIONS, BUSINESS_DIRECTION_REQUESTS, CALL_CLICKS, WEBSITE_CLICKS,
+         * BUSINESS_BOOKINGS, BUSINESS_FOOD_ORDERS, BUSINESS_FOOD_MENU_CLICKS
+         *
+         */
+        metrics?: string;
+        /**
+         * Start date (YYYY-MM-DD). Defaults to 30 days ago. Max 18 months back.
+         */
+        startDate?: string;
+    };
+};
+
+export type GetGoogleBusinessPerformanceResponse = ({
+    success?: boolean;
+    accountId?: string;
+    platform?: string;
+    dateRange?: {
+        startDate?: string;
+        endDate?: string;
+    };
+    /**
+     * Each key is a metric name containing total and daily values.
+     */
+    metrics?: {
+        [key: string]: {
+            /**
+             * Sum of all daily values in the range
+             */
+            total?: number;
+            values?: Array<{
+                date?: string;
+                value?: number;
+            }>;
+        };
+    };
+    dataDelay?: string;
+});
+
+export type GetGoogleBusinessPerformanceError = ({
+    error?: string;
+    validMetrics?: Array<(string)>;
+} | {
+    error?: string;
+} | {
+    error?: string;
+    code?: string;
+});
+
+export type GetGoogleBusinessSearchKeywordsData = {
+    query: {
+        /**
+         * The Zernio SocialAccount ID for the Google Business Profile account.
+         */
+        accountId: string;
+        /**
+         * End month (YYYY-MM). Defaults to current month.
+         */
+        endMonth?: string;
+        /**
+         * Start month (YYYY-MM). Defaults to 3 months ago.
+         */
+        startMonth?: string;
+    };
+};
+
+export type GetGoogleBusinessSearchKeywordsResponse = ({
+    success?: boolean;
+    accountId?: string;
+    platform?: string;
+    monthRange?: {
+        startMonth?: string;
+        endMonth?: string;
+    };
+    keywords?: Array<{
+        keyword?: string;
+        impressions?: number;
+    }>;
+    note?: string;
+});
+
+export type GetGoogleBusinessSearchKeywordsError = ({
+    error?: string;
+} | {
+    error?: string;
+    code?: string;
+});
+
 export type ListAccountGroupsResponse = ({
     groups?: Array<{
         _id?: string;

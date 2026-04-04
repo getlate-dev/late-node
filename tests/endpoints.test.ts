@@ -133,6 +133,16 @@ describe('Endpoint Methods', () => {
       expect(client.analytics.getPostTimeline).toBeTypeOf('function');
     });
 
+    it('should have getGoogleBusinessPerformance method', () => {
+      expect(client.analytics.getGoogleBusinessPerformance).toBeDefined();
+      expect(client.analytics.getGoogleBusinessPerformance).toBeTypeOf('function');
+    });
+
+    it('should have getGoogleBusinessSearchKeywords method', () => {
+      expect(client.analytics.getGoogleBusinessSearchKeywords).toBeDefined();
+      expect(client.analytics.getGoogleBusinessSearchKeywords).toBeTypeOf('function');
+    });
+
     it('should have getLinkedInAggregateAnalytics method', () => {
       expect(client.analytics.getLinkedInAggregateAnalytics).toBeDefined();
       expect(client.analytics.getLinkedInAggregateAnalytics).toBeTypeOf('function');
