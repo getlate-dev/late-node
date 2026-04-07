@@ -1145,9 +1145,10 @@ export const updateLinkedInOrganization = <ThrowOnError extends boolean = false>
  * **Important:** The `mentions` array field in POST /v1/posts is stored for reference only and does NOT trigger @mentions on LinkedIn. You must embed the mention format directly in the content text.
  *
  * **Requirements:**
- * - Person mentions require the LinkedIn account to be admin of at least one organization.
- * - Organization mentions (e.g. @Microsoft) work without this requirement.
+ * - **Person mentions** require the LinkedIn account to be admin of at least one organization. This is a LinkedIn API limitation: the only endpoints that resolve profile URLs to member URNs (`vanityUrl`, `peopleTypeahead`) are scoped to organization followers. There is no public LinkedIn API to resolve a vanity URL without organization context.
+ * - **Organization mentions** (e.g. @Microsoft) work without this requirement.
  * - For person mentions to be clickable, the `displayName` parameter must exactly match the name shown on their LinkedIn profile.
+ * - Person mentions DO work when published from personal profiles (the URN just needs to be valid). The limitation is only in the resolution step (URL to URN), not in publishing.
  *
  */
 export const getLinkedInMentions = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetLinkedInMentionsData, ThrowOnError>) => {
