@@ -421,7 +421,8 @@ export type permission = 'read-write' | 'read';
  */
 export type BlueskyPlatformData = {
     /**
-     * Sequence of posts in a Bluesky thread (root then replies in order).
+     * Complete sequence of posts in a Bluesky thread. The first item becomes the root post, subsequent items are chained as replies. When threadItems is provided, the top-level content field is used only for display and search purposes, it is NOT published. You must include your first post as threadItems[0].
+     *
      */
     threadItems?: Array<{
         content?: string;
@@ -1670,7 +1671,8 @@ export type ThreadsPlatformData = {
      */
     topic_tag?: string;
     /**
-     * Sequence of posts in a Threads thread (root then replies in order).
+     * Complete sequence of posts in a Threads thread. The first item becomes the root post, subsequent items are chained as replies. When threadItems is provided, the top-level content field is used only for display and search purposes, it is NOT published. You must include your first post as threadItems[0].
+     *
      */
     threadItems?: Array<{
         content?: string;
@@ -1772,7 +1774,8 @@ export type TwitterPlatformData = {
      */
     replySettings?: 'following' | 'mentionedUsers' | 'subscribers' | 'verified';
     /**
-     * Sequence of tweets in a thread. First item is the root tweet.
+     * Complete sequence of tweets in a thread. The first item becomes the root tweet, subsequent items are chained as replies. When threadItems is provided, the top-level content field is used only for display and search purposes, it is NOT published. You must include your first tweet as threadItems[0].
+     *
      */
     threadItems?: Array<{
         content?: string;
