@@ -276,6 +276,7 @@ try {
 | Method | Description |
 |--------|-------------|
 | `logs.listConnectionLogs()` | List connection logs |
+| `logs.listLogs()` | List activity logs |
 | `logs.listPostsLogs()` | List publishing logs |
 | `logs.getPostLogs()` | Get post logs |
 
@@ -304,6 +305,7 @@ try {
 | `connect.updateRedditSubreddits()` | Set default subreddit |
 | `connect.updateYoutubeDefaultPlaylist()` | Set default YouTube playlist |
 | `connect.completeTelegramConnect()` | Check Telegram status |
+| `connect.connectAds()` | Connect ads for a platform |
 | `connect.connectBlueskyCredentials()` | Connect Bluesky account |
 | `connect.connectWhatsAppCredentials()` | Connect WhatsApp via credentials |
 | `connect.handleOAuthCallback()` | Complete OAuth callback |

@@ -17,6 +17,7 @@ import {
   cancelWhatsAppBroadcastSchedule,
   clearContactFieldValue,
   completeTelegramConnect,
+  connectAds,
   connectBlueskyCredentials,
   connectWhatsAppCredentials,
   createAccountGroup,
@@ -176,6 +177,7 @@ import {
   listInboxConversations,
   listInboxReviews,
   listLinkedInOrganizations,
+  listLogs,
   listPinterestBoardsForSelection,
   listPosts,
   listPostsLogs,
@@ -467,6 +469,7 @@ export class Zernio {
   connect = {
     getConnectUrl: getConnectUrl,
     handleOAuthCallback: handleOAuthCallback,
+    connectAds: connectAds,
     getPendingOAuthData: getPendingOAuthData,
     connectWhatsAppCredentials: connectWhatsAppCredentials,
     getFacebookPages: getFacebookPages,
@@ -582,6 +585,7 @@ export class Zernio {
    * Logs API - Publishing logs
    */
   logs = {
+    listLogs: listLogs,
     listPostsLogs: listPostsLogs,
     listConnectionLogs: listConnectionLogs,
     getPostLogs: getPostLogs,

@@ -189,6 +189,11 @@ describe('Endpoint Methods', () => {
       expect(client.connect.handleOAuthCallback).toBeTypeOf('function');
     });
 
+    it('should have connectAds method', () => {
+      expect(client.connect.connectAds).toBeDefined();
+      expect(client.connect.connectAds).toBeTypeOf('function');
+    });
+
     it('should have getPendingOAuthData method', () => {
       expect(client.connect.getPendingOAuthData).toBeDefined();
       expect(client.connect.getPendingOAuthData).toBeTypeOf('function');
@@ -366,6 +371,11 @@ describe('Endpoint Methods', () => {
   });
 
   describe('logs', () => {
+    it('should have listLogs method', () => {
+      expect(client.logs.listLogs).toBeDefined();
+      expect(client.logs.listLogs).toBeTypeOf('function');
+    });
+
     it('should have listPostsLogs method', () => {
       expect(client.logs.listPostsLogs).toBeDefined();
       expect(client.logs.listPostsLogs).toBeTypeOf('function');

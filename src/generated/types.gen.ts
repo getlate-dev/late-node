@@ -1620,6 +1620,14 @@ export type SocialAccount = {
      */
     followersLastUpdated?: string;
     /**
+     * Ads connection status for this account.
+     * - `connected`: Ads are ready to use (same-token platforms like Meta/LinkedIn, or separate ads token is present).
+     * - `not_connected`: Platform supports ads but requires a separate ads OAuth. Use `GET /v1/connect/{platform}/ads` to connect.
+     * - `not_available`: Platform does not support ads (e.g., YouTube, Reddit, Bluesky).
+     *
+     */
+    adsStatus?: 'connected' | 'not_connected' | 'not_available';
+    /**
      * Platform-specific metadata. Fields vary by platform. For WhatsApp accounts, includes:
      * - `qualityRating`: Phone number quality rating from Meta (`GREEN`, `YELLOW`, `RED`, or `UNKNOWN`)
      * - `nameStatus`: Display name review status (`APPROVED`, `PENDING_REVIEW`, `DECLINED`, or `NONE`). Messages cannot be sent until the display name is approved by Meta.
@@ -1634,6 +1642,15 @@ export type SocialAccount = {
         [key: string]: unknown;
     };
 };
+
+/**
+ * Ads connection status for this account.
+ * - `connected`: Ads are ready to use (same-token platforms like Meta/LinkedIn, or separate ads token is present).
+ * - `not_connected`: Platform supports ads but requires a separate ads OAuth. Use `GET /v1/connect/{platform}/ads` to connect.
+ * - `not_available`: Platform does not support ads (e.g., YouTube, Reddit, Bluesky).
+ *
+ */
+export type adsStatus = 'connected' | 'not_connected' | 'not_available';
 
 /**
  * Text, images (up to 10), videos (up to 10), and mixed media albums. Captions up to 1024 chars for media, 4096 for text-only.
@@ -4321,6 +4338,48 @@ export type HandleOAuthCallbackError = (unknown | {
     error?: string;
 });
 
+export type ConnectAdsData = {
+    path: {
+        /**
+         * Platform to connect ads for. Only platforms with ads support are accepted.
+         */
+        platform: 'facebook' | 'instagram' | 'linkedin' | 'tiktok' | 'twitter' | 'pinterest' | 'googleads';
+    };
+    query: {
+        /**
+         * Existing SocialAccount ID. Required for separate-token platforms (tiktok, twitter, pinterest). Ignored for same-token and ads-only platforms.
+         */
+        accountId?: string;
+        /**
+         * Enable headless mode (same-token platforms only)
+         */
+        headless?: boolean;
+        /**
+         * Your Zernio profile ID
+         */
+        profileId: string;
+        /**
+         * Custom redirect URL after OAuth completes (same-token platforms only)
+         */
+        redirect_url?: string;
+    };
+};
+
+export type ConnectAdsResponse = (({
+    alreadyConnected?: boolean;
+    accountId?: string;
+    platform?: string;
+    username?: string;
+    displayName?: string;
+} | {
+    authUrl?: string;
+    state?: string;
+}));
+
+export type ConnectAdsError = (unknown | {
+    error?: string;
+});
+
 export type ListFacebookPagesData = {
     query: {
         /**
@@ -6587,6 +6646,92 @@ export type TestWebhookError = (unknown | {
 } | {
     success?: boolean;
     message?: string;
+});
+
+export type ListLogsData = {
+    query?: {
+        /**
+         * Filter by action (e.g., post.published, message.sent, account.connected, webhook.delivered)
+         */
+        action?: string;
+        /**
+         * Number of days to look back (max 90)
+         */
+        days?: number;
+        /**
+         * Maximum number of logs to return (max 100)
+         */
+        limit?: number;
+        /**
+         * Filter by platform
+         */
+        platform?: 'tiktok' | 'instagram' | 'whatsapp' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat' | 'all';
+        /**
+         * Free-text search across log fields
+         */
+        search?: string;
+        /**
+         * Number of logs to skip (for pagination)
+         */
+        skip?: number;
+        /**
+         * Filter by status
+         */
+        status?: 'success' | 'failed' | 'pending' | 'skipped' | 'all';
+        /**
+         * Log category to query
+         */
+        type?: 'publishing' | 'connections' | 'webhooks' | 'messaging';
+    };
+};
+
+export type ListLogsResponse = ({
+    logs?: Array<{
+        /**
+         * Log category (publishing, connections, webhooks, messaging)
+         */
+        type?: string;
+        /**
+         * Specific action (post.published, message.sent, account.connected, etc.)
+         */
+        action?: string;
+        user_id?: string;
+        platform?: string;
+        account_id?: string;
+        status?: 'success' | 'failed' | 'pending' | 'skipped';
+        status_code?: number;
+        error_message?: string;
+        error_code?: string;
+        duration_ms?: number;
+        /**
+         * The API endpoint that triggered this log
+         */
+        endpoint?: string;
+        /**
+         * Request JSON (truncated to 5KB)
+         */
+        request_body?: string;
+        /**
+         * Response JSON (truncated to 10KB)
+         */
+        response_body?: string;
+        created_at?: string;
+        /**
+         * Additional context as JSON string
+         */
+        metadata?: string;
+    }>;
+    pagination?: {
+        total?: number;
+        limit?: number;
+        skip?: number;
+        pages?: number;
+        hasMore?: boolean;
+    };
+});
+
+export type ListLogsError = ({
+    error?: string;
 });
 
 export type GetWebhookLogsData = {
