@@ -719,9 +719,10 @@ export const selectFacebookPage = <ThrowOnError extends boolean = false>(options
 
 /**
  * List GBP locations
- * For headless flows. Returns the list of GBP locations the user can manage. Use X-Connect-Token if connecting via API key.
+ * For headless flows. Returns the list of GBP locations the user can manage. Use pendingDataToken (from the OAuth callback redirect) to list locations without consuming the token, so it remains available for select-location. Use X-Connect-Token header if connecting via API key.
+ *
  */
-export const listGoogleBusinessLocations = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<ListGoogleBusinessLocationsData, ThrowOnError>) => {
+export const listGoogleBusinessLocations = <ThrowOnError extends boolean = false>(options?: OptionsLegacyParser<ListGoogleBusinessLocationsData, ThrowOnError>) => {
     return (options?.client ?? client).get<ListGoogleBusinessLocationsResponse, ListGoogleBusinessLocationsError, ThrowOnError>({
         ...options,
         url: '/v1/connect/googlebusiness/locations'
@@ -730,7 +731,8 @@ export const listGoogleBusinessLocations = <ThrowOnError extends boolean = false
 
 /**
  * Select GBP location
- * Complete the headless flow by saving the user's selected GBP location. Include userProfile from the OAuth redirect (contains refresh token). Use X-Connect-Token if connecting via API key.
+ * Complete the headless GBP flow by saving the user's selected location. The pendingDataToken is returned in your redirect URL after OAuth completes (step=select_location). Tokens and profile data are stored server-side, so only the pendingDataToken is needed here. Use X-Connect-Token header if connecting via API key.
+ *
  */
 export const selectGoogleBusinessLocation = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<SelectGoogleBusinessLocationData, ThrowOnError>) => {
     return (options?.client ?? client).post<SelectGoogleBusinessLocationResponse, SelectGoogleBusinessLocationError, ThrowOnError>({

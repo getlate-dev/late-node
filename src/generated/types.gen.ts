@@ -4418,15 +4418,19 @@ export type SelectFacebookPageError = (unknown | {
 });
 
 export type ListGoogleBusinessLocationsData = {
-    query: {
+    query?: {
         /**
-         * Profile ID from your connection flow
+         * Token from the OAuth callback redirect. Preferred over tempToken because it preserves server-side token storage. One of pendingDataToken or tempToken is required.
          */
-        profileId: string;
+        pendingDataToken?: string;
         /**
-         * Temporary Google access token from the OAuth callback redirect
+         * Profile ID from your connection flow. Required for auth validation when provided.
          */
-        tempToken: string;
+        profileId?: string;
+        /**
+         * Legacy. Direct Google access token. Use pendingDataToken instead when available.
+         */
+        tempToken?: string;
     };
 };
 
@@ -4474,28 +4478,9 @@ export type SelectGoogleBusinessLocationData = {
          */
         locationId: string;
         /**
-         * Temporary Google access token from OAuth
+         * Token from the OAuth callback redirect (pendingDataToken query param). Tokens and profile data are retrieved server-side from this token.
          */
-        tempToken: string;
-        /**
-         * Decoded user profile from the OAuth callback. Contains the refresh token. Always include this field.
-         */
-        userProfile?: {
-            id?: string;
-            name?: string;
-            /**
-             * Google refresh token for long-lived access
-             */
-            refreshToken?: string;
-            /**
-             * Token expiration time in seconds
-             */
-            tokenExpiresIn?: number;
-            /**
-             * Granted OAuth scopes
-             */
-            scope?: string;
-        };
+        pendingDataToken: string;
         /**
          * Optional custom redirect URL to return to after selection
          */
