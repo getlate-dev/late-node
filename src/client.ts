@@ -72,6 +72,7 @@ import {
   deleteWhatsAppGroupChat,
   deleteWhatsAppTemplate,
   deprecateWhatsAppFlow,
+  disconnectAds,
   editInboxMessage,
   editPost,
   enrollContacts,
@@ -225,7 +226,6 @@ import {
   setInstagramIceBreakers,
   setMessengerMenu,
   setTelegramCommands,
-  syncExternalAds,
   testWebhook,
   undoRetweet,
   unenrollContact,
@@ -440,6 +440,7 @@ export class Zernio {
     getFollowerStats: getFollowerStats,
     updateAccount: updateAccount,
     deleteAccount: deleteAccount,
+    disconnectAds: disconnectAds,
     getAllAccountsHealth: getAllAccountsHealth,
     getAccountHealth: getAccountHealth,
     getTikTokCreatorInfo: getTikTokCreatorInfo,
@@ -816,7 +817,6 @@ export class Zernio {
     listAdAccounts: listAdAccounts,
     boostPost: boostPost,
     createStandaloneAd: createStandaloneAd,
-    syncExternalAds: syncExternalAds,
     searchAdInterests: searchAdInterests,
   };
 

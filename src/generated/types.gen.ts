@@ -4005,6 +4005,29 @@ export type DeleteAccountError = ({
     error?: string;
 });
 
+export type DisconnectAdsData = {
+    body: {
+        /**
+         * The ads platform to disconnect
+         */
+        adsPlatform: 'metaads' | 'linkedinads' | 'pinterestads' | 'tiktokads' | 'xads';
+    };
+    path: {
+        /**
+         * The SocialAccount ID (parent posting account for same-token/separate-token platforms)
+         */
+        accountId: string;
+    };
+};
+
+export type DisconnectAdsResponse = ({
+    message?: string;
+});
+
+export type DisconnectAdsError = (unknown | {
+    error?: string;
+});
+
 export type GetAllAccountsHealthData = {
     query?: {
         /**
@@ -4347,7 +4370,7 @@ export type ConnectAdsData = {
     };
     query: {
         /**
-         * Existing SocialAccount ID. Required for separate-token platforms (tiktok, twitter, pinterest). Ignored for same-token and ads-only platforms.
+         * Existing SocialAccount ID. Required for separate-token platforms (tiktok, twitter). Ignored for same-token and ads-only platforms.
          */
         accountId?: string;
         /**
@@ -11735,6 +11758,10 @@ export type ListAdsData = {
          * Platform campaign ID (filter ads within a campaign)
          */
         campaignId?: string;
+        /**
+         * Start of metrics date range (YYYY-MM-DD). Defaults to 90 days ago.
+         */
+        fromDate?: string;
         limit?: number;
         /**
          * Page number (1-based)
@@ -11750,6 +11777,10 @@ export type ListAdsData = {
          */
         source?: 'zernio' | 'all';
         status?: 'active' | 'paused' | 'pending_review' | 'rejected' | 'completed' | 'cancelled' | 'error';
+        /**
+         * End of metrics date range (YYYY-MM-DD). Defaults to today. Max 90-day range.
+         */
+        toDate?: string;
     };
 };
 
@@ -11843,6 +11874,10 @@ export type GetAdTreeData = {
          */
         adAccountId?: string;
         /**
+         * Start of metrics date range (YYYY-MM-DD). Defaults to 90 days ago.
+         */
+        fromDate?: string;
+        /**
          * Campaigns per page
          */
         limit?: number;
@@ -11860,6 +11895,10 @@ export type GetAdTreeData = {
          * Filter by derived campaign status (post-aggregation)
          */
         status?: 'active' | 'paused' | 'pending_review' | 'rejected' | 'completed' | 'cancelled' | 'error';
+        /**
+         * End of metrics date range (YYYY-MM-DD). Defaults to today. Max 90-day range.
+         */
+        toDate?: string;
     };
 };
 
@@ -11944,6 +11983,14 @@ export type GetAdAnalyticsData = {
          * Comma-separated breakdown dimensions. Meta: age, gender, country, publisher_platform, device_platform, region. TikTok: gender, age, country_code, platform, ac, language.
          */
         breakdowns?: string;
+        /**
+         * Start of date range (YYYY-MM-DD). Defaults to 90 days ago.
+         */
+        fromDate?: string;
+        /**
+         * End of date range (YYYY-MM-DD). Defaults to today. Max 90-day range.
+         */
+        toDate?: string;
     };
 };
 
@@ -12141,26 +12188,6 @@ export type CreateStandaloneAdResponse = ({
 export type CreateStandaloneAdError = (unknown | {
     error?: string;
 });
-
-export type SyncExternalAdsResponse = ({
-    success?: boolean;
-    /**
-     * New ads imported
-     */
-    synced?: number;
-    /**
-     * Already-known ads (skipped import
-     */
-    skipped?: number;
-    /**
-     * Failed ad imports
-     */
-    errors?: number;
-});
-
-export type SyncExternalAdsError = ({
-    error?: string;
-} | unknown);
 
 export type SearchAdInterestsData = {
     query: {

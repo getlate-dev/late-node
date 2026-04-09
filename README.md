@@ -192,6 +192,7 @@ try {
 | `accounts.getTikTokCreatorInfo()` | Get TikTok creator info |
 | `accounts.updateAccount()` | Update account |
 | `accounts.deleteAccount()` | Disconnect account |
+| `accounts.disconnectAds()` | Disconnect ads from an account |
 
 ### Profiles
 | Method | Description |
@@ -363,7 +364,6 @@ try {
 | `ads.deleteAd()` | Cancel an ad |
 | `ads.boostPost()` | Boost an existing post as a paid ad |
 | `ads.searchAdInterests()` | Search targeting interests |
-| `ads.syncExternalAds()` | Sync external ads from platform ad managers |
 
 ### Broadcasts
 | Method | Description |
