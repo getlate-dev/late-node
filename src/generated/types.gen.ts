@@ -1910,7 +1910,7 @@ export type Webhook = {
     /**
      * Events subscribed to
      */
-    events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'comment.received')>;
+    events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'message.sent' | 'comment.received')>;
     /**
      * Whether webhook delivery is enabled
      */
@@ -1944,7 +1944,7 @@ export type WebhookLog = {
      * Name of the webhook that was triggered
      */
     webhookName?: string;
-    event?: 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'comment.received' | 'webhook.test';
+    event?: 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'message.sent' | 'comment.received' | 'webhook.test';
     url?: string;
     status?: 'success' | 'failed';
     /**
@@ -1976,7 +1976,7 @@ export type WebhookLog = {
     createdAt?: string;
 };
 
-export type event = 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'comment.received' | 'webhook.test';
+export type event = 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'message.sent' | 'comment.received' | 'webhook.test';
 
 export type status7 = 'success' | 'failed';
 
@@ -2243,6 +2243,82 @@ export type direction = 'incoming' | 'outgoing';
 export type status8 = 'active' | 'archived';
 
 /**
+ * Webhook payload for message sent events (fired when a message is sent via the API)
+ */
+export type WebhookPayloadMessageSent = {
+    /**
+     * Stable webhook event ID
+     */
+    id: string;
+    event: 'message.sent';
+    message: {
+        /**
+         * Internal message ID
+         */
+        id: string;
+        /**
+         * Internal conversation ID
+         */
+        conversationId: string;
+        platform: 'instagram' | 'facebook' | 'telegram' | 'whatsapp';
+        /**
+         * Platform's message ID
+         */
+        platformMessageId: string;
+        direction: 'incoming' | 'outgoing';
+        /**
+         * Message text content
+         */
+        text: (string) | null;
+        attachments: Array<{
+            /**
+             * Attachment type (image, video, file, sticker, audio)
+             */
+            type: string;
+            /**
+             * Attachment URL (may expire for Meta platforms)
+             */
+            url: string;
+            /**
+             * Additional attachment metadata
+             */
+            payload?: {
+                [key: string]: unknown;
+            };
+        }>;
+        sender: {
+            id: string;
+            name?: string;
+            username?: string;
+            picture?: string;
+        };
+        sentAt: string;
+        isRead: boolean;
+    };
+    conversation: {
+        id: string;
+        platformConversationId: string;
+        participantId?: string;
+        participantName?: string;
+        participantUsername?: string;
+        participantPicture?: string;
+        status: 'active' | 'archived';
+    };
+    account: {
+        /**
+         * Social account ID
+         */
+        id: string;
+        platform: string;
+        username: string;
+        displayName?: string;
+    };
+    timestamp: string;
+};
+
+export type event6 = 'message.sent';
+
+/**
  * Webhook payload for post events
  */
 export type WebhookPayloadPost = {
@@ -2268,7 +2344,7 @@ export type WebhookPayloadPost = {
     timestamp: string;
 };
 
-export type event6 = 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled';
+export type event7 = 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled';
 
 /**
  * Webhook payload for test deliveries
@@ -2286,7 +2362,7 @@ export type WebhookPayloadTest = {
     timestamp: string;
 };
 
-export type event7 = 'webhook.test';
+export type event8 = 'webhook.test';
 
 export type WhatsAppBodyComponent = {
     type: 'body';
@@ -6762,7 +6838,7 @@ export type GetWebhookLogsData = {
         /**
          * Filter by event type
          */
-        event?: 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'comment.received' | 'webhook.test';
+        event?: 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'message.sent' | 'comment.received' | 'webhook.test';
         /**
          * Maximum number of logs to return (max 100)
          */
