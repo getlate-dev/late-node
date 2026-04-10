@@ -593,14 +593,11 @@ export const deleteAccount = <ThrowOnError extends boolean = false>(options: Opt
 };
 
 /**
+ * @deprecated
  * Disconnect ads from an account
- * Disconnects ads from a social account without removing the posting connection.
+ * **Deprecated.** Ads accounts are now standalone SocialAccount documents. Use `DELETE /v1/accounts/{accountId}` instead, passing the ads account's own ID.
  *
- * **Same-token platforms** (metaads, linkedinads, pinterestads): Sets an `adsOptOut` flag. The posting account and OAuth token are preserved. Reconnecting ads clears the flag.
- *
- * **Separate-token platforms** (tiktokads, xads): Clears the ads-specific metadata (marketing API tokens). The posting account stays intact.
- *
- * **Standalone platforms** (googleads): Do not use this endpoint. Use `DELETE /v1/accounts/{accountId}` instead, since Google Ads accounts are standalone.
+ * This endpoint is kept for backward compatibility. It soft-deletes the ads SocialAccount identified by `accountId` (which must be an ads account, not a posting account). The parent posting account is left untouched.
  *
  */
 export const disconnectAds = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<DisconnectAdsData, ThrowOnError>) => {
@@ -715,15 +712,15 @@ export const handleOAuthCallback = <ThrowOnError extends boolean = false>(option
 
 /**
  * Connect ads for a platform
- * Unified ads connection endpoint. Handles all platforms through a single route:
+ * Unified ads connection endpoint. Creates a dedicated ads SocialAccount for the specified platform.
  *
- * **Same-token platforms** (facebook, instagram, linkedin, pinterest): If a posting account already exists, returns `alreadyConnected: true` immediately (no extra OAuth needed). If not, starts the normal OAuth flow, and the resulting account supports both posting and ads.
+ * **Same-token platforms** (facebook, instagram, linkedin, pinterest): Creates an ads SocialAccount (`metaads`, `linkedinads`, `pinterestads`) with a copied OAuth token from the parent posting account. If the ads account already exists, returns `alreadyConnected: true`. No extra OAuth needed.
  *
- * **Separate-token platforms** (tiktok, twitter): Requires an existing posting account (`accountId` param). If ads are already connected, returns `alreadyConnected: true`. Otherwise, starts the platform-specific marketing API OAuth flow.
+ * **Separate-token platforms** (tiktok, twitter): Starts the platform-specific marketing API OAuth flow and creates an ads SocialAccount (`tiktokads`, `xads`) with its own token. Requires an existing posting account (`accountId` param). If the ads account already exists, returns `alreadyConnected: true`.
  *
- * **Ads-only platforms** (googleads): If a Google Ads account exists, returns `alreadyConnected: true`. Otherwise, starts the Google Ads OAuth flow.
+ * **Standalone platforms** (googleads): Starts the Google Ads OAuth flow and creates a standalone ads SocialAccount (`googleads`) with no parent. If the account already exists, returns `alreadyConnected: true`.
  *
- * Use the `adsStatus` field from `GET /v1/accounts` to check which accounts need ads connection.
+ * Ads accounts appear as regular SocialAccount documents with ads platform values (e.g., `metaads`, `tiktokads`) in `GET /v1/accounts`.
  *
  */
 export const connectAds = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<ConnectAdsData, ThrowOnError>) => {

@@ -1602,7 +1602,7 @@ export type contentType3 = 'story' | 'saved_story' | 'spotlight';
 
 export type SocialAccount = {
     _id?: string;
-    platform?: string;
+    platform?: 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat' | 'whatsapp' | 'linkedinads' | 'metaads' | 'pinterestads' | 'tiktokads' | 'xads' | 'googleads';
     profileId?: (string | Profile);
     username?: string;
     displayName?: string;
@@ -1620,11 +1620,30 @@ export type SocialAccount = {
      */
     followersLastUpdated?: string;
     /**
-     * Ads connection status for this account.
+     * Reference to the parent posting SocialAccount. Set for ads accounts that share
+     * or derive from a posting account's OAuth token. null for standalone ads (Google Ads)
+     * and all posting accounts.
+     *
+     */
+    parentAccountId?: (string) | null;
+    /**
+     * Whether the user explicitly activated this account. false means the account was
+     * created as a side effect (e.g., posting account auto-created when user connected
+     * ads first). Posting UI and scheduler ignore accounts with enabled: false.
+     *
+     */
+    enabled?: boolean;
+    /**
+     * **Deprecated.** With the new ads account model, ads accounts are separate SocialAccount
+     * documents. Check for accounts with ads platform values (metaads, linkedinads, pinterestads,
+     * tiktokads, xads, googleads) instead.
+     *
+     * Legacy behavior:
      * - `connected`: Ads are ready to use (same-token platforms like Meta/LinkedIn, or separate ads token is present).
      * - `not_connected`: Platform supports ads but requires a separate ads OAuth. Use `GET /v1/connect/{platform}/ads` to connect.
      * - `not_available`: Platform does not support ads (e.g., YouTube, Reddit, Bluesky).
      *
+     * @deprecated
      */
     adsStatus?: 'connected' | 'not_connected' | 'not_available';
     /**
@@ -1643,12 +1662,19 @@ export type SocialAccount = {
     };
 };
 
+export type platform3 = 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat' | 'whatsapp' | 'linkedinads' | 'metaads' | 'pinterestads' | 'tiktokads' | 'xads' | 'googleads';
+
 /**
- * Ads connection status for this account.
+ * **Deprecated.** With the new ads account model, ads accounts are separate SocialAccount
+ * documents. Check for accounts with ads platform values (metaads, linkedinads, pinterestads,
+ * tiktokads, xads, googleads) instead.
+ *
+ * Legacy behavior:
  * - `connected`: Ads are ready to use (same-token platforms like Meta/LinkedIn, or separate ads token is present).
  * - `not_connected`: Platform supports ads but requires a separate ads OAuth. Use `GET /v1/connect/{platform}/ads` to connect.
  * - `not_available`: Platform does not support ads (e.g., YouTube, Reddit, Bluesky).
  *
+ * @deprecated
  */
 export type adsStatus = 'connected' | 'not_connected' | 'not_available';
 
@@ -1698,11 +1724,31 @@ export type ThreadsPlatformData = {
 };
 
 /**
- * Photo carousels up to 35 images. Video titles up to 2200 chars, photo titles truncated to 90 chars. privacyLevel must match creator_info options. Both camelCase and snake_case accepted.
+ * Photo carousels up to 35 images. Video titles up to 2200 chars, photo titles truncated to 90 chars.
+ * privacyLevel must match creator_info options. Both camelCase and snake_case accepted.
+ *
+ * **Creator Inbox (draft mode):** Set `draft: true` to send content to the TikTok Creator Inbox
+ * instead of publishing immediately. The creator receives an inbox notification and completes
+ * the post using TikTok's editing flow. This maps to TikTok's `post_mode: "MEDIA_UPLOAD"` internally.
+ *
+ * **Important:** The field `publish_type` is NOT supported. Use `draft: true` for Creator Inbox flow.
+ *
+ * **Photo drafts** use the `/v2/post/publish/content/init/` endpoint with `post_mode: "MEDIA_UPLOAD"`.
+ * **Video drafts** use the dedicated `/v2/post/publish/inbox/video/init/` endpoint.
+ *
+ * When `draft: true`, the `video.upload` scope is required. When `draft` is false or omitted
+ * (direct post), the `video.publish` scope is required. For Creator Inbox, TikTok app version
+ * must be 31.8 or higher.
+ *
  */
 export type TikTokPlatformData = {
     /**
-     * When true, sends the post to the TikTok Creator Inbox as a draft instead of publishing immediately.
+     * When true, sends the post to the TikTok Creator Inbox as a draft instead of publishing
+     * immediately. The creator receives an inbox notification to complete posting via TikTok's
+     * editing flow. Maps to TikTok API `post_mode: "MEDIA_UPLOAD"` (photos) or the dedicated
+     * inbox endpoint (videos). When false or omitted, publishes directly via `post_mode: "DIRECT_POST"`.
+     * Note: `publish_type` is not a supported field. Use this field instead.
+     *
      */
     draft?: boolean;
     /**
@@ -2116,7 +2162,7 @@ export type WebhookPayloadComment = {
 
 export type event4 = 'comment.received';
 
-export type platform3 = 'instagram' | 'facebook' | 'twitter' | 'youtube' | 'linkedin' | 'bluesky' | 'reddit';
+export type platform4 = 'instagram' | 'facebook' | 'twitter' | 'youtube' | 'linkedin' | 'bluesky' | 'reddit';
 
 /**
  * Webhook payload for message received events
@@ -2236,7 +2282,7 @@ export type WebhookPayloadMessage = {
 
 export type event5 = 'message.received';
 
-export type platform4 = 'instagram' | 'facebook' | 'telegram' | 'whatsapp';
+export type platform5 = 'instagram' | 'facebook' | 'telegram' | 'whatsapp';
 
 export type direction = 'incoming' | 'outgoing';
 
@@ -4082,15 +4128,15 @@ export type DeleteAccountError = ({
 });
 
 export type DisconnectAdsData = {
-    body: {
+    body?: {
         /**
-         * The ads platform to disconnect
+         * The ads platform (optional, used for logging only)
          */
-        adsPlatform: 'metaads' | 'linkedinads' | 'pinterestads' | 'tiktokads' | 'xads';
+        adsPlatform?: 'metaads' | 'linkedinads' | 'pinterestads' | 'tiktokads' | 'xads';
     };
     path: {
         /**
-         * The SocialAccount ID (parent posting account for same-token/separate-token platforms)
+         * The ads SocialAccount ID to disconnect
          */
         accountId: string;
     };
@@ -4446,7 +4492,7 @@ export type ConnectAdsData = {
     };
     query: {
         /**
-         * Existing SocialAccount ID. Required for separate-token platforms (tiktok, twitter). Ignored for same-token and ads-only platforms.
+         * Existing SocialAccount ID. Required for separate-token platforms (tiktok, twitter). Ignored for same-token and standalone platforms.
          */
         accountId?: string;
         /**
