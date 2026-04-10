@@ -73,6 +73,8 @@ export const validateSubreddit = <ThrowOnError extends boolean = false>(options:
  * Accepts both Zernio Post IDs and External Post IDs (auto-resolved). fromDate defaults to 90 days ago if omitted, max range 366 days.
  * Single post lookups may return 202 (sync pending) or 424 (all platforms failed). For follower stats, use /v1/accounts/follower-stats.
  *
+ * **LinkedIn personal accounts:** Analytics are only available for posts published through Zernio. LinkedIn's API only returns metrics for posts authored by the authenticated user. Organization/company page analytics work for all posts.
+ *
  */
 export const getAnalytics = <ThrowOnError extends boolean = false>(options?: OptionsLegacyParser<GetAnalyticsData, ThrowOnError>) => {
     return (options?.client ?? client).get<GetAnalyticsResponse, GetAnalyticsError, ThrowOnError>({
@@ -1119,7 +1121,7 @@ export const getLinkedInOrganizations = <ThrowOnError extends boolean = false>(o
 
 /**
  * Get LinkedIn aggregate stats
- * Returns aggregate analytics across all posts for a LinkedIn personal account. Org accounts should use /v1/analytics instead. Requires r_member_postAnalytics scope.
+ * Returns aggregate analytics across all posts for a LinkedIn personal account. Only includes posts published through Zernio (LinkedIn API limitation). Org accounts should use /v1/analytics instead. Requires r_member_postAnalytics scope.
  */
 export const getLinkedInAggregateAnalytics = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetLinkedInAggregateAnalyticsData, ThrowOnError>) => {
     return (options?.client ?? client).get<GetLinkedInAggregateAnalyticsResponse, GetLinkedInAggregateAnalyticsError, ThrowOnError>({
