@@ -2012,7 +2012,7 @@ export type WebhookLog = {
      */
     errorMessage?: string;
     /**
-     * Delivery attempt number (max 3 retries)
+     * Delivery attempt number (max 7 attempts)
      */
     attemptNumber?: number;
     /**
