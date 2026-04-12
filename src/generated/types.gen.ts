@@ -4588,7 +4588,7 @@ export type SelectFacebookPageData = {
         /**
          * Decoded user profile object from the OAuth callback
          */
-        userProfile?: {
+        userProfile: {
             id?: string;
             name?: string;
             profilePicture?: string;
