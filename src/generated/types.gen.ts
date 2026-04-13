@@ -680,6 +680,95 @@ export type GoogleBusinessPlatformData = {
  */
 export type type2 = 'LEARN_MORE' | 'BOOK' | 'ORDER' | 'SHOP' | 'SIGN_UP' | 'CALL';
 
+/**
+ * The `account` context included in inbox webhook payloads.
+ */
+export type InboxWebhookAccount = {
+    /**
+     * Social account ID
+     */
+    id: string;
+    platform: string;
+    username: string;
+    displayName?: string;
+};
+
+/**
+ * The `conversation` context included in inbox webhook payloads.
+ */
+export type InboxWebhookConversation = {
+    id: string;
+    platformConversationId: string;
+    participantId?: string;
+    participantName?: string;
+    participantUsername?: string;
+    participantPicture?: string;
+    status: 'active' | 'archived';
+};
+
+export type status3 = 'active' | 'archived';
+
+/**
+ * The `message` object included in inbox webhook payloads.
+ */
+export type InboxWebhookMessage = {
+    /**
+     * Internal message ID
+     */
+    id: string;
+    /**
+     * Internal conversation ID
+     */
+    conversationId: string;
+    platform: 'instagram' | 'facebook' | 'telegram' | 'whatsapp';
+    /**
+     * Platform's message ID
+     */
+    platformMessageId: string;
+    direction: 'incoming' | 'outgoing';
+    /**
+     * Message text content (retained on deleted messages for API consumers; Zernio dashboard UI hides this)
+     */
+    text: (string) | null;
+    attachments: Array<{
+        /**
+         * Attachment type (image, video, file, sticker, audio)
+         */
+        type: string;
+        /**
+         * Attachment URL (may expire for Meta platforms)
+         */
+        url: string;
+        /**
+         * Additional attachment metadata
+         */
+        payload?: {
+            [key: string]: unknown;
+        };
+    }>;
+    sender: {
+        id: string;
+        name?: string;
+        username?: string;
+        picture?: string;
+        /**
+         * Instagram profile data. Only present for Instagram conversations.
+         */
+        instagramProfile?: {
+            isFollower?: (boolean) | null;
+            isFollowing?: (boolean) | null;
+            followerCount?: (number) | null;
+            isVerified?: (boolean) | null;
+        };
+    };
+    sentAt: string;
+    isRead: boolean;
+};
+
+export type platform3 = 'instagram' | 'facebook' | 'telegram' | 'whatsapp';
+
+export type direction = 'incoming' | 'outgoing';
+
 export type InstagramAccountInsightsResponse = {
     success?: boolean;
     /**
@@ -1065,7 +1154,7 @@ export type PlatformAnalytics = {
     errorMessage?: (string) | null;
 };
 
-export type status3 = 'published' | 'failed';
+export type status4 = 'published' | 'failed';
 
 /**
  * Sync state of analytics for this platform
@@ -1175,7 +1264,7 @@ export type Post = {
     updatedAt?: string;
 };
 
-export type status4 = 'draft' | 'scheduled' | 'publishing' | 'published' | 'failed' | 'partial';
+export type status5 = 'draft' | 'scheduled' | 'publishing' | 'published' | 'failed' | 'partial';
 
 export type visibility = 'public' | 'private' | 'unlisted';
 
@@ -1291,7 +1380,7 @@ export type PostLog = {
  */
 export type action = 'publish' | 'retry' | 'media_upload' | 'rate_limit_pause' | 'token_refresh' | 'cancelled';
 
-export type status5 = 'success' | 'failed' | 'pending' | 'skipped';
+export type status6 = 'success' | 'failed' | 'pending' | 'skipped';
 
 export type PostRetryResponse = {
     message?: string;
@@ -1662,7 +1751,7 @@ export type SocialAccount = {
     };
 };
 
-export type platform3 = 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat' | 'whatsapp' | 'linkedinads' | 'metaads' | 'pinterestads' | 'tiktokads' | 'xads' | 'googleads';
+export type platform4 = 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat' | 'whatsapp' | 'linkedinads' | 'metaads' | 'pinterestads' | 'tiktokads' | 'xads' | 'googleads';
 
 /**
  * **Deprecated.** With the new ads account model, ads accounts are separate SocialAccount
@@ -1885,7 +1974,7 @@ export type UploadTokenResponse = {
     status?: 'pending' | 'completed' | 'expired';
 };
 
-export type status6 = 'pending' | 'completed' | 'expired';
+export type status7 = 'pending' | 'completed' | 'expired';
 
 export type UploadTokenStatusResponse = {
     token?: string;
@@ -1956,7 +2045,7 @@ export type Webhook = {
     /**
      * Events subscribed to
      */
-    events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'message.sent' | 'comment.received')>;
+    events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'message.sent' | 'message.edited' | 'message.deleted' | 'message.delivered' | 'message.read' | 'message.failed' | 'comment.received')>;
     /**
      * Whether webhook delivery is enabled
      */
@@ -1990,7 +2079,7 @@ export type WebhookLog = {
      * Name of the webhook that was triggered
      */
     webhookName?: string;
-    event?: 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'message.sent' | 'comment.received' | 'webhook.test';
+    event?: 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'message.sent' | 'message.edited' | 'message.deleted' | 'message.delivered' | 'message.read' | 'message.failed' | 'comment.received' | 'webhook.test';
     url?: string;
     status?: 'success' | 'failed';
     /**
@@ -2022,9 +2111,9 @@ export type WebhookLog = {
     createdAt?: string;
 };
 
-export type event = 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'message.sent' | 'comment.received' | 'webhook.test';
+export type event = 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'message.sent' | 'message.edited' | 'message.deleted' | 'message.delivered' | 'message.read' | 'message.failed' | 'comment.received' | 'webhook.test';
 
-export type status7 = 'success' | 'failed';
+export type status8 = 'success' | 'failed';
 
 /**
  * Webhook payload for account connected events
@@ -2162,7 +2251,7 @@ export type WebhookPayloadComment = {
 
 export type event4 = 'comment.received';
 
-export type platform4 = 'instagram' | 'facebook' | 'twitter' | 'youtube' | 'linkedin' | 'bluesky' | 'reddit';
+export type platform5 = 'instagram' | 'facebook' | 'twitter' | 'youtube' | 'linkedin' | 'bluesky' | 'reddit';
 
 /**
  * Webhook payload for message received events
@@ -2282,11 +2371,106 @@ export type WebhookPayloadMessage = {
 
 export type event5 = 'message.received';
 
-export type platform5 = 'instagram' | 'facebook' | 'telegram' | 'whatsapp';
+/**
+ * Webhook payload for `message.deleted` events. Fires when the sender
+ * deletes (unsends) a message. Supported platforms: Instagram (incoming
+ * unsend) and WhatsApp (when the business deletes an outgoing message
+ * via the Cloud API).
+ *
+ * The `message.text` and `message.attachments` fields retain the content
+ * that existed before the delete. The Zernio dashboard UI does not show
+ * this content, but authorized API consumers may access it for
+ * moderation, compliance, or archival use cases.
+ *
+ */
+export type WebhookPayloadMessageDeleted = {
+    id: string;
+    event: 'message.deleted';
+    message: InboxWebhookMessage;
+    deletedAt: string;
+    conversation: InboxWebhookConversation;
+    account: InboxWebhookAccount;
+    timestamp: string;
+};
 
-export type direction = 'incoming' | 'outgoing';
+export type event6 = 'message.deleted';
 
-export type status8 = 'active' | 'archived';
+/**
+ * Shared payload for `message.delivered`, `message.read`, and
+ * `message.failed` events. Fires when the platform reports a new
+ * delivery state for an outgoing message.
+ *
+ * Platform support:
+ * * `message.delivered` — WhatsApp, Facebook Messenger.
+ * * `message.read`      — WhatsApp, Facebook Messenger, Instagram.
+ * * `message.failed`    — WhatsApp only (other platforms don't expose
+ * per-message failure via webhook).
+ *
+ */
+export type WebhookPayloadMessageDeliveryStatus = {
+    id: string;
+    event: 'message.delivered' | 'message.read' | 'message.failed';
+    message: InboxWebhookMessage;
+    /**
+     * When the platform reported this status.
+     */
+    statusAt: string;
+    /**
+     * Populated only on `message.failed`.
+     */
+    error?: {
+        code?: number;
+        title?: string;
+        message?: string;
+    } | null;
+    conversation: InboxWebhookConversation;
+    account: InboxWebhookAccount;
+    timestamp: string;
+};
+
+export type event7 = 'message.delivered' | 'message.read' | 'message.failed';
+
+/**
+ * Webhook payload for `message.edited` events. Fires when the sender
+ * edits a previously-sent message. Supported platforms: Instagram,
+ * Facebook Messenger, Telegram. The `message` object reflects the
+ * LATEST state; `editHistory` contains every prior version in order
+ * (oldest first), so the last entry is the version immediately before
+ * the current content.
+ *
+ */
+export type WebhookPayloadMessageEdited = {
+    id: string;
+    event: 'message.edited';
+    message: InboxWebhookMessage;
+    /**
+     * Prior versions of the message, oldest first.
+     */
+    editHistory: Array<{
+        text: (string) | null;
+        attachments: Array<{
+            type?: string;
+            url?: string;
+            payload?: {
+                [key: string]: unknown;
+            };
+        }>;
+        editedAt: string;
+    }>;
+    /**
+     * Total number of edits applied to this message.
+     */
+    editCount: number;
+    /**
+     * When the most recent edit happened.
+     */
+    editedAt: string;
+    conversation: InboxWebhookConversation;
+    account: InboxWebhookAccount;
+    timestamp: string;
+};
+
+export type event8 = 'message.edited';
 
 /**
  * Webhook payload for message sent events (fired when a message is sent via the API)
@@ -2362,7 +2546,7 @@ export type WebhookPayloadMessageSent = {
     timestamp: string;
 };
 
-export type event6 = 'message.sent';
+export type event9 = 'message.sent';
 
 /**
  * Webhook payload for post events
@@ -2390,7 +2574,7 @@ export type WebhookPayloadPost = {
     timestamp: string;
 };
 
-export type event7 = 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled';
+export type event10 = 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled';
 
 /**
  * Webhook payload for test deliveries
@@ -2408,7 +2592,7 @@ export type WebhookPayloadTest = {
     timestamp: string;
 };
 
-export type event8 = 'webhook.test';
+export type event11 = 'webhook.test';
 
 export type WhatsAppBodyComponent = {
     type: 'body';
@@ -6884,7 +7068,7 @@ export type GetWebhookLogsData = {
         /**
          * Filter by event type
          */
-        event?: 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'message.sent' | 'comment.received' | 'webhook.test';
+        event?: 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'message.sent' | 'message.edited' | 'message.deleted' | 'message.delivered' | 'message.read' | 'message.failed' | 'comment.received' | 'webhook.test';
         /**
          * Maximum number of logs to return (max 100)
          */
@@ -7361,6 +7545,55 @@ export type GetInboxConversationMessagesResponse = ({
          * Instagram story mention
          */
         isStoryMention?: (boolean) | null;
+        /**
+         * True if the sender has edited this message at least once.
+         */
+        isEdited?: boolean;
+        /**
+         * When the most recent edit happened.
+         */
+        editedAt?: (string) | null;
+        /**
+         * Total number of edits applied.
+         */
+        editCount?: number;
+        /**
+         * Every prior version of the message, oldest first.
+         */
+        editHistory?: Array<{
+            text?: (string) | null;
+            attachments?: Array<{
+                type?: string;
+                url?: string;
+                payload?: {
+                    [key: string]: unknown;
+                };
+            }>;
+            editedAt?: string;
+        }>;
+        /**
+         * True if the sender has deleted (unsent) this message. The original `message` and `attachments` fields remain populated.
+         */
+        isDeleted?: boolean;
+        deletedAt?: (string) | null;
+        /**
+         * Lifecycle status for outgoing messages. Not all platforms emit every state (see webhook support matrix).
+         */
+        deliveryStatus?: ('sent' | 'delivered' | 'read' | 'failed' | 'deleted') | null;
+        deliveredAt?: (string) | null;
+        readAt?: (string) | null;
+        /**
+         * Original send time for outgoing messages (used for Messenger watermark queries).
+         */
+        sentAt?: (string) | null;
+        /**
+         * Populated when `deliveryStatus === "failed"`.
+         */
+        deliveryError?: {
+            code?: number;
+            title?: string;
+            message?: string;
+        } | null;
     }>;
     lastUpdated?: string;
 });
