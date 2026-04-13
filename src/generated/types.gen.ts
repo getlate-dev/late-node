@@ -12110,6 +12110,10 @@ export type ListAdsData = {
          */
         accountId?: string;
         /**
+         * Platform ad account ID (e.g. act_123 for Meta). Mirrors the same filter on /v1/ads/campaigns and /v1/ads/tree.
+         */
+        adAccountId?: string;
+        /**
          * Platform campaign ID (filter ads within a campaign)
          */
         campaignId?: string;
