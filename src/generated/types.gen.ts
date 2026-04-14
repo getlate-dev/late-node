@@ -107,6 +107,43 @@ export type Ad = {
     campaignName?: string;
     adSetName?: string;
     /**
+     * Raw Meta campaign objective (e.g. OUTCOME_SALES, OUTCOME_LEADS, OUTCOME_TRAFFIC). Only present for Meta ads.
+     */
+    platformObjective?: (string) | null;
+    /**
+     * Meta ad set optimization goal (e.g. OFFSITE_CONVERSIONS, VALUE, LEAD_GENERATION, LINK_CLICKS). Only present for Meta ads.
+     */
+    optimizationGoal?: (string) | null;
+    /**
+     * Bid strategy (e.g. LOWEST_COST_WITHOUT_CAP, COST_CAP, LOWEST_COST_WITH_MIN_ROAS). Ad set level overrides campaign level. Only present for Meta ads.
+     */
+    bidStrategy?: (string) | null;
+    /**
+     * Meta promoted object containing conversion event details. Structure varies by objective. Only present for Meta ads.
+     */
+    promotedObject?: {
+        /**
+         * Conversion event type (e.g. PURCHASE, LEAD, COMPLETE_REGISTRATION, ADD_TO_CART)
+         */
+        custom_event_type?: string;
+        /**
+         * Meta pixel ID
+         */
+        pixel_id?: string;
+        /**
+         * Facebook page ID
+         */
+        page_id?: string;
+        /**
+         * Facebook app ID
+         */
+        application_id?: string;
+        /**
+         * Product catalog set ID
+         */
+        product_set_id?: string;
+    } | null;
+    /**
      * Platform-specific creative data. Fields vary by platform.
      */
     creative?: {
@@ -193,6 +230,26 @@ export type AdCampaign = {
     platformAdAccountId?: string;
     accountId?: string;
     profileId?: string;
+    /**
+     * Raw Meta campaign objective (e.g. OUTCOME_SALES, OUTCOME_LEADS, OUTCOME_TRAFFIC)
+     */
+    platformObjective?: (string) | null;
+    /**
+     * Meta optimization goal. String if all ad sets share the same goal, array of distinct values if they differ.
+     */
+    optimizationGoal?: ((string | Array<(string)>) | null);
+    /**
+     * Campaign-level bid strategy (e.g. LOWEST_COST_WITHOUT_CAP, COST_CAP, LOWEST_COST_WITH_MIN_ROAS)
+     */
+    bidStrategy?: (string) | null;
+    /**
+     * Meta promoted object at campaign level (conversion event details)
+     */
+    promotedObject?: {
+        custom_event_type?: string;
+        pixel_id?: string;
+        page_id?: string;
+    } | null;
     earliestAd?: string;
     latestAd?: string;
 };
@@ -238,6 +295,22 @@ export type AdTreeAdSet = {
     } | null;
     metrics?: AdMetrics;
     /**
+     * Meta ad set optimization goal (e.g. OFFSITE_CONVERSIONS, VALUE, LEAD_GENERATION)
+     */
+    optimizationGoal?: (string) | null;
+    /**
+     * Bid strategy for this ad set (overrides campaign level when set)
+     */
+    bidStrategy?: (string) | null;
+    /**
+     * Meta promoted object for this ad set (conversion event details)
+     */
+    promotedObject?: {
+        custom_event_type?: string;
+        pixel_id?: string;
+        page_id?: string;
+    } | null;
+    /**
      * Individual ads within this ad set (capped at 100). Returns a subset of Ad fields from the aggregation (core fields like _id, name, platform, status, budget, metrics, creative, goal are included; targeting and schedule may be absent).
      */
     ads?: Array<Ad>;
@@ -267,6 +340,26 @@ export type AdTreeCampaign = {
     platformAdAccountId?: string;
     accountId?: string;
     profileId?: string;
+    /**
+     * Raw Meta campaign objective (e.g. OUTCOME_SALES, OUTCOME_LEADS, OUTCOME_TRAFFIC)
+     */
+    platformObjective?: (string) | null;
+    /**
+     * Meta optimization goal. String if all ad sets share the same goal, array of distinct values if they differ.
+     */
+    optimizationGoal?: ((string | Array<(string)>) | null);
+    /**
+     * Campaign-level bid strategy (e.g. LOWEST_COST_WITHOUT_CAP, COST_CAP, LOWEST_COST_WITH_MIN_ROAS)
+     */
+    bidStrategy?: (string) | null;
+    /**
+     * Meta promoted object at campaign level (conversion event details)
+     */
+    promotedObject?: {
+        custom_event_type?: string;
+        pixel_id?: string;
+        page_id?: string;
+    } | null;
     adSets?: Array<AdTreeAdSet>;
 };
 
