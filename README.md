@@ -209,17 +209,17 @@ try {
 | `analytics.getBestTimeToPost()` | Get best times to post |
 | `analytics.getContentDecay()` | Get content performance decay |
 | `analytics.getDailyMetrics()` | Get daily aggregated metrics |
-| `analytics.getGoogleBusinessPerformance()` | Get Google Business Profile performance metrics |
-| `analytics.getGoogleBusinessSearchKeywords()` | Get Google Business Profile search keywords |
-| `analytics.getInstagramAccountInsights()` | Get Instagram account-level insights |
-| `analytics.getInstagramDemographics()` | Get Instagram audience demographics |
+| `analytics.getGoogleBusinessPerformance()` | Get GBP performance metrics |
+| `analytics.getGoogleBusinessSearchKeywords()` | Get GBP search keywords |
+| `analytics.getInstagramAccountInsights()` | Get Instagram insights |
+| `analytics.getInstagramDemographics()` | Get Instagram demographics |
 | `analytics.getLinkedInAggregateAnalytics()` | Get LinkedIn aggregate stats |
 | `analytics.getLinkedInPostAnalytics()` | Get LinkedIn post stats |
 | `analytics.getLinkedInPostReactions()` | Get LinkedIn post reactions |
-| `analytics.getPostingFrequency()` | Get posting frequency vs engagement |
+| `analytics.getPostingFrequency()` | Get frequency vs engagement |
 | `analytics.getPostTimeline()` | Get post analytics timeline |
 | `analytics.getYouTubeDailyViews()` | Get YouTube daily views |
-| `analytics.getYouTubeDemographics()` | Get YouTube audience demographics |
+| `analytics.getYouTubeDemographics()` | Get YouTube demographics |
 
 ### Account Groups
 | Method | Description |
@@ -258,7 +258,7 @@ try {
 ### Media
 | Method | Description |
 |--------|-------------|
-| `media.getMediaPresignedUrl()` | Get presigned upload URL |
+| `media.getMediaPresignedUrl()` | Get upload URL |
 
 ### Users
 | Method | Description |
@@ -335,29 +335,29 @@ try {
 | Method | Description |
 |--------|-------------|
 | `adAudiences.listAdAudiences()` | List custom audiences |
-| `adAudiences.createAdAudience()` | Create a custom audience (Meta only) |
+| `adAudiences.createAdAudience()` | Create custom audience |
 | `adAudiences.getAdAudience()` | Get audience details |
-| `adAudiences.deleteAdAudience()` | Delete a custom audience |
-| `adAudiences.addUsersToAdAudience()` | Add users to a customer list audience |
+| `adAudiences.deleteAdAudience()` | Delete custom audience |
+| `adAudiences.addUsersToAdAudience()` | Add users to audience |
 
 ### Ad Campaigns
 | Method | Description |
 |--------|-------------|
-| `adCampaigns.listAdCampaigns()` | List campaigns with aggregate metrics |
-| `adCampaigns.getAdTree()` | Get nested campaign/ad-set/ad tree |
+| `adCampaigns.listAdCampaigns()` | List campaigns |
+| `adCampaigns.getAdTree()` | Get campaign tree |
 | `adCampaigns.updateAdCampaignStatus()` | Pause or resume a campaign |
 
 ### Ads
 | Method | Description |
 |--------|-------------|
-| `ads.listAdAccounts()` | List ad accounts for a social account |
+| `ads.listAdAccounts()` | List ad accounts |
 | `ads.listAds()` | List ads |
-| `ads.createStandaloneAd()` | Create a standalone ad with custom creative |
+| `ads.createStandaloneAd()` | Create standalone ad |
 | `ads.getAd()` | Get ad details |
-| `ads.getAdAnalytics()` | Get ad analytics with daily breakdown |
-| `ads.updateAd()` | Update ad (pause/resume, budget, targeting, name) |
+| `ads.getAdAnalytics()` | Get ad analytics |
+| `ads.updateAd()` | Update ad |
 | `ads.deleteAd()` | Cancel an ad |
-| `ads.boostPost()` | Boost an existing post as a paid ad |
+| `ads.boostPost()` | Boost post as ad |
 | `ads.searchAdInterests()` | Search targeting interests |
 
 ### Broadcasts
@@ -365,24 +365,24 @@ try {
 |--------|-------------|
 | `broadcasts.listBroadcastRecipients()` | List broadcast recipients |
 | `broadcasts.listBroadcasts()` | List broadcasts |
-| `broadcasts.createBroadcast()` | Create a broadcast draft |
+| `broadcasts.createBroadcast()` | Create broadcast draft |
 | `broadcasts.getBroadcast()` | Get broadcast details |
-| `broadcasts.updateBroadcast()` | Update a broadcast |
-| `broadcasts.deleteBroadcast()` | Delete a broadcast (draft only) |
+| `broadcasts.updateBroadcast()` | Update broadcast |
+| `broadcasts.deleteBroadcast()` | Delete broadcast |
 | `broadcasts.addBroadcastRecipients()` | Add recipients to a broadcast |
-| `broadcasts.cancelBroadcast()` | Cancel a broadcast |
+| `broadcasts.cancelBroadcast()` | Cancel broadcast |
 | `broadcasts.scheduleBroadcast()` | Schedule broadcast for later |
-| `broadcasts.sendBroadcast()` | Trigger immediate send |
+| `broadcasts.sendBroadcast()` | Send broadcast now |
 
 ### Comment Automations
 | Method | Description |
 |--------|-------------|
-| `commentAutomations.listCommentAutomationLogs()` | List trigger logs for an automation |
+| `commentAutomations.listCommentAutomationLogs()` | List automation logs |
 | `commentAutomations.listCommentAutomations()` | List comment-to-DM automations |
-| `commentAutomations.createCommentAutomation()` | Create a comment-to-DM automation |
-| `commentAutomations.getCommentAutomation()` | Get automation details with recent logs |
+| `commentAutomations.createCommentAutomation()` | Create comment-to-DM automation |
+| `commentAutomations.getCommentAutomation()` | Get automation details |
 | `commentAutomations.updateCommentAutomation()` | Update automation settings |
-| `commentAutomations.deleteCommentAutomation()` | Delete automation and all logs |
+| `commentAutomations.deleteCommentAutomation()` | Delete automation |
 
 ### Comments (Inbox)
 | Method | Description |
@@ -402,21 +402,21 @@ try {
 |--------|-------------|
 | `contacts.listContacts()` | List contacts |
 | `contacts.bulkCreateContacts()` | Bulk create contacts |
-| `contacts.createContact()` | Create a contact |
-| `contacts.getContact()` | Get contact with channels |
+| `contacts.createContact()` | Create contact |
+| `contacts.getContact()` | Get contact |
 | `contacts.getContactChannels()` | List channels for a contact |
-| `contacts.updateContact()` | Update a contact |
-| `contacts.deleteContact()` | Delete a contact |
+| `contacts.updateContact()` | Update contact |
+| `contacts.deleteContact()` | Delete contact |
 
 ### Custom Fields
 | Method | Description |
 |--------|-------------|
 | `customFields.listCustomFields()` | List custom field definitions |
-| `customFields.createCustomField()` | Create a custom field definition |
-| `customFields.updateCustomField()` | Update a custom field definition |
-| `customFields.deleteCustomField()` | Delete a custom field definition |
-| `customFields.clearContactFieldValue()` | Clear a custom field value |
-| `customFields.setContactFieldValue()` | Set a custom field value |
+| `customFields.createCustomField()` | Create custom field |
+| `customFields.updateCustomField()` | Update custom field |
+| `customFields.deleteCustomField()` | Delete custom field |
+| `customFields.clearContactFieldValue()` | Clear custom field value |
+| `customFields.setContactFieldValue()` | Set custom field value |
 
 ### GMB Attributes
 | Method | Description |
@@ -478,14 +478,14 @@ try {
 |--------|-------------|
 | `sequences.listSequenceEnrollments()` | List enrollments for a sequence |
 | `sequences.listSequences()` | List sequences |
-| `sequences.createSequence()` | Create a sequence |
+| `sequences.createSequence()` | Create sequence |
 | `sequences.getSequence()` | Get sequence with steps |
-| `sequences.updateSequence()` | Update a sequence |
-| `sequences.deleteSequence()` | Delete a sequence |
-| `sequences.activateSequence()` | Activate a sequence |
+| `sequences.updateSequence()` | Update sequence |
+| `sequences.deleteSequence()` | Delete sequence |
+| `sequences.activateSequence()` | Activate sequence |
 | `sequences.enrollContacts()` | Enroll contacts in a sequence |
-| `sequences.pauseSequence()` | Pause a sequence |
-| `sequences.unenrollContact()` | Unenroll a contact from a sequence |
+| `sequences.pauseSequence()` | Pause sequence |
+| `sequences.unenrollContact()` | Unenroll contact |
 
 ### Twitter Engagement
 | Method | Description |
@@ -502,7 +502,7 @@ try {
 |--------|-------------|
 | `validate.validateMedia()` | Validate media URL |
 | `validate.validatePost()` | Validate post content |
-| `validate.validatePostLength()` | Validate post character count |
+| `validate.validatePostLength()` | Validate character count |
 | `validate.validateSubreddit()` | Check subreddit existence |
 
 ### WhatsApp
@@ -514,7 +514,7 @@ try {
 | `whatsapp.createWhatsAppGroupInviteLink()` | Create invite link |
 | `whatsapp.createWhatsAppTemplate()` | Create template |
 | `whatsapp.getWhatsAppBusinessProfile()` | Get business profile |
-| `whatsapp.getWhatsAppDisplayName()` | Get display name and review status |
+| `whatsapp.getWhatsAppDisplayName()` | Get display name status |
 | `whatsapp.getWhatsAppGroupChat()` | Get group info |
 | `whatsapp.getWhatsAppTemplate()` | Get template |
 | `whatsapp.getWhatsAppTemplates()` | List templates |

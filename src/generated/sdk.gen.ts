@@ -6,7 +6,7 @@ import type { ValidatePostLengthData, ValidatePostLengthError, ValidatePostLengt
 export const client = createClient(createConfig());
 
 /**
- * Validate post character count
+ * Validate character count
  * Check weighted character count per platform and whether the text is within each platform's limit.
  *
  * Twitter/X uses weighted counting (URLs = 23 chars via t.co, emojis = 2 chars). All other platforms use plain character length.
@@ -97,7 +97,7 @@ export const getYouTubeDailyViews = <ThrowOnError extends boolean = false>(optio
 };
 
 /**
- * Get Instagram account-level insights
+ * Get Instagram insights
  * Returns account-level Instagram insights such as reach, views, accounts engaged, and total interactions.
  * These metrics reflect the entire account's performance across all content surfaces (feed, stories, explore, profile),
  * and are fundamentally different from post-level metrics. Data may be delayed up to 48 hours.
@@ -112,7 +112,7 @@ export const getInstagramAccountInsights = <ThrowOnError extends boolean = false
 };
 
 /**
- * Get Instagram audience demographics
+ * Get Instagram demographics
  * Returns audience demographic insights for an Instagram account, broken down by age, city, country, and/or gender.
  * Requires at least 100 followers. Returns top 45 entries per dimension.
  * Data may be delayed up to 48 hours. Requires the Analytics add-on.
@@ -126,7 +126,7 @@ export const getInstagramDemographics = <ThrowOnError extends boolean = false>(o
 };
 
 /**
- * Get YouTube audience demographics
+ * Get YouTube demographics
  * Returns audience demographic insights for a YouTube channel, broken down by age, gender, and/or country.
  * Age and gender values are viewer percentages (0-100). Country values are view counts.
  * Data is based on signed-in viewers only, with a 2-3 day delay. Requires the Analytics add-on.
@@ -183,7 +183,7 @@ export const getContentDecay = <ThrowOnError extends boolean = false>(options?: 
 };
 
 /**
- * Get posting frequency vs engagement
+ * Get frequency vs engagement
  * Returns the correlation between posting frequency (posts per week) and engagement rate, broken down by platform.
  * Helps find the optimal posting cadence for each platform. Each row represents a specific (platform, posts_per_week) combination
  * with the average engagement rate observed across all weeks matching that frequency.
@@ -212,7 +212,7 @@ export const getPostTimeline = <ThrowOnError extends boolean = false>(options: O
 };
 
 /**
- * Get Google Business Profile performance metrics
+ * Get GBP performance metrics
  * Returns daily performance metrics for a Google Business Profile location.
  * Metrics include impressions (Maps/Search, desktop/mobile), website clicks,
  * call clicks, direction requests, conversations, bookings, and food orders.
@@ -228,7 +228,7 @@ export const getGoogleBusinessPerformance = <ThrowOnError extends boolean = fals
 };
 
 /**
- * Get Google Business Profile search keywords
+ * Get GBP search keywords
  * Returns search keywords that triggered impressions for a Google Business Profile location.
  * Data is aggregated monthly. Keywords below a minimum impression threshold set by Google are excluded.
  * Max 18 months of historical data. Requires the Analytics add-on.
@@ -286,7 +286,7 @@ export const deleteAccountGroup = <ThrowOnError extends boolean = false>(options
 };
 
 /**
- * Get presigned upload URL
+ * Get upload URL
  * Get a presigned URL to upload files directly to cloud storage (up to 5GB). Returns an uploadUrl and publicUrl. PUT your file to the uploadUrl, then use the publicUrl in your posts.
  */
 export const getMediaPresignedUrl = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetMediaPresignedUrlData, ThrowOnError>) => {
@@ -2045,7 +2045,7 @@ export const uploadWhatsAppProfilePhoto = <ThrowOnError extends boolean = false>
 };
 
 /**
- * Get display name and review status
+ * Get display name status
  * Fetch the current display name and its Meta review status for a WhatsApp Business account.
  * Display name changes require Meta approval and can take 1-3 business days.
  *
@@ -2405,7 +2405,7 @@ export const listContacts = <ThrowOnError extends boolean = false>(options?: Opt
 };
 
 /**
- * Create a contact
+ * Create contact
  * Create a new contact. Optionally create a platform channel in the same request by providing accountId, platform, and platformIdentifier.
  */
 export const createContact = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<CreateContactData, ThrowOnError>) => {
@@ -2416,7 +2416,7 @@ export const createContact = <ThrowOnError extends boolean = false>(options: Opt
 };
 
 /**
- * Get contact with channels
+ * Get contact
  */
 export const getContact = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetContactData, ThrowOnError>) => {
     return (options?.client ?? client).get<GetContactResponse, GetContactError, ThrowOnError>({
@@ -2426,7 +2426,7 @@ export const getContact = <ThrowOnError extends boolean = false>(options: Option
 };
 
 /**
- * Update a contact
+ * Update contact
  */
 export const updateContact = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<UpdateContactData, ThrowOnError>) => {
     return (options?.client ?? client).patch<UpdateContactResponse, UpdateContactError, ThrowOnError>({
@@ -2436,7 +2436,7 @@ export const updateContact = <ThrowOnError extends boolean = false>(options: Opt
 };
 
 /**
- * Delete a contact
+ * Delete contact
  */
 export const deleteContact = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<DeleteContactData, ThrowOnError>) => {
     return (options?.client ?? client).delete<DeleteContactResponse, DeleteContactError, ThrowOnError>({
@@ -2467,7 +2467,7 @@ export const bulkCreateContacts = <ThrowOnError extends boolean = false>(options
 };
 
 /**
- * Set a custom field value
+ * Set custom field value
  */
 export const setContactFieldValue = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<SetContactFieldValueData, ThrowOnError>) => {
     return (options?.client ?? client).put<SetContactFieldValueResponse, SetContactFieldValueError, ThrowOnError>({
@@ -2477,7 +2477,7 @@ export const setContactFieldValue = <ThrowOnError extends boolean = false>(optio
 };
 
 /**
- * Clear a custom field value
+ * Clear custom field value
  */
 export const clearContactFieldValue = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<ClearContactFieldValueData, ThrowOnError>) => {
     return (options?.client ?? client).delete<ClearContactFieldValueResponse, ClearContactFieldValueError, ThrowOnError>({
@@ -2497,7 +2497,7 @@ export const listCustomFields = <ThrowOnError extends boolean = false>(options?:
 };
 
 /**
- * Create a custom field definition
+ * Create custom field
  */
 export const createCustomField = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<CreateCustomFieldData, ThrowOnError>) => {
     return (options?.client ?? client).post<CreateCustomFieldResponse, CreateCustomFieldError, ThrowOnError>({
@@ -2507,7 +2507,7 @@ export const createCustomField = <ThrowOnError extends boolean = false>(options:
 };
 
 /**
- * Update a custom field definition
+ * Update custom field
  */
 export const updateCustomField = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<UpdateCustomFieldData, ThrowOnError>) => {
     return (options?.client ?? client).patch<UpdateCustomFieldResponse, UpdateCustomFieldError, ThrowOnError>({
@@ -2517,7 +2517,7 @@ export const updateCustomField = <ThrowOnError extends boolean = false>(options:
 };
 
 /**
- * Delete a custom field definition
+ * Delete custom field
  */
 export const deleteCustomField = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<DeleteCustomFieldData, ThrowOnError>) => {
     return (options?.client ?? client).delete<DeleteCustomFieldResponse, DeleteCustomFieldError, ThrowOnError>({
@@ -2537,7 +2537,7 @@ export const listBroadcasts = <ThrowOnError extends boolean = false>(options?: O
 };
 
 /**
- * Create a broadcast draft
+ * Create broadcast draft
  */
 export const createBroadcast = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<CreateBroadcastData, ThrowOnError>) => {
     return (options?.client ?? client).post<CreateBroadcastResponse, CreateBroadcastError, ThrowOnError>({
@@ -2557,7 +2557,7 @@ export const getBroadcast = <ThrowOnError extends boolean = false>(options: Opti
 };
 
 /**
- * Update a broadcast
+ * Update broadcast
  */
 export const updateBroadcast = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<UpdateBroadcastData, ThrowOnError>) => {
     return (options?.client ?? client).patch<UpdateBroadcastResponse, UpdateBroadcastError, ThrowOnError>({
@@ -2567,7 +2567,7 @@ export const updateBroadcast = <ThrowOnError extends boolean = false>(options: O
 };
 
 /**
- * Delete a broadcast (draft only)
+ * Delete broadcast
  */
 export const deleteBroadcast = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<DeleteBroadcastData, ThrowOnError>) => {
     return (options?.client ?? client).delete<DeleteBroadcastResponse, DeleteBroadcastError, ThrowOnError>({
@@ -2577,7 +2577,7 @@ export const deleteBroadcast = <ThrowOnError extends boolean = false>(options: O
 };
 
 /**
- * Trigger immediate send
+ * Send broadcast now
  */
 export const sendBroadcast = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<SendBroadcastData, ThrowOnError>) => {
     return (options?.client ?? client).post<SendBroadcastResponse, SendBroadcastError, ThrowOnError>({
@@ -2597,7 +2597,7 @@ export const scheduleBroadcast = <ThrowOnError extends boolean = false>(options:
 };
 
 /**
- * Cancel a broadcast
+ * Cancel broadcast
  */
 export const cancelBroadcast = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<CancelBroadcastData, ThrowOnError>) => {
     return (options?.client ?? client).post<CancelBroadcastResponse, CancelBroadcastError, ThrowOnError>({
@@ -2637,7 +2637,7 @@ export const listSequences = <ThrowOnError extends boolean = false>(options?: Op
 };
 
 /**
- * Create a sequence
+ * Create sequence
  */
 export const createSequence = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<CreateSequenceData, ThrowOnError>) => {
     return (options?.client ?? client).post<CreateSequenceResponse, CreateSequenceError, ThrowOnError>({
@@ -2657,7 +2657,7 @@ export const getSequence = <ThrowOnError extends boolean = false>(options: Optio
 };
 
 /**
- * Update a sequence
+ * Update sequence
  */
 export const updateSequence = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<UpdateSequenceData, ThrowOnError>) => {
     return (options?.client ?? client).patch<UpdateSequenceResponse, UpdateSequenceError, ThrowOnError>({
@@ -2667,7 +2667,7 @@ export const updateSequence = <ThrowOnError extends boolean = false>(options: Op
 };
 
 /**
- * Delete a sequence
+ * Delete sequence
  */
 export const deleteSequence = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<DeleteSequenceData, ThrowOnError>) => {
     return (options?.client ?? client).delete<DeleteSequenceResponse, DeleteSequenceError, ThrowOnError>({
@@ -2677,7 +2677,7 @@ export const deleteSequence = <ThrowOnError extends boolean = false>(options: Op
 };
 
 /**
- * Activate a sequence
+ * Activate sequence
  */
 export const activateSequence = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<ActivateSequenceData, ThrowOnError>) => {
     return (options?.client ?? client).post<ActivateSequenceResponse, ActivateSequenceError, ThrowOnError>({
@@ -2687,7 +2687,7 @@ export const activateSequence = <ThrowOnError extends boolean = false>(options: 
 };
 
 /**
- * Pause a sequence
+ * Pause sequence
  */
 export const pauseSequence = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<PauseSequenceData, ThrowOnError>) => {
     return (options?.client ?? client).post<PauseSequenceResponse, PauseSequenceError, ThrowOnError>({
@@ -2707,7 +2707,7 @@ export const enrollContacts = <ThrowOnError extends boolean = false>(options: Op
 };
 
 /**
- * Unenroll a contact from a sequence
+ * Unenroll contact
  */
 export const unenrollContact = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<UnenrollContactData, ThrowOnError>) => {
     return (options?.client ?? client).delete<UnenrollContactResponse, UnenrollContactError, ThrowOnError>({
@@ -2738,7 +2738,7 @@ export const listCommentAutomations = <ThrowOnError extends boolean = false>(opt
 };
 
 /**
- * Create a comment-to-DM automation
+ * Create comment-to-DM automation
  * Create a keyword-triggered DM automation on an Instagram or Facebook post.
  * When someone comments a matching keyword, they automatically receive a DM.
  * Only one active automation per post is allowed.
@@ -2752,7 +2752,7 @@ export const createCommentAutomation = <ThrowOnError extends boolean = false>(op
 };
 
 /**
- * Get automation details with recent logs
+ * Get automation details
  */
 export const getCommentAutomation = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetCommentAutomationData, ThrowOnError>) => {
     return (options?.client ?? client).get<GetCommentAutomationResponse, GetCommentAutomationError, ThrowOnError>({
@@ -2772,7 +2772,7 @@ export const updateCommentAutomation = <ThrowOnError extends boolean = false>(op
 };
 
 /**
- * Delete automation and all logs
+ * Delete automation
  */
 export const deleteCommentAutomation = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<DeleteCommentAutomationData, ThrowOnError>) => {
     return (options?.client ?? client).delete<DeleteCommentAutomationResponse, DeleteCommentAutomationError, ThrowOnError>({
@@ -2782,7 +2782,7 @@ export const deleteCommentAutomation = <ThrowOnError extends boolean = false>(op
 };
 
 /**
- * List trigger logs for an automation
+ * List automation logs
  * Paginated list of every comment that triggered this automation, with send status and commenter info.
  */
 export const listCommentAutomationLogs = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<ListCommentAutomationLogsData, ThrowOnError>) => {
@@ -2807,7 +2807,7 @@ export const listAds = <ThrowOnError extends boolean = false>(options?: OptionsL
 };
 
 /**
- * List campaigns with aggregate metrics
+ * List campaigns
  * Returns campaigns as virtual aggregations over ad documents grouped by platform campaign ID.
  * Metrics (spend, impressions, clicks, etc.) are summed across all ads in each campaign.
  * Campaign status is derived from child ad statuses (active > pending_review > paused > error > completed > cancelled > rejected).
@@ -2834,7 +2834,7 @@ export const updateAdCampaignStatus = <ThrowOnError extends boolean = false>(opt
 };
 
 /**
- * Get nested campaign/ad-set/ad tree
+ * Get campaign tree
  * Returns a nested Campaign > Ad Set > Ad hierarchy with rolled-up metrics at each level.
  * Uses a two-stage aggregation: ads are grouped into ad sets, then ad sets into campaigns.
  * Metrics are computed over an optional date range, then rolled up from ad level to ad set
@@ -2861,7 +2861,7 @@ export const getAd = <ThrowOnError extends boolean = false>(options: OptionsLega
 };
 
 /**
- * Update ad (pause/resume, budget, targeting, name)
+ * Update ad
  * Update one or more fields on an ad. Status changes and budget updates are propagated to the platform. Targeting updates are Meta-only.
  */
 export const updateAd = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<UpdateAdData, ThrowOnError>) => {
@@ -2883,7 +2883,7 @@ export const deleteAd = <ThrowOnError extends boolean = false>(options: OptionsL
 };
 
 /**
- * Get ad analytics with daily breakdown
+ * Get ad analytics
  * Returns detailed performance analytics for an ad. Includes summary metrics, a daily timeline
  * over the requested date range, and optional demographic breakdowns (Meta and TikTok only).
  * If no date range is provided, defaults to the last 90 days. Date range is capped at 90 days max.
@@ -2897,7 +2897,7 @@ export const getAdAnalytics = <ThrowOnError extends boolean = false>(options: Op
 };
 
 /**
- * List ad accounts for a social account
+ * List ad accounts
  * Returns the platform ad accounts available for the given social account (e.g. Meta ad accounts, TikTok advertiser IDs, Google Ads customer IDs).
  */
 export const listAdAccounts = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<ListAdAccountsData, ThrowOnError>) => {
@@ -2908,7 +2908,7 @@ export const listAdAccounts = <ThrowOnError extends boolean = false>(options: Op
 };
 
 /**
- * Boost an existing post as a paid ad
+ * Boost post as ad
  * Creates a paid ad campaign from an existing published post. Creates the full platform campaign hierarchy (campaign, ad set, ad).
  */
 export const boostPost = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<BoostPostData, ThrowOnError>) => {
@@ -2919,7 +2919,7 @@ export const boostPost = <ThrowOnError extends boolean = false>(options: Options
 };
 
 /**
- * Create a standalone ad with custom creative
+ * Create standalone ad
  * Creates a paid ad with custom creative (headline, body, image/video, link). Creates the full platform campaign hierarchy.
  */
 export const createStandaloneAd = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<CreateStandaloneAdData, ThrowOnError>) => {
@@ -2952,7 +2952,7 @@ export const listAdAudiences = <ThrowOnError extends boolean = false>(options: O
 };
 
 /**
- * Create a custom audience (Meta only)
+ * Create custom audience
  * Create a customer list, website retargeting, or lookalike audience on Meta (Facebook/Instagram).
  */
 export const createAdAudience = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<CreateAdAudienceData, ThrowOnError>) => {
@@ -2974,7 +2974,7 @@ export const getAdAudience = <ThrowOnError extends boolean = false>(options: Opt
 };
 
 /**
- * Delete a custom audience
+ * Delete custom audience
  * Deletes the audience from both Meta and the local database.
  */
 export const deleteAdAudience = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<DeleteAdAudienceData, ThrowOnError>) => {
@@ -2985,7 +2985,7 @@ export const deleteAdAudience = <ThrowOnError extends boolean = false>(options: 
 };
 
 /**
- * Add users to a customer list audience
+ * Add users to audience
  * Upload user data (emails and/or phone numbers) to a customer_list audience. Data is SHA256-hashed server-side before sending to Meta. Max 10,000 users per request.
  */
 export const addUsersToAdAudience = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<AddUsersToAdAudienceData, ThrowOnError>) => {

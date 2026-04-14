@@ -13,7 +13,6 @@ export type AccountsListResponse = {
 };
 
 export type AccountWithFollowerStats = SocialAccount & {
-    profilePicture?: string;
     /**
      * Current follower count
      */
@@ -1619,6 +1618,10 @@ export type SocialAccount = {
     profileId?: (string | Profile);
     username?: string;
     displayName?: string;
+    /**
+     * URL to the account's profile picture on the platform. May be null if the platform does not provide one.
+     */
+    profilePicture?: (string) | null;
     /**
      * Full profile URL for the connected account on its platform.
      */
