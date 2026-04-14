@@ -55,11 +55,6 @@ describe('Endpoint Methods', () => {
       expect(client.accounts.deleteAccount).toBeTypeOf('function');
     });
 
-    it('should have disconnectAds method', () => {
-      expect(client.accounts.disconnectAds).toBeDefined();
-      expect(client.accounts.disconnectAds).toBeTypeOf('function');
-    });
-
     it('should have getAllAccountsHealth method', () => {
       expect(client.accounts.getAllAccountsHealth).toBeDefined();
       expect(client.accounts.getAllAccountsHealth).toBeTypeOf('function');
@@ -381,16 +376,6 @@ describe('Endpoint Methods', () => {
       expect(client.logs.listLogs).toBeTypeOf('function');
     });
 
-    it('should have listPostsLogs method', () => {
-      expect(client.logs.listPostsLogs).toBeDefined();
-      expect(client.logs.listPostsLogs).toBeTypeOf('function');
-    });
-
-    it('should have listConnectionLogs method', () => {
-      expect(client.logs.listConnectionLogs).toBeDefined();
-      expect(client.logs.listConnectionLogs).toBeTypeOf('function');
-    });
-
     it('should have getPostLogs method', () => {
       expect(client.logs.getPostLogs).toBeDefined();
       expect(client.logs.getPostLogs).toBeTypeOf('function');
@@ -578,11 +563,6 @@ describe('Endpoint Methods', () => {
     it('should have testWebhook method', () => {
       expect(client.webhooks.testWebhook).toBeDefined();
       expect(client.webhooks.testWebhook).toBeTypeOf('function');
-    });
-
-    it('should have getWebhookLogs method', () => {
-      expect(client.webhooks.getWebhookLogs).toBeDefined();
-      expect(client.webhooks.getWebhookLogs).toBeTypeOf('function');
     });
 
   });

@@ -442,102 +442,6 @@ export type BlueskyPlatformData = {
     }>;
 };
 
-/**
- * Connection event log showing account connection/disconnection history
- */
-export type ConnectionLog = {
-    _id?: string;
-    /**
-     * User who owns the connection (may be null for early OAuth failures)
-     */
-    userId?: string;
-    profileId?: string;
-    /**
-     * The social account ID (present on successful connections and disconnects)
-     */
-    accountId?: string;
-    platform?: 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat' | 'discord';
-    /**
-     * Type of connection event: connect_success, connect_failed, disconnect, reconnect_success, reconnect_failed
-     */
-    eventType?: 'connect_success' | 'connect_failed' | 'disconnect' | 'reconnect_success' | 'reconnect_failed';
-    /**
-     * How the connection was initiated
-     */
-    connectionMethod?: 'oauth' | 'credentials' | 'invitation';
-    /**
-     * Error details (present on failed events)
-     */
-    error?: {
-        /**
-         * Error code (e.g., oauth_denied, token_exchange_failed)
-         */
-        code?: string;
-        /**
-         * Human-readable error message
-         */
-        message?: string;
-        /**
-         * Raw error response (truncated to 2000 chars)
-         */
-        rawResponse?: string;
-    };
-    /**
-     * Success details (present on successful events)
-     */
-    success?: {
-        displayName?: string;
-        username?: string;
-        profilePicture?: string;
-        /**
-         * OAuth scopes/permissions granted
-         */
-        permissions?: Array<(string)>;
-        tokenExpiresAt?: string;
-        /**
-         * Account type (personal, business, organization)
-         */
-        accountType?: string;
-    };
-    /**
-     * Additional context about the connection attempt
-     */
-    context?: {
-        isHeadlessMode?: boolean;
-        hasCustomRedirectUrl?: boolean;
-        isReconnection?: boolean;
-        /**
-         * Using bring-your-own-keys
-         */
-        isBYOK?: boolean;
-        invitationToken?: string;
-        connectToken?: string;
-    };
-    /**
-     * How long the operation took in milliseconds
-     */
-    durationMs?: number;
-    /**
-     * Additional metadata
-     */
-    metadata?: {
-        [key: string]: unknown;
-    };
-    createdAt?: string;
-};
-
-export type platform2 = 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat' | 'discord';
-
-/**
- * Type of connection event: connect_success, connect_failed, disconnect, reconnect_success, reconnect_failed
- */
-export type eventType = 'connect_success' | 'connect_failed' | 'disconnect' | 'reconnect_success' | 'reconnect_failed';
-
-/**
- * How the connection was initiated
- */
-export type connectionMethod = 'oauth' | 'credentials' | 'invitation';
-
 export type ErrorResponse = {
     error?: string;
     details?: {
@@ -777,7 +681,7 @@ export type InboxWebhookMessage = {
     isRead: boolean;
 };
 
-export type platform3 = 'instagram' | 'facebook' | 'telegram' | 'whatsapp';
+export type platform2 = 'instagram' | 'facebook' | 'telegram' | 'whatsapp';
 
 export type direction = 'incoming' | 'outgoing';
 
@@ -1387,6 +1291,8 @@ export type PostLog = {
     createdAt?: string;
 };
 
+export type platform3 = 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat' | 'discord';
+
 /**
  * Type of action logged: publish (initial attempt), retry (after failure), media_upload, rate_limit_pause, token_refresh, cancelled
  */
@@ -1735,19 +1641,6 @@ export type SocialAccount = {
      */
     enabled?: boolean;
     /**
-     * **Deprecated.** With the new ads account model, ads accounts are separate SocialAccount
-     * documents. Check for accounts with ads platform values (metaads, linkedinads, pinterestads,
-     * tiktokads, xads, googleads) instead.
-     *
-     * Legacy behavior:
-     * - `connected`: Ads are ready to use (same-token platforms like Meta/LinkedIn, or separate ads token is present).
-     * - `not_connected`: Platform supports ads but requires a separate ads OAuth. Use `GET /v1/connect/{platform}/ads` to connect.
-     * - `not_available`: Platform does not support ads (e.g., YouTube, Reddit, Bluesky).
-     *
-     * @deprecated
-     */
-    adsStatus?: 'connected' | 'not_connected' | 'not_available';
-    /**
      * Platform-specific metadata. Fields vary by platform. For WhatsApp accounts, includes:
      * - `qualityRating`: Phone number quality rating from Meta (`GREEN`, `YELLOW`, `RED`, or `UNKNOWN`)
      * - `nameStatus`: Display name review status (`APPROVED`, `PENDING_REVIEW`, `DECLINED`, or `NONE`). Messages cannot be sent until the display name is approved by Meta.
@@ -1764,20 +1657,6 @@ export type SocialAccount = {
 };
 
 export type platform4 = 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat' | 'discord' | 'whatsapp' | 'linkedinads' | 'metaads' | 'pinterestads' | 'tiktokads' | 'xads' | 'googleads';
-
-/**
- * **Deprecated.** With the new ads account model, ads accounts are separate SocialAccount
- * documents. Check for accounts with ads platform values (metaads, linkedinads, pinterestads,
- * tiktokads, xads, googleads) instead.
- *
- * Legacy behavior:
- * - `connected`: Ads are ready to use (same-token platforms like Meta/LinkedIn, or separate ads token is present).
- * - `not_connected`: Platform supports ads but requires a separate ads OAuth. Use `GET /v1/connect/{platform}/ads` to connect.
- * - `not_available`: Platform does not support ads (e.g., YouTube, Reddit, Bluesky).
- *
- * @deprecated
- */
-export type adsStatus = 'connected' | 'not_connected' | 'not_available';
 
 /**
  * Text, images (up to 10), videos (up to 10), and mixed media albums. Captions up to 1024 chars for media, 4096 for text-only.
@@ -2079,55 +1958,6 @@ export type Webhook = {
 };
 
 /**
- * Webhook delivery log entry
- */
-export type WebhookLog = {
-    _id?: string;
-    /**
-     * ID of the webhook that was triggered
-     */
-    webhookId?: string;
-    /**
-     * Name of the webhook that was triggered
-     */
-    webhookName?: string;
-    event?: 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'message.sent' | 'message.edited' | 'message.deleted' | 'message.delivered' | 'message.read' | 'message.failed' | 'comment.received' | 'webhook.test';
-    url?: string;
-    status?: 'success' | 'failed';
-    /**
-     * HTTP status code from webhook endpoint
-     */
-    statusCode?: number;
-    /**
-     * Payload sent to webhook endpoint
-     */
-    requestPayload?: {
-        [key: string]: unknown;
-    };
-    /**
-     * Response body from webhook endpoint (truncated to 10KB)
-     */
-    responseBody?: string;
-    /**
-     * Error message if delivery failed
-     */
-    errorMessage?: string;
-    /**
-     * Delivery attempt number (max 7 attempts)
-     */
-    attemptNumber?: number;
-    /**
-     * Response time in milliseconds
-     */
-    responseTime?: number;
-    createdAt?: string;
-};
-
-export type event = 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'message.sent' | 'message.edited' | 'message.deleted' | 'message.delivered' | 'message.read' | 'message.failed' | 'comment.received' | 'webhook.test';
-
-export type status8 = 'success' | 'failed';
-
-/**
  * Webhook payload for account connected events
  */
 export type WebhookPayloadAccountConnected = {
@@ -2152,7 +1982,7 @@ export type WebhookPayloadAccountConnected = {
     timestamp: string;
 };
 
-export type event2 = 'account.connected';
+export type event = 'account.connected';
 
 /**
  * Webhook payload for account disconnected events
@@ -2187,7 +2017,7 @@ export type WebhookPayloadAccountDisconnected = {
     timestamp: string;
 };
 
-export type event3 = 'account.disconnected';
+export type event2 = 'account.disconnected';
 
 /**
  * Whether the disconnection was intentional (user action) or unintentional (token expired/revoked)
@@ -2261,7 +2091,7 @@ export type WebhookPayloadComment = {
     timestamp: string;
 };
 
-export type event4 = 'comment.received';
+export type event3 = 'comment.received';
 
 export type platform5 = 'instagram' | 'facebook' | 'twitter' | 'youtube' | 'linkedin' | 'bluesky' | 'reddit';
 
@@ -2381,7 +2211,7 @@ export type WebhookPayloadMessage = {
     timestamp: string;
 };
 
-export type event5 = 'message.received';
+export type event4 = 'message.received';
 
 /**
  * Webhook payload for `message.deleted` events. Fires when the sender
@@ -2405,7 +2235,7 @@ export type WebhookPayloadMessageDeleted = {
     timestamp: string;
 };
 
-export type event6 = 'message.deleted';
+export type event5 = 'message.deleted';
 
 /**
  * Shared payload for `message.delivered`, `message.read`, and
@@ -2440,7 +2270,7 @@ export type WebhookPayloadMessageDeliveryStatus = {
     timestamp: string;
 };
 
-export type event7 = 'message.delivered' | 'message.read' | 'message.failed';
+export type event6 = 'message.delivered' | 'message.read' | 'message.failed';
 
 /**
  * Webhook payload for `message.edited` events. Fires when the sender
@@ -2482,7 +2312,7 @@ export type WebhookPayloadMessageEdited = {
     timestamp: string;
 };
 
-export type event8 = 'message.edited';
+export type event7 = 'message.edited';
 
 /**
  * Webhook payload for message sent events (fired when a message is sent via the API)
@@ -2558,7 +2388,7 @@ export type WebhookPayloadMessageSent = {
     timestamp: string;
 };
 
-export type event9 = 'message.sent';
+export type event8 = 'message.sent';
 
 /**
  * Webhook payload for post events
@@ -2586,7 +2416,7 @@ export type WebhookPayloadPost = {
     timestamp: string;
 };
 
-export type event10 = 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled';
+export type event9 = 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled';
 
 /**
  * Webhook payload for test deliveries
@@ -2604,7 +2434,7 @@ export type WebhookPayloadTest = {
     timestamp: string;
 };
 
-export type event11 = 'webhook.test';
+export type event10 = 'webhook.test';
 
 export type WhatsAppBodyComponent = {
     type: 'body';
@@ -4320,29 +4150,6 @@ export type DeleteAccountResponse = ({
 });
 
 export type DeleteAccountError = ({
-    error?: string;
-});
-
-export type DisconnectAdsData = {
-    body?: {
-        /**
-         * The ads platform (optional, used for logging only)
-         */
-        adsPlatform?: 'metaads' | 'linkedinads' | 'pinterestads' | 'tiktokads' | 'xads';
-    };
-    path: {
-        /**
-         * The ads SocialAccount ID to disconnect
-         */
-        accountId: string;
-    };
-};
-
-export type DisconnectAdsResponse = ({
-    message?: string;
-});
-
-export type DisconnectAdsError = (unknown | {
     error?: string;
 });
 
@@ -7075,139 +6882,6 @@ export type ListLogsError = ({
     error?: string;
 });
 
-export type GetWebhookLogsData = {
-    query?: {
-        /**
-         * Filter by event type
-         */
-        event?: 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'message.sent' | 'message.edited' | 'message.deleted' | 'message.delivered' | 'message.read' | 'message.failed' | 'comment.received' | 'webhook.test';
-        /**
-         * Maximum number of logs to return (max 100)
-         */
-        limit?: number;
-        /**
-         * Filter by delivery status
-         */
-        status?: 'success' | 'failed';
-        /**
-         * Filter by webhook ID
-         */
-        webhookId?: string;
-    };
-};
-
-export type GetWebhookLogsResponse = ({
-    logs?: Array<WebhookLog>;
-});
-
-export type GetWebhookLogsError = ({
-    error?: string;
-});
-
-export type ListPostsLogsData = {
-    query?: {
-        /**
-         * Filter by action type
-         */
-        action?: 'publish' | 'retry' | 'media_upload' | 'rate_limit_pause' | 'token_refresh' | 'cancelled' | 'all';
-        /**
-         * Number of days to look back (max 7)
-         */
-        days?: number;
-        /**
-         * Maximum number of logs to return (max 100)
-         */
-        limit?: number;
-        /**
-         * Filter by platform
-         */
-        platform?: 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat' | 'all';
-        /**
-         * Search through log entries by text content.
-         */
-        search?: string;
-        /**
-         * Number of logs to skip (for pagination)
-         */
-        skip?: number;
-        /**
-         * Filter by log status
-         */
-        status?: 'success' | 'failed' | 'pending' | 'skipped' | 'all';
-    };
-};
-
-export type ListPostsLogsResponse = ({
-    logs?: Array<PostLog>;
-    pagination?: {
-        /**
-         * Total number of logs matching the query
-         */
-        total?: number;
-        limit?: number;
-        skip?: number;
-        /**
-         * Total number of pages
-         */
-        pages?: number;
-        hasMore?: boolean;
-    };
-});
-
-export type ListPostsLogsError = ({
-    error?: string;
-});
-
-export type ListConnectionLogsData = {
-    query?: {
-        /**
-         * Number of days to look back (max 7)
-         */
-        days?: number;
-        /**
-         * Filter by event type
-         */
-        eventType?: 'connect_success' | 'connect_failed' | 'disconnect' | 'reconnect_success' | 'reconnect_failed' | 'all';
-        /**
-         * Maximum number of logs to return (max 100)
-         */
-        limit?: number;
-        /**
-         * Filter by platform
-         */
-        platform?: 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat' | 'all';
-        /**
-         * Number of logs to skip (for pagination)
-         */
-        skip?: number;
-        /**
-         * Filter by status (shorthand for event types)
-         */
-        status?: 'success' | 'failed' | 'all';
-    };
-};
-
-export type ListConnectionLogsResponse = ({
-    logs?: Array<ConnectionLog>;
-    pagination?: {
-        /**
-         * Total number of logs matching the query
-         */
-        total?: number;
-        limit?: number;
-        skip?: number;
-        /**
-         * Total number of pages
-         */
-        pages?: number;
-        hasMore?: boolean;
-    };
-});
-
-export type ListConnectionLogsError = ({
-    error?: string;
-});
-
 export type GetPostLogsData = {
     path: {
         /**
@@ -8797,545 +8471,6 @@ export type DeleteInboxReviewReplyError = ({
     error?: string;
 } | unknown);
 
-export type SendWhatsAppBulkData = {
-    body: {
-        /**
-         * WhatsApp social account ID
-         */
-        accountId: string;
-        /**
-         * List of recipients (max 100)
-         */
-        recipients: Array<{
-            /**
-             * Recipient phone number in E.164 format
-             */
-            phone: string;
-            /**
-             * Per-recipient template variables keyed by index (e.g., "1", "2")
-             */
-            variables?: {
-                [key: string]: (string);
-            };
-        }>;
-        template: {
-            /**
-             * Template name
-             */
-            name: string;
-            /**
-             * Template language code
-             */
-            language: string;
-            /**
-             * Base template components
-             */
-            components?: Array<{
-                [key: string]: unknown;
-            }>;
-        };
-    };
-};
-
-export type SendWhatsAppBulkResponse = ({
-    success?: boolean;
-    summary?: {
-        total?: number;
-        sent?: number;
-        failed?: number;
-    };
-    results?: Array<{
-        phone?: string;
-        success?: boolean;
-        messageId?: string;
-        error?: string;
-    }>;
-});
-
-export type SendWhatsAppBulkError = (unknown | {
-    error?: string;
-});
-
-export type GetWhatsAppContactsData = {
-    query: {
-        /**
-         * WhatsApp social account ID
-         */
-        accountId: string;
-        /**
-         * Filter by group
-         */
-        group?: string;
-        /**
-         * Maximum results (default 50)
-         */
-        limit?: number;
-        /**
-         * Filter by opt-in status
-         */
-        optedIn?: 'true' | 'false';
-        /**
-         * Search contacts by name, phone, email, or company
-         */
-        search?: string;
-        /**
-         * Offset for pagination
-         */
-        skip?: number;
-        /**
-         * Filter by tag
-         */
-        tag?: string;
-    };
-};
-
-export type GetWhatsAppContactsResponse = ({
-    success?: boolean;
-    contacts?: Array<{
-        id?: string;
-        phone?: string;
-        waId?: string;
-        name?: string;
-        email?: string;
-        company?: string;
-        tags?: Array<(string)>;
-        groups?: Array<(string)>;
-        isOptedIn?: boolean;
-        lastMessageSentAt?: string;
-        lastMessageReceivedAt?: string;
-        messagesSentCount?: number;
-        messagesReceivedCount?: number;
-        customFields?: {
-            [key: string]: unknown;
-        };
-        notes?: string;
-        createdAt?: string;
-    }>;
-    filters?: {
-        tags?: Array<(string)>;
-        groups?: Array<(string)>;
-    };
-    pagination?: {
-        total?: number;
-        limit?: number;
-        skip?: number;
-        hasMore?: boolean;
-    };
-});
-
-export type GetWhatsAppContactsError = (unknown | {
-    error?: string;
-});
-
-export type CreateWhatsAppContactData = {
-    body: {
-        /**
-         * WhatsApp social account ID
-         */
-        accountId: string;
-        /**
-         * Phone number in E.164 format
-         */
-        phone: string;
-        /**
-         * Contact name
-         */
-        name: string;
-        /**
-         * Contact email
-         */
-        email?: string;
-        /**
-         * Company name
-         */
-        company?: string;
-        /**
-         * Tags for categorization
-         */
-        tags?: Array<(string)>;
-        /**
-         * Groups the contact belongs to
-         */
-        groups?: Array<(string)>;
-        /**
-         * Whether the contact has opted in to receive messages
-         */
-        isOptedIn?: boolean;
-        /**
-         * Custom key-value fields
-         */
-        customFields?: {
-            [key: string]: (string);
-        };
-        /**
-         * Notes about the contact
-         */
-        notes?: string;
-    };
-};
-
-export type CreateWhatsAppContactResponse = ({
-    success?: boolean;
-    contact?: {
-        id?: string;
-        phone?: string;
-        name?: string;
-        email?: string;
-        company?: string;
-        tags?: Array<(string)>;
-        groups?: Array<(string)>;
-        isOptedIn?: boolean;
-        createdAt?: string;
-    };
-});
-
-export type CreateWhatsAppContactError = (unknown | {
-    error?: string;
-});
-
-export type GetWhatsAppContactData = {
-    path: {
-        /**
-         * Contact ID
-         */
-        contactId: string;
-    };
-};
-
-export type GetWhatsAppContactResponse = ({
-    success?: boolean;
-    contact?: {
-        id?: string;
-        phone?: string;
-        waId?: string;
-        name?: string;
-        email?: string;
-        company?: string;
-        tags?: Array<(string)>;
-        groups?: Array<(string)>;
-        isOptedIn?: boolean;
-        optInDate?: string;
-        optOutDate?: string;
-        isBlocked?: boolean;
-        lastMessageSentAt?: string;
-        lastMessageReceivedAt?: string;
-        messagesSentCount?: number;
-        messagesReceivedCount?: number;
-        customFields?: {
-            [key: string]: unknown;
-        };
-        notes?: string;
-        createdAt?: string;
-        updatedAt?: string;
-    };
-});
-
-export type GetWhatsAppContactError = ({
-    error?: string;
-});
-
-export type UpdateWhatsAppContactData = {
-    body: {
-        /**
-         * Contact name
-         */
-        name?: string;
-        /**
-         * Contact email
-         */
-        email?: string;
-        /**
-         * Company name
-         */
-        company?: string;
-        /**
-         * Tags (replaces existing)
-         */
-        tags?: Array<(string)>;
-        /**
-         * Groups (replaces existing)
-         */
-        groups?: Array<(string)>;
-        /**
-         * Opt-in status (changes are timestamped)
-         */
-        isOptedIn?: boolean;
-        /**
-         * Block status
-         */
-        isBlocked?: boolean;
-        /**
-         * Custom fields to merge (set value to null to remove a field)
-         */
-        customFields?: {
-            [key: string]: ((string) | null);
-        };
-        /**
-         * Notes about the contact
-         */
-        notes?: string;
-    };
-    path: {
-        /**
-         * Contact ID
-         */
-        contactId: string;
-    };
-};
-
-export type UpdateWhatsAppContactResponse = ({
-    success?: boolean;
-    contact?: {
-        id?: string;
-        phone?: string;
-        name?: string;
-        email?: string;
-        company?: string;
-        tags?: Array<(string)>;
-        groups?: Array<(string)>;
-        isOptedIn?: boolean;
-        isBlocked?: boolean;
-        customFields?: {
-            [key: string]: unknown;
-        };
-        notes?: string;
-        updatedAt?: string;
-    };
-});
-
-export type UpdateWhatsAppContactError = ({
-    error?: string;
-});
-
-export type DeleteWhatsAppContactData = {
-    path: {
-        /**
-         * Contact ID
-         */
-        contactId: string;
-    };
-};
-
-export type DeleteWhatsAppContactResponse = ({
-    success?: boolean;
-    message?: string;
-});
-
-export type DeleteWhatsAppContactError = ({
-    error?: string;
-});
-
-export type ImportWhatsAppContactsData = {
-    body: {
-        /**
-         * WhatsApp social account ID
-         */
-        accountId: string;
-        /**
-         * Contacts to import (max 1000)
-         */
-        contacts: Array<{
-            /**
-             * Phone number in E.164 format
-             */
-            phone: string;
-            /**
-             * Contact name
-             */
-            name: string;
-            email?: string;
-            company?: string;
-            tags?: Array<(string)>;
-            groups?: Array<(string)>;
-            customFields?: {
-                [key: string]: (string);
-            };
-            notes?: string;
-        }>;
-        /**
-         * Tags applied to all imported contacts
-         */
-        defaultTags?: Array<(string)>;
-        /**
-         * Groups applied to all imported contacts
-         */
-        defaultGroups?: Array<(string)>;
-        /**
-         * Skip contacts with existing phone numbers
-         */
-        skipDuplicates?: boolean;
-    };
-};
-
-export type ImportWhatsAppContactsResponse = ({
-    success?: boolean;
-    summary?: {
-        total?: number;
-        created?: number;
-        skipped?: number;
-        failed?: number;
-    };
-    results?: Array<{
-        phone?: string;
-        name?: string;
-        success?: boolean;
-        contactId?: string;
-        error?: string;
-    }>;
-});
-
-export type ImportWhatsAppContactsError = (unknown | {
-    error?: string;
-});
-
-export type BulkUpdateWhatsAppContactsData = {
-    body: {
-        /**
-         * Bulk action to perform
-         */
-        action: 'addTags' | 'removeTags' | 'addGroups' | 'removeGroups' | 'optIn' | 'optOut' | 'block' | 'unblock';
-        /**
-         * Contact IDs to update (max 500)
-         */
-        contactIds: Array<(string)>;
-        /**
-         * Tags to add or remove (required for addTags/removeTags)
-         */
-        tags?: Array<(string)>;
-        /**
-         * Groups to add or remove (required for addGroups/removeGroups)
-         */
-        groups?: Array<(string)>;
-    };
-};
-
-export type BulkUpdateWhatsAppContactsResponse = ({
-    success?: boolean;
-    action?: string;
-    /**
-     * Number of contacts modified
-     */
-    modified?: number;
-    /**
-     * Number of contacts matched
-     */
-    matched?: number;
-});
-
-export type BulkUpdateWhatsAppContactsError = (unknown | {
-    error?: string;
-});
-
-export type BulkDeleteWhatsAppContactsData = {
-    body: {
-        /**
-         * Contact IDs to delete (max 500)
-         */
-        contactIds: Array<(string)>;
-    };
-};
-
-export type BulkDeleteWhatsAppContactsResponse = ({
-    success?: boolean;
-    /**
-     * Number of contacts deleted
-     */
-    deleted?: number;
-});
-
-export type BulkDeleteWhatsAppContactsError = (unknown | {
-    error?: string;
-});
-
-export type GetWhatsAppGroupsData = {
-    query: {
-        /**
-         * WhatsApp social account ID
-         */
-        accountId: string;
-    };
-};
-
-export type GetWhatsAppGroupsResponse = ({
-    success?: boolean;
-    groups?: Array<{
-        name?: string;
-        /**
-         * Total contacts in this group
-         */
-        totalCount?: number;
-        /**
-         * Opted-in contacts in this group
-         */
-        optedInCount?: number;
-    }>;
-    summary?: {
-        totalContacts?: number;
-        optedInContacts?: number;
-        groupCount?: number;
-    };
-});
-
-export type GetWhatsAppGroupsError = (unknown | {
-    error?: string;
-});
-
-export type RenameWhatsAppGroupData = {
-    body: {
-        /**
-         * WhatsApp social account ID
-         */
-        accountId: string;
-        /**
-         * Current group name
-         */
-        oldName: string;
-        /**
-         * New group name
-         */
-        newName: string;
-    };
-};
-
-export type RenameWhatsAppGroupResponse = ({
-    success?: boolean;
-    message?: string;
-    /**
-     * Number of contacts updated
-     */
-    modified?: number;
-});
-
-export type RenameWhatsAppGroupError = (unknown | {
-    error?: string;
-});
-
-export type DeleteWhatsAppGroupData = {
-    body: {
-        /**
-         * WhatsApp social account ID
-         */
-        accountId: string;
-        /**
-         * Group name to delete
-         */
-        groupName: string;
-    };
-};
-
-export type DeleteWhatsAppGroupResponse = ({
-    success?: boolean;
-    message?: string;
-    /**
-     * Number of contacts updated
-     */
-    modified?: number;
-});
-
-export type DeleteWhatsAppGroupError = (unknown | {
-    error?: string;
-});
-
 export type GetWhatsAppTemplatesData = {
     query: {
         /**
@@ -9523,411 +8658,6 @@ export type DeleteWhatsAppTemplateResponse = ({
 });
 
 export type DeleteWhatsAppTemplateError = (unknown | {
-    error?: string;
-});
-
-export type GetWhatsAppBroadcastsData = {
-    query: {
-        /**
-         * WhatsApp social account ID
-         */
-        accountId: string;
-        /**
-         * Maximum results (default 50)
-         */
-        limit?: number;
-        /**
-         * Offset for pagination
-         */
-        skip?: number;
-        /**
-         * Filter by broadcast status
-         */
-        status?: 'draft' | 'scheduled' | 'sending' | 'completed' | 'failed' | 'cancelled';
-    };
-};
-
-export type GetWhatsAppBroadcastsResponse = ({
-    success?: boolean;
-    broadcasts?: Array<{
-        id?: string;
-        name?: string;
-        description?: string;
-        template?: {
-            name?: string;
-            language?: string;
-        };
-        status?: 'draft' | 'scheduled' | 'sending' | 'completed' | 'failed' | 'cancelled';
-        /**
-         * Template name or message text snippet
-         */
-        messagePreview?: string;
-        recipientCount?: number;
-        scheduledAt?: string;
-        startedAt?: string;
-        completedAt?: string;
-        sentCount?: number;
-        deliveredCount?: number;
-        readCount?: number;
-        failedCount?: number;
-        createdAt?: string;
-    }>;
-    pagination?: {
-        total?: number;
-        limit?: number;
-        skip?: number;
-        hasMore?: boolean;
-    };
-});
-
-export type GetWhatsAppBroadcastsError = (unknown | {
-    error?: string;
-});
-
-export type CreateWhatsAppBroadcastData = {
-    body: {
-        /**
-         * WhatsApp social account ID
-         */
-        accountId: string;
-        /**
-         * Broadcast name
-         */
-        name: string;
-        /**
-         * Broadcast description
-         */
-        description?: string;
-        template: {
-            /**
-             * Template name
-             */
-            name: string;
-            /**
-             * Template language code
-             */
-            language: string;
-            /**
-             * Base template components
-             */
-            components?: Array<{
-                [key: string]: unknown;
-            }>;
-        };
-        /**
-         * Initial recipients (optional)
-         */
-        recipients?: Array<{
-            /**
-             * Phone number in E.164 format
-             */
-            phone: string;
-            name?: string;
-            /**
-             * Per-recipient template variables
-             */
-            variables?: {
-                [key: string]: (string);
-            };
-        }>;
-    };
-};
-
-export type CreateWhatsAppBroadcastResponse = ({
-    success?: boolean;
-    broadcast?: {
-        id?: string;
-        name?: string;
-        description?: string;
-        template?: {
-            [key: string]: unknown;
-        };
-        /**
-         * Always "draft" for new broadcasts
-         */
-        status?: string;
-        recipientCount?: number;
-        createdAt?: string;
-    };
-});
-
-export type CreateWhatsAppBroadcastError = (unknown | {
-    error?: string;
-});
-
-export type GetWhatsAppBroadcastData = {
-    path: {
-        /**
-         * Broadcast ID
-         */
-        broadcastId: string;
-    };
-};
-
-export type GetWhatsAppBroadcastResponse = ({
-    success?: boolean;
-    broadcast?: {
-        id?: string;
-        name?: string;
-        description?: string;
-        template?: {
-            [key: string]: unknown;
-        };
-        status?: 'draft' | 'scheduled' | 'sending' | 'completed' | 'failed' | 'cancelled';
-        recipientCount?: number;
-        scheduledAt?: string;
-        startedAt?: string;
-        completedAt?: string;
-        sentCount?: number;
-        deliveredCount?: number;
-        readCount?: number;
-        failedCount?: number;
-        createdAt?: string;
-        updatedAt?: string;
-    };
-});
-
-export type GetWhatsAppBroadcastError = ({
-    error?: string;
-});
-
-export type DeleteWhatsAppBroadcastData = {
-    path: {
-        /**
-         * Broadcast ID
-         */
-        broadcastId: string;
-    };
-};
-
-export type DeleteWhatsAppBroadcastResponse = ({
-    success?: boolean;
-    message?: string;
-});
-
-export type DeleteWhatsAppBroadcastError = (unknown | {
-    error?: string;
-});
-
-export type SendWhatsAppBroadcastData = {
-    path: {
-        /**
-         * Broadcast ID
-         */
-        broadcastId: string;
-    };
-};
-
-export type SendWhatsAppBroadcastResponse = ({
-    success?: boolean;
-    /**
-     * Final broadcast status
-     */
-    status?: 'completed' | 'failed';
-    /**
-     * Number of messages sent successfully
-     */
-    sent?: number;
-    /**
-     * Number of messages that failed
-     */
-    failed?: number;
-    /**
-     * Total recipient count
-     */
-    total?: number;
-});
-
-export type SendWhatsAppBroadcastError = (unknown | {
-    error?: string;
-});
-
-export type ScheduleWhatsAppBroadcastData = {
-    body: {
-        /**
-         * ISO 8601 date-time for sending (must be in the future, max 30 days)
-         */
-        scheduledAt: string;
-    };
-    path: {
-        /**
-         * Broadcast ID
-         */
-        broadcastId: string;
-    };
-};
-
-export type ScheduleWhatsAppBroadcastResponse = ({
-    success?: boolean;
-    broadcast?: {
-        id?: string;
-        /**
-         * "scheduled"
-         */
-        status?: string;
-        scheduledAt?: string;
-    };
-});
-
-export type ScheduleWhatsAppBroadcastError = (unknown | {
-    error?: string;
-});
-
-export type CancelWhatsAppBroadcastScheduleData = {
-    path: {
-        /**
-         * Broadcast ID
-         */
-        broadcastId: string;
-    };
-};
-
-export type CancelWhatsAppBroadcastScheduleResponse = ({
-    success?: boolean;
-    broadcast?: {
-        id?: string;
-        /**
-         * "draft"
-         */
-        status?: string;
-    };
-    message?: string;
-});
-
-export type CancelWhatsAppBroadcastScheduleError = (unknown | {
-    error?: string;
-});
-
-export type GetWhatsAppBroadcastRecipientsData = {
-    path: {
-        /**
-         * Broadcast ID
-         */
-        broadcastId: string;
-    };
-    query?: {
-        /**
-         * Maximum results (default 100)
-         */
-        limit?: number;
-        /**
-         * Offset for pagination
-         */
-        skip?: number;
-        /**
-         * Filter by recipient delivery status
-         */
-        status?: 'pending' | 'sent' | 'delivered' | 'read' | 'failed';
-    };
-};
-
-export type GetWhatsAppBroadcastRecipientsResponse = ({
-    success?: boolean;
-    recipients?: Array<{
-        phone?: string;
-        name?: string;
-        variables?: {
-            [key: string]: unknown;
-        };
-        status?: 'pending' | 'sent' | 'delivered' | 'read' | 'failed';
-        messageId?: string;
-        error?: string;
-        sentAt?: string;
-        deliveredAt?: string;
-        readAt?: string;
-    }>;
-    pagination?: {
-        total?: number;
-        limit?: number;
-        skip?: number;
-        hasMore?: boolean;
-    };
-    summary?: {
-        total?: number;
-        pending?: number;
-        sent?: number;
-        delivered?: number;
-        read?: number;
-        failed?: number;
-    };
-});
-
-export type GetWhatsAppBroadcastRecipientsError = ({
-    error?: string;
-});
-
-export type AddWhatsAppBroadcastRecipientsData = {
-    body: {
-        /**
-         * Recipients to add (max 1000)
-         */
-        recipients: Array<{
-            /**
-             * Phone number in E.164 format
-             */
-            phone: string;
-            name?: string;
-            variables?: {
-                [key: string]: (string);
-            };
-        }>;
-    };
-    path: {
-        /**
-         * Broadcast ID
-         */
-        broadcastId: string;
-    };
-};
-
-export type AddWhatsAppBroadcastRecipientsResponse = ({
-    success?: boolean;
-    /**
-     * Number of new recipients added
-     */
-    added?: number;
-    /**
-     * Number of duplicate phone numbers skipped
-     */
-    duplicates?: number;
-    /**
-     * Total recipient count after addition
-     */
-    totalRecipients?: number;
-});
-
-export type AddWhatsAppBroadcastRecipientsError = (unknown | {
-    error?: string;
-});
-
-export type RemoveWhatsAppBroadcastRecipientsData = {
-    body: {
-        /**
-         * Phone numbers to remove
-         */
-        phones: Array<(string)>;
-    };
-    path: {
-        /**
-         * Broadcast ID
-         */
-        broadcastId: string;
-    };
-};
-
-export type RemoveWhatsAppBroadcastRecipientsResponse = ({
-    success?: boolean;
-    /**
-     * Number of recipients removed
-     */
-    removed?: number;
-    /**
-     * Remaining recipient count
-     */
-    totalRecipients?: number;
-});
-
-export type RemoveWhatsAppBroadcastRecipientsError = (unknown | {
     error?: string;
 });
 
