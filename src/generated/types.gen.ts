@@ -456,7 +456,7 @@ export type ConnectionLog = {
      * The social account ID (present on successful connections and disconnects)
      */
     accountId?: string;
-    platform?: 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat';
+    platform?: 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat' | 'discord';
     /**
      * Type of connection event: connect_success, connect_failed, disconnect, reconnect_success, reconnect_failed
      */
@@ -526,7 +526,7 @@ export type ConnectionLog = {
     createdAt?: string;
 };
 
-export type platform2 = 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat';
+export type platform2 = 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat' | 'discord';
 
 /**
  * Type of connection event: connect_success, connect_failed, disconnect, reconnect_success, reconnect_failed
@@ -1321,7 +1321,7 @@ export type PostLog = {
 });
     userId?: string;
     profileId?: string;
-    platform?: 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat';
+    platform?: 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat' | 'discord';
     accountId?: string;
     accountUsername?: string;
     /**
@@ -1703,7 +1703,7 @@ export type contentType3 = 'story' | 'saved_story' | 'spotlight';
 
 export type SocialAccount = {
     _id?: string;
-    platform?: 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat' | 'whatsapp' | 'linkedinads' | 'metaads' | 'pinterestads' | 'tiktokads' | 'xads' | 'googleads';
+    platform?: 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat' | 'discord' | 'whatsapp' | 'linkedinads' | 'metaads' | 'pinterestads' | 'tiktokads' | 'xads' | 'googleads';
     profileId?: (string | Profile);
     username?: string;
     displayName?: string;
@@ -1763,7 +1763,7 @@ export type SocialAccount = {
     };
 };
 
-export type platform4 = 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat' | 'whatsapp' | 'linkedinads' | 'metaads' | 'pinterestads' | 'tiktokads' | 'xads' | 'googleads';
+export type platform4 = 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat' | 'discord' | 'whatsapp' | 'linkedinads' | 'metaads' | 'pinterestads' | 'tiktokads' | 'xads' | 'googleads';
 
 /**
  * **Deprecated.** With the new ads account model, ads accounts are separate SocialAccount
@@ -2857,7 +2857,7 @@ export type ValidatePostData = {
          * Target platforms (same format as POST /v1/posts)
          */
         platforms: Array<{
-            platform: 'twitter' | 'instagram' | 'tiktok' | 'youtube' | 'facebook' | 'linkedin' | 'bluesky' | 'threads' | 'reddit' | 'pinterest' | 'telegram' | 'snapchat' | 'googlebusiness';
+            platform: 'twitter' | 'instagram' | 'tiktok' | 'youtube' | 'facebook' | 'linkedin' | 'bluesky' | 'threads' | 'reddit' | 'pinterest' | 'telegram' | 'snapchat' | 'googlebusiness' | 'discord';
             customContent?: string;
             platformSpecificData?: {
                 [key: string]: unknown;
@@ -4351,7 +4351,7 @@ export type GetAllAccountsHealthData = {
         /**
          * Filter by platform
          */
-        platform?: 'facebook' | 'instagram' | 'linkedin' | 'twitter' | 'tiktok' | 'youtube' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat';
+        platform?: 'facebook' | 'instagram' | 'linkedin' | 'twitter' | 'tiktok' | 'youtube' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat' | 'discord';
         /**
          * Filter by profile ID
          */
@@ -4629,7 +4629,7 @@ export type GetConnectUrlData = {
         /**
          * Social media platform to connect
          */
-        platform: 'facebook' | 'instagram' | 'linkedin' | 'twitter' | 'tiktok' | 'youtube' | 'threads' | 'reddit' | 'pinterest' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat';
+        platform: 'facebook' | 'instagram' | 'linkedin' | 'twitter' | 'tiktok' | 'youtube' | 'threads' | 'reddit' | 'pinterest' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat' | 'discord';
     };
     query: {
         /**
