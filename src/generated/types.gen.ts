@@ -87,7 +87,7 @@ export type Ad = {
     _id?: string;
     name?: string;
     platform?: 'facebook' | 'instagram' | 'tiktok' | 'linkedin' | 'pinterest' | 'google' | 'twitter';
-    status?: 'active' | 'paused' | 'pending_review' | 'rejected' | 'completed' | 'cancelled' | 'error';
+    status?: AdStatus;
     adType?: 'boost' | 'standalone';
     goal?: 'engagement' | 'traffic' | 'awareness' | 'video_views';
     /**
@@ -204,8 +204,6 @@ export type Ad = {
 
 export type platform = 'facebook' | 'instagram' | 'tiktok' | 'linkedin' | 'pinterest' | 'google' | 'twitter';
 
-export type status = 'active' | 'paused' | 'pending_review' | 'rejected' | 'completed' | 'cancelled' | 'error';
-
 export type adType = 'boost' | 'standalone';
 
 export type goal = 'engagement' | 'traffic' | 'awareness' | 'video_views';
@@ -219,7 +217,7 @@ export type AdCampaign = {
     /**
      * Derived from child ad statuses
      */
-    status?: 'active' | 'paused' | 'pending_review' | 'rejected' | 'completed' | 'cancelled' | 'error';
+    status?: (AdStatus);
     adCount?: number;
     budget?: {
         amount?: number;
@@ -234,9 +232,9 @@ export type AdCampaign = {
      */
     platformObjective?: (string) | null;
     /**
-     * Meta optimization goal. String if all ad sets share the same goal, array of distinct values if they differ.
+     * Meta optimization goal shared across ad sets, or comma-separated values when ad sets differ (e.g. OFFSITE_CONVERSIONS, VALUE, LEAD_GENERATION)
      */
-    optimizationGoal?: ((string | Array<(string)>) | null);
+    optimizationGoal?: (string) | null;
     /**
      * Campaign-level bid strategy (e.g. LOWEST_COST_WITHOUT_CAP, COST_CAP, LOWEST_COST_WITH_MIN_ROAS)
      */
@@ -277,6 +275,8 @@ export type AdMetrics = {
     lastSyncedAt?: string;
 };
 
+export type AdStatus = 'active' | 'paused' | 'pending_review' | 'rejected' | 'completed' | 'cancelled' | 'error';
+
 /**
  * Ad set (or ad group/line item depending on platform) with rolled-up metrics and child ads
  */
@@ -286,7 +286,7 @@ export type AdTreeAdSet = {
     /**
      * Derived from child ad statuses
      */
-    status?: 'active' | 'paused' | 'pending_review' | 'rejected' | 'completed' | 'cancelled' | 'error';
+    status?: (AdStatus);
     adCount?: number;
     budget?: {
         amount?: number;
@@ -325,7 +325,7 @@ export type AdTreeCampaign = {
     /**
      * Derived from child ad statuses
      */
-    status?: 'active' | 'paused' | 'pending_review' | 'rejected' | 'completed' | 'cancelled' | 'error';
+    status?: (AdStatus);
     /**
      * Total ads across all ad sets
      */
@@ -344,9 +344,9 @@ export type AdTreeCampaign = {
      */
     platformObjective?: (string) | null;
     /**
-     * Meta optimization goal. String if all ad sets share the same goal, array of distinct values if they differ.
+     * Meta optimization goal shared across ad sets, or comma-separated values when ad sets differ (e.g. OFFSITE_CONVERSIONS, VALUE, LEAD_GENERATION)
      */
-    optimizationGoal?: ((string | Array<(string)>) | null);
+    optimizationGoal?: (string) | null;
     /**
      * Campaign-level bid strategy (e.g. LOWEST_COST_WITHOUT_CAP, COST_CAP, LOWEST_COST_WITH_MIN_ROAS)
      */
@@ -472,7 +472,7 @@ export type AnalyticsSinglePostResponse = {
 /**
  * Overall post status. "partial" when some platforms published and others failed.
  */
-export type status2 = 'published' | 'failed' | 'partial';
+export type status = 'published' | 'failed' | 'partial';
 
 /**
  * Overall sync state across all platforms
@@ -714,7 +714,7 @@ export type InboxWebhookConversation = {
     status: 'active' | 'archived';
 };
 
-export type status3 = 'active' | 'archived';
+export type status2 = 'active' | 'archived';
 
 /**
  * The message object included in inbox webhook payloads.
@@ -1162,7 +1162,7 @@ export type PlatformAnalytics = {
     errorMessage?: (string) | null;
 };
 
-export type status4 = 'published' | 'failed';
+export type status3 = 'published' | 'failed';
 
 /**
  * Sync state of analytics for this platform
@@ -1272,7 +1272,7 @@ export type Post = {
     updatedAt?: string;
 };
 
-export type status5 = 'draft' | 'scheduled' | 'publishing' | 'published' | 'failed' | 'partial';
+export type status4 = 'draft' | 'scheduled' | 'publishing' | 'published' | 'failed' | 'partial';
 
 export type visibility = 'public' | 'private' | 'unlisted';
 
@@ -1874,7 +1874,7 @@ export type UploadTokenResponse = {
     status?: 'pending' | 'completed' | 'expired';
 };
 
-export type status6 = 'pending' | 'completed' | 'expired';
+export type status5 = 'pending' | 'completed' | 'expired';
 
 export type UploadTokenStatusResponse = {
     token?: string;
@@ -10858,7 +10858,7 @@ export type ListAdsData = {
          * zernio = Zernio-created only, all = include external ads
          */
         source?: 'zernio' | 'all';
-        status?: 'active' | 'paused' | 'pending_review' | 'rejected' | 'completed' | 'cancelled' | 'error';
+        status?: AdStatus;
         /**
          * End of metrics date range (YYYY-MM-DD). Defaults to today. Max 90-day range.
          */
@@ -10899,7 +10899,7 @@ export type ListAdCampaignsData = {
         /**
          * Filter by derived campaign status (post-aggregation)
          */
-        status?: 'active' | 'paused' | 'pending_review' | 'rejected' | 'completed' | 'cancelled' | 'error';
+        status?: AdStatus;
     };
 };
 
@@ -10976,7 +10976,7 @@ export type GetAdTreeData = {
         /**
          * Filter by derived campaign status (post-aggregation)
          */
-        status?: 'active' | 'paused' | 'pending_review' | 'rejected' | 'completed' | 'cancelled' | 'error';
+        status?: AdStatus;
         /**
          * End of metrics date range (YYYY-MM-DD). Defaults to today. Max 90-day range.
          */
