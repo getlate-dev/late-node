@@ -25,7 +25,7 @@ export const validatePostLength = <ThrowOnError extends boolean = false>(options
  * Validate post content
  * Dry-run the full post validation pipeline without publishing. Catches issues like missing media for Instagram/TikTok/YouTube, hashtag limits, invalid thread formats, Facebook Reel requirements, and character limit violations.
  *
- * Accepts the same body as `POST /v1/posts`. Does NOT validate accounts, process media, or track usage. This is content-only validation.
+ * Accepts the same body as POST /v1/posts. Does NOT validate accounts, process media, or track usage. This is content-only validation.
  *
  * Returns errors for failures and warnings for near-limit content (>90% of character limit).
  *
@@ -57,7 +57,7 @@ export const validateMedia = <ThrowOnError extends boolean = false>(options: Opt
  * Check subreddit existence
  * Check if a subreddit exists and return basic info (title, subscriber count, NSFW status, post types allowed).
  *
- * When accountId is provided, uses authenticated Reddit OAuth API with automatic token refresh (recommended). Falls back to Reddit's public JSON API, which may be unreliable from server IPs. Returns `exists: false` for private, banned, or nonexistent subreddits.
+ * When accountId is provided, uses authenticated Reddit OAuth API with automatic token refresh (recommended). Falls back to Reddit's public JSON API, which may be unreliable from server IPs. Returns exists: false for private, banned, or nonexistent subreddits.
  *
  */
 export const validateSubreddit = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<ValidateSubredditData, ThrowOnError>) => {
@@ -73,7 +73,7 @@ export const validateSubreddit = <ThrowOnError extends boolean = false>(options:
  * Accepts both Zernio Post IDs and External Post IDs (auto-resolved). fromDate defaults to 90 days ago if omitted, max range 366 days.
  * Single post lookups may return 202 (sync pending) or 424 (all platforms failed). For follower stats, use /v1/accounts/follower-stats.
  *
- * **LinkedIn personal accounts:** Analytics are only available for posts published through Zernio. LinkedIn's API only returns metrics for posts authored by the authenticated user. Organization/company page analytics work for all posts.
+ * LinkedIn personal accounts: Analytics are only available for posts published through Zernio. LinkedIn's API only returns metrics for posts authored by the authenticated user. Organization/company page analytics work for all posts.
  *
  */
 export const getAnalytics = <ThrowOnError extends boolean = false>(options?: OptionsLegacyParser<GetAnalyticsData, ThrowOnError>) => {
@@ -433,7 +433,7 @@ export const unpublishPost = <ThrowOnError extends boolean = false>(options: Opt
  * Edit published post
  * Edit a published post on a social media platform. Currently only supported for X (Twitter).
  *
- * **Requirements:**
+ * Requirements:
  * - Connected X account must have an active X Premium subscription
  * - Must be within 1 hour of original publish time
  * - Maximum 5 edits per tweet (enforced by X)
@@ -454,11 +454,11 @@ export const editPost = <ThrowOnError extends boolean = false>(options: OptionsL
  * Updates metadata of a published video on the specified platform without re-uploading.
  * Currently only supported for YouTube. At least one updatable field is required.
  *
- * **Two modes:**
+ * Two modes:
  *
- * 1. **Post-based** (video published through Zernio): pass the Zernio postId in the URL and `platform` in the body.
- * 2. **Direct video ID** (video uploaded outside Zernio, e.g. directly to YouTube): use `_` as the postId,
- * and pass `videoId` + `accountId` + `platform` in the body. The accountId is the Zernio social account ID
+ * 1. Post-based (video published through Zernio): pass the Zernio postId in the URL and platform in the body.
+ * 2. Direct video ID (video uploaded outside Zernio, e.g. directly to YouTube): use _ as the postId,
+ * and pass videoId + accountId + platform in the body. The accountId is the Zernio social account ID
  * for the connected YouTube channel.
  *
  */
@@ -701,13 +701,13 @@ export const handleOAuthCallback = <ThrowOnError extends boolean = false>(option
  * Connect ads for a platform
  * Unified ads connection endpoint. Creates a dedicated ads SocialAccount for the specified platform.
  *
- * **Same-token platforms** (facebook, instagram, linkedin, pinterest): Creates an ads SocialAccount (`metaads`, `linkedinads`, `pinterestads`) with a copied OAuth token from the parent posting account. If the ads account already exists, returns `alreadyConnected: true`. No extra OAuth needed.
+ * Same-token platforms (facebook, instagram, linkedin, pinterest): Creates an ads SocialAccount (metaads, linkedinads, pinterestads) with a copied OAuth token from the parent posting account. If the ads account already exists, returns alreadyConnected: true. No extra OAuth needed.
  *
- * **Separate-token platforms** (tiktok, twitter): Starts the platform-specific marketing API OAuth flow and creates an ads SocialAccount (`tiktokads`, `xads`) with its own token. Requires an existing posting account (`accountId` param). If the ads account already exists, returns `alreadyConnected: true`.
+ * Separate-token platforms (tiktok, twitter): Starts the platform-specific marketing API OAuth flow and creates an ads SocialAccount (tiktokads, xads) with its own token. Requires an existing posting account (accountId param). If the ads account already exists, returns alreadyConnected: true.
  *
- * **Standalone platforms** (googleads): Starts the Google Ads OAuth flow and creates a standalone ads SocialAccount (`googleads`) with no parent. If the account already exists, returns `alreadyConnected: true`.
+ * Standalone platforms (googleads): Starts the Google Ads OAuth flow and creates a standalone ads SocialAccount (googleads) with no parent. If the account already exists, returns alreadyConnected: true.
  *
- * Ads accounts appear as regular SocialAccount documents with ads platform values (e.g., `metaads`, `tiktokads`) in `GET /v1/accounts`.
+ * Ads accounts appear as regular SocialAccount documents with ads platform values (e.g., metaads, tiktokads) in GET /v1/accounts.
  *
  */
 export const connectAds = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<ConnectAdsData, ThrowOnError>) => {
@@ -1023,7 +1023,7 @@ export const connectBlueskyCredentials = <ThrowOnError extends boolean = false>(
  * 1. Go to Meta Business Suite (business.facebook.com)
  * 2. Create or select a WhatsApp Business Account
  * 3. In Business Settings > System Users, create a System User
- * 4. Assign it the `whatsapp_business_management` and `whatsapp_business_messaging` permissions
+ * 4. Assign it the whatsapp_business_management and whatsapp_business_messaging permissions
  * 5. Generate a permanent access token
  * 6. Get the WABA ID from WhatsApp Manager > Account Tools > Phone Numbers
  * 7. Get the Phone Number ID from the same page (click on the number)
@@ -1130,7 +1130,7 @@ export const getLinkedInPostAnalytics = <ThrowOnError extends boolean = false>(o
  * Get LinkedIn post reactions
  * Returns individual reactions for a specific LinkedIn post, including reactor profiles
  * (name, headline/job title, profile picture, profile URL, reaction type).
- * Only works for **organization/company page** accounts. LinkedIn restricts reaction
+ * Only works for organization/company page accounts. LinkedIn restricts reaction
  * data for personal profiles (r_member_social_feed is a closed permission).
  *
  */
@@ -1156,22 +1156,22 @@ export const updateLinkedInOrganization = <ThrowOnError extends boolean = false>
  * Resolve LinkedIn mention
  * Converts a LinkedIn profile or company URL to a URN for @mentions in posts.
  *
- * **How to use LinkedIn @mentions (2-step workflow):**
+ * How to use LinkedIn @mentions (2-step workflow):
  *
  * 1. Call this endpoint with the LinkedIn profile/company URL to get the mention URN and format.
- * 2. Embed the returned `mentionFormat` (e.g. `@[Vincent Jong](urn:li:person:xxx)`) directly in your post's `content` field.
+ * 2. Embed the returned mentionFormat (e.g. @[Vincent Jong](urn:li:person:xxx)) directly in your post's content field.
  *
- * **Example:**
- * - Resolve: `GET /v1/accounts/{id}/linkedin-mentions?url=linkedin.com/in/vincentjong&displayName=Vincent Jong`
- * - Returns: `mentionFormat: "@[Vincent Jong](urn:li:person:xxx)"`
- * - Use in post content: `"Great talk with @[Vincent Jong](urn:li:person:xxx) today!"`
+ * Example:
+ * - Resolve: GET /v1/accounts/{id}/linkedin-mentions?url=linkedin.com/in/vincentjong&displayName=Vincent Jong
+ * - Returns: mentionFormat: "@[Vincent Jong](urn:li:person:xxx)"
+ * - Use in post content: "Great talk with @[Vincent Jong](urn:li:person:xxx) today!"
  *
- * **Important:** The `mentions` array field in POST /v1/posts is stored for reference only and does NOT trigger @mentions on LinkedIn. You must embed the mention format directly in the content text.
+ * Important: The mentions array field in POST /v1/posts is stored for reference only and does NOT trigger @mentions on LinkedIn. You must embed the mention format directly in the content text.
  *
- * **Requirements:**
- * - **Person mentions** require the LinkedIn account to be admin of at least one organization. This is a LinkedIn API limitation: the only endpoints that resolve profile URLs to member URNs (`vanityUrl`, `peopleTypeahead`) are scoped to organization followers. There is no public LinkedIn API to resolve a vanity URL without organization context.
- * - **Organization mentions** (e.g. @Microsoft) work without this requirement.
- * - For person mentions to be clickable, the `displayName` parameter must exactly match the name shown on their LinkedIn profile.
+ * Requirements:
+ * - Person mentions require the LinkedIn account to be admin of at least one organization. This is a LinkedIn API limitation: the only endpoints that resolve profile URLs to member URNs (vanityUrl, peopleTypeahead) are scoped to organization followers. There is no public LinkedIn API to resolve a vanity URL without organization context.
+ * - Organization mentions (e.g. @Microsoft) work without this requirement.
+ * - For person mentions to be clickable, the displayName parameter must exactly match the name shown on their LinkedIn profile.
  * - Person mentions DO work when published from personal profiles (the URN just needs to be valid). The limitation is only in the resolution step (URL to URN), not in publishing.
  *
  */
@@ -1206,7 +1206,7 @@ export const updatePinterestBoards = <ThrowOnError extends boolean = false>(opti
 
 /**
  * List YouTube playlists
- * Returns the playlists available for a connected YouTube account. Use this to get a playlist ID when creating a YouTube post with the `playlistId` field.
+ * Returns the playlists available for a connected YouTube account. Use this to get a playlist ID when creating a YouTube post with the playlistId field.
  */
 export const getYoutubePlaylists = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetYoutubePlaylistsData, ThrowOnError>) => {
     return (options?.client ?? client).get<GetYoutubePlaylistsResponse, GetYoutubePlaylistsError, ThrowOnError>({
@@ -1217,7 +1217,7 @@ export const getYoutubePlaylists = <ThrowOnError extends boolean = false>(option
 
 /**
  * Set default YouTube playlist
- * Sets the default playlist used when publishing videos for this account. When a post does not specify a `playlistId`, the default playlist is not automatically used (it is stored for client-side convenience).
+ * Sets the default playlist used when publishing videos for this account. When a post does not specify a playlistId, the default playlist is not automatically used (it is stored for client-side convenience).
  */
 export const updateYoutubeDefaultPlaylist = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<UpdateYoutubeDefaultPlaylistData, ThrowOnError>) => {
     return (options?.client ?? client).put<UpdateYoutubeDefaultPlaylistResponse, UpdateYoutubeDefaultPlaylistError, ThrowOnError>({
@@ -1432,7 +1432,7 @@ export const listLogs = <ThrowOnError extends boolean = false>(options?: Options
  * Fetch conversations (DMs) from all connected messaging accounts in a single API call. Supports filtering by profile and platform. Results are aggregated and deduplicated.
  * Supported platforms: Facebook, Instagram, Twitter/X, Bluesky, Reddit, Telegram.
  *
- * **Twitter/X limitation:** X has replaced traditional DMs with encrypted "X Chat" for many accounts. Messages sent or received through encrypted X Chat are not accessible via X's API (the `/2/dm_events` endpoint only returns legacy unencrypted DMs). This means some Twitter/X conversations may show only outgoing messages or appear empty. This is an X platform limitation that affects all third-party applications. See [X's docs on encrypted messaging](https://help.x.com/en/using-x/about-chat) for more details.
+ * Twitter/X limitation: X has replaced traditional DMs with encrypted "X Chat" for many accounts. Messages sent or received through encrypted X Chat are not accessible via X's API (the /2/dm_events endpoint only returns legacy unencrypted DMs). This means some Twitter/X conversations may show only outgoing messages or appear empty. This is an X platform limitation that affects all third-party applications. See X's docs on encrypted messaging for more details.
  *
  */
 export const listInboxConversations = <ThrowOnError extends boolean = false>(options?: OptionsLegacyParser<ListInboxConversationsData, ThrowOnError>) => {
@@ -1446,13 +1446,13 @@ export const listInboxConversations = <ThrowOnError extends boolean = false>(opt
  * Create conversation
  * Initiate a new direct message conversation with a specified user. If a conversation already exists with the recipient, the message is added to the existing thread.
  *
- * **Currently supported platforms:** Twitter/X only. Other platforms will return `PLATFORM_NOT_SUPPORTED`.
+ * Currently supported platforms: Twitter/X only. Other platforms will return PLATFORM_NOT_SUPPORTED.
  *
- * **DM eligibility:** Before sending, the endpoint checks if the recipient accepts DMs from your account (via the `receives_your_dm` field). If not, a 422 error with code `DM_NOT_ALLOWED` is returned. You can skip this check with `skipDmCheck: true` if you have already verified eligibility.
+ * DM eligibility: Before sending, the endpoint checks if the recipient accepts DMs from your account (via the receives_your_dm field). If not, a 422 error with code DM_NOT_ALLOWED is returned. You can skip this check with skipDmCheck: true if you have already verified eligibility.
  *
- * **X API tier requirement:** DM write endpoints require X API Pro tier ($5,000/month) or Enterprise access. This applies to BYOK (Bring Your Own Key) users who provide their own X API credentials.
+ * X API tier requirement: DM write endpoints require X API Pro tier ($5,000/month) or Enterprise access. This applies to BYOK (Bring Your Own Key) users who provide their own X API credentials.
  *
- * **Rate limits:** 200 requests per 15 minutes, 1,000 per 24 hours per user, 15,000 per 24 hours per app (shared across all DM endpoints).
+ * Rate limits: 200 requests per 15 minutes, 1,000 per 24 hours per user, 15,000 per 24 hours per app (shared across all DM endpoints).
  *
  */
 export const createInboxConversation = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<CreateInboxConversationData, ThrowOnError>) => {
@@ -1488,7 +1488,7 @@ export const updateInboxConversation = <ThrowOnError extends boolean = false>(op
  * List messages
  * Fetch messages for a specific conversation. Requires accountId query parameter.
  *
- * **Twitter/X limitation:** X's encrypted "X Chat" messages are not accessible via the API. Conversations where the other participant uses encrypted X Chat may only show your outgoing messages. See the [list conversations endpoint](#/Messages/listInboxConversations) for more details.
+ * Twitter/X limitation: X's encrypted "X Chat" messages are not accessible via the API. Conversations where the other participant uses encrypted X Chat may only show your outgoing messages. See the list conversations endpoint for more details.
  *
  */
 export const getInboxConversationMessages = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetInboxConversationMessagesData, ThrowOnError>) => {
@@ -1525,11 +1525,11 @@ export const editInboxMessage = <ThrowOnError extends boolean = false>(options: 
 /**
  * Delete message
  * Delete a message from a conversation. Platform support varies:
- * - **Telegram**: Full delete (bot's own messages anytime, others if admin)
- * - **X/Twitter**: Full delete (own DM events only)
- * - **Bluesky**: Delete for self only (recipient still sees it)
- * - **Reddit**: Delete from sender's view only
- * - **Facebook, Instagram, WhatsApp**: Not supported (returns 400)
+ * - Telegram: Full delete (bot's own messages anytime, others if admin)
+ * - X/Twitter: Full delete (own DM events only)
+ * - Bluesky: Delete for self only (recipient still sees it)
+ * - Reddit: Delete from sender's view only
+ * - Facebook, Instagram, WhatsApp: Not supported (returns 400)
  *
  */
 export const deleteInboxMessage = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<DeleteInboxMessageData, ThrowOnError>) => {
@@ -1542,9 +1542,9 @@ export const deleteInboxMessage = <ThrowOnError extends boolean = false>(options
 /**
  * Send typing indicator
  * Show a typing indicator in a conversation. Platform support:
- * - **Facebook Messenger**: Shows "Page is typing..." for 20 seconds
- * - **Telegram**: Shows "Bot is typing..." for 5 seconds
- * - **All others**: Returns 200 but no-op (platform doesn't support it)
+ * - Facebook Messenger: Shows "Page is typing..." for 20 seconds
+ * - Telegram: Shows "Bot is typing..." for 5 seconds
+ * - All others: Returns 200 but no-op (platform doesn't support it)
  *
  * Typing indicators are best-effort. The endpoint always returns 200 even if the platform call fails.
  *
@@ -1559,9 +1559,9 @@ export const sendTypingIndicator = <ThrowOnError extends boolean = false>(option
 /**
  * Add reaction
  * Add an emoji reaction to a message. Platform support:
- * - **Telegram**: Supports a subset of Unicode emoji reactions
- * - **WhatsApp**: Supports any standard emoji (one reaction per message per sender)
- * - **All others**: Returns 400 (not supported)
+ * - Telegram: Supports a subset of Unicode emoji reactions
+ * - WhatsApp: Supports any standard emoji (one reaction per message per sender)
+ * - All others: Returns 400 (not supported)
  *
  */
 export const addMessageReaction = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<AddMessageReactionData, ThrowOnError>) => {
@@ -1574,9 +1574,9 @@ export const addMessageReaction = <ThrowOnError extends boolean = false>(options
 /**
  * Remove reaction
  * Remove a reaction from a message. Platform support:
- * - **Telegram**: Send empty reaction array to clear
- * - **WhatsApp**: Send empty emoji to remove
- * - **All others**: Returns 400 (not supported)
+ * - Telegram: Send empty reaction array to clear
+ * - WhatsApp: Send empty emoji to remove
+ * - All others: Returns 400 (not supported)
  *
  */
 export const removeMessageReaction = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<RemoveMessageReactionData, ThrowOnError>) => {
@@ -1589,12 +1589,12 @@ export const removeMessageReaction = <ThrowOnError extends boolean = false>(opti
 /**
  * Upload media file
  * Upload a media file using API key authentication and get back a publicly accessible URL.
- * The URL can be used as `attachmentUrl` when sending inbox messages.
+ * The URL can be used as attachmentUrl when sending inbox messages.
  *
  * Files are stored in temporary storage and auto-delete after 7 days.
  * Maximum file size is 25MB.
  *
- * Unlike `/v1/media/upload` (which uses upload tokens for end-user flows),
+ * Unlike /v1/media/upload (which uses upload tokens for end-user flows),
  * this endpoint uses standard Bearer token authentication for programmatic use.
  *
  */
@@ -1947,11 +1947,11 @@ export const getWhatsAppTemplates = <ThrowOnError extends boolean = false>(optio
  * Create template
  * Create a new message template. Supports two modes:
  *
- * **Custom template:** Provide `components` with your own content. Submitted to Meta for review (can take up to 24h).
+ * Custom template: Provide components with your own content. Submitted to Meta for review (can take up to 24h).
  *
- * **Library template:** Provide `library_template_name` instead of `components` to use a pre-built template
- * from Meta's template library. Library templates are **pre-approved** (no review wait). You can optionally
- * customize parameters and buttons via `library_template_body_inputs` and `library_template_button_inputs`.
+ * Library template: Provide library_template_name instead of components to use a pre-built template
+ * from Meta's template library. Library templates are pre-approved (no review wait). You can optionally
+ * customize parameters and buttons via library_template_body_inputs and library_template_button_inputs.
  *
  * Browse available library templates at: https://business.facebook.com/wa/manage/message-templates/
  *
@@ -2354,9 +2354,9 @@ export const uploadWhatsAppFlowJson = <ThrowOnError extends boolean = false>(opt
 
 /**
  * Publish flow
- * Publish a DRAFT flow. **This is irreversible.** Once published, the flow and its JSON
+ * Publish a DRAFT flow. This is irreversible. Once published, the flow and its JSON
  * become immutable and the flow can be sent to users. To update a published flow,
- * create a new flow (optionally cloning this one via `cloneFlowId`).
+ * create a new flow (optionally cloning this one via cloneFlowId).
  *
  */
 export const publishWhatsAppFlow = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<PublishWhatsAppFlowData, ThrowOnError>) => {
@@ -2368,7 +2368,7 @@ export const publishWhatsAppFlow = <ThrowOnError extends boolean = false>(option
 
 /**
  * Deprecate flow
- * Deprecate a PUBLISHED flow. **This is irreversible.** Deprecated flows cannot be sent
+ * Deprecate a PUBLISHED flow. This is irreversible. Deprecated flows cannot be sent
  * or opened, but existing active sessions may continue until they complete.
  *
  */
@@ -2417,6 +2417,7 @@ export const createContact = <ThrowOnError extends boolean = false>(options: Opt
 
 /**
  * Get contact
+ * Returns a contact with all associated messaging channels.
  */
 export const getContact = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetContactData, ThrowOnError>) => {
     return (options?.client ?? client).get<GetContactResponse, GetContactError, ThrowOnError>({
@@ -2427,6 +2428,7 @@ export const getContact = <ThrowOnError extends boolean = false>(options: Option
 
 /**
  * Update contact
+ * Update one or more fields on a contact. Only provided fields are changed.
  */
 export const updateContact = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<UpdateContactData, ThrowOnError>) => {
     return (options?.client ?? client).patch<UpdateContactResponse, UpdateContactError, ThrowOnError>({
@@ -2437,6 +2439,7 @@ export const updateContact = <ThrowOnError extends boolean = false>(options: Opt
 
 /**
  * Delete contact
+ * Permanently deletes a contact and all associated channels.
  */
 export const deleteContact = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<DeleteContactData, ThrowOnError>) => {
     return (options?.client ?? client).delete<DeleteContactResponse, DeleteContactError, ThrowOnError>({
@@ -2447,6 +2450,7 @@ export const deleteContact = <ThrowOnError extends boolean = false>(options: Opt
 
 /**
  * List channels for a contact
+ * Returns all messaging channels linked to a contact (e.g. Instagram DM, Telegram, WhatsApp).
  */
 export const getContactChannels = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetContactChannelsData, ThrowOnError>) => {
     return (options?.client ?? client).get<GetContactChannelsResponse, GetContactChannelsError, ThrowOnError>({
@@ -2468,6 +2472,7 @@ export const bulkCreateContacts = <ThrowOnError extends boolean = false>(options
 
 /**
  * Set custom field value
+ * Set or overwrite a custom field value on a contact. The value type must match the field definition.
  */
 export const setContactFieldValue = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<SetContactFieldValueData, ThrowOnError>) => {
     return (options?.client ?? client).put<SetContactFieldValueResponse, SetContactFieldValueError, ThrowOnError>({
@@ -2478,6 +2483,7 @@ export const setContactFieldValue = <ThrowOnError extends boolean = false>(optio
 
 /**
  * Clear custom field value
+ * Remove a custom field value from a contact. The field definition is not affected.
  */
 export const clearContactFieldValue = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<ClearContactFieldValueData, ThrowOnError>) => {
     return (options?.client ?? client).delete<ClearContactFieldValueResponse, ClearContactFieldValueError, ThrowOnError>({
@@ -2488,6 +2494,7 @@ export const clearContactFieldValue = <ThrowOnError extends boolean = false>(opt
 
 /**
  * List custom field definitions
+ * Returns all custom field definitions. Optionally filter by profile.
  */
 export const listCustomFields = <ThrowOnError extends boolean = false>(options?: OptionsLegacyParser<ListCustomFieldsData, ThrowOnError>) => {
     return (options?.client ?? client).get<ListCustomFieldsResponse, ListCustomFieldsError, ThrowOnError>({
@@ -2498,6 +2505,7 @@ export const listCustomFields = <ThrowOnError extends boolean = false>(options?:
 
 /**
  * Create custom field
+ * Create a new custom field definition. Supported types are text, number, date, boolean, and select.
  */
 export const createCustomField = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<CreateCustomFieldData, ThrowOnError>) => {
     return (options?.client ?? client).post<CreateCustomFieldResponse, CreateCustomFieldError, ThrowOnError>({
@@ -2508,6 +2516,7 @@ export const createCustomField = <ThrowOnError extends boolean = false>(options:
 
 /**
  * Update custom field
+ * Update a custom field definition. The field type cannot be changed after creation.
  */
 export const updateCustomField = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<UpdateCustomFieldData, ThrowOnError>) => {
     return (options?.client ?? client).patch<UpdateCustomFieldResponse, UpdateCustomFieldError, ThrowOnError>({
@@ -2518,6 +2527,7 @@ export const updateCustomField = <ThrowOnError extends boolean = false>(options:
 
 /**
  * Delete custom field
+ * Delete a custom field definition and remove its values from all contacts.
  */
 export const deleteCustomField = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<DeleteCustomFieldData, ThrowOnError>) => {
     return (options?.client ?? client).delete<DeleteCustomFieldResponse, DeleteCustomFieldError, ThrowOnError>({
@@ -2528,6 +2538,7 @@ export const deleteCustomField = <ThrowOnError extends boolean = false>(options:
 
 /**
  * List broadcasts
+ * Returns broadcasts with delivery stats. Filter by status, platform, or profile.
  */
 export const listBroadcasts = <ThrowOnError extends boolean = false>(options?: OptionsLegacyParser<ListBroadcastsData, ThrowOnError>) => {
     return (options?.client ?? client).get<ListBroadcastsResponse, ListBroadcastsError, ThrowOnError>({
@@ -2538,6 +2549,7 @@ export const listBroadcasts = <ThrowOnError extends boolean = false>(options?: O
 
 /**
  * Create broadcast draft
+ * Create a broadcast in draft status. Add recipients and then send or schedule it.
  */
 export const createBroadcast = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<CreateBroadcastData, ThrowOnError>) => {
     return (options?.client ?? client).post<CreateBroadcastResponse, CreateBroadcastError, ThrowOnError>({
@@ -2548,6 +2560,7 @@ export const createBroadcast = <ThrowOnError extends boolean = false>(options: O
 
 /**
  * Get broadcast details
+ * Returns a broadcast with its full configuration and delivery stats.
  */
 export const getBroadcast = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetBroadcastData, ThrowOnError>) => {
     return (options?.client ?? client).get<GetBroadcastResponse, GetBroadcastError, ThrowOnError>({
@@ -2558,6 +2571,7 @@ export const getBroadcast = <ThrowOnError extends boolean = false>(options: Opti
 
 /**
  * Update broadcast
+ * Update a broadcast's name, message, template, or segment filters. Only draft broadcasts can be updated.
  */
 export const updateBroadcast = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<UpdateBroadcastData, ThrowOnError>) => {
     return (options?.client ?? client).patch<UpdateBroadcastResponse, UpdateBroadcastError, ThrowOnError>({
@@ -2568,6 +2582,7 @@ export const updateBroadcast = <ThrowOnError extends boolean = false>(options: O
 
 /**
  * Delete broadcast
+ * Permanently delete a broadcast. Only drafts can be deleted.
  */
 export const deleteBroadcast = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<DeleteBroadcastData, ThrowOnError>) => {
     return (options?.client ?? client).delete<DeleteBroadcastResponse, DeleteBroadcastError, ThrowOnError>({
@@ -2578,6 +2593,7 @@ export const deleteBroadcast = <ThrowOnError extends boolean = false>(options: O
 
 /**
  * Send broadcast now
+ * Immediately start sending a draft broadcast to its recipients.
  */
 export const sendBroadcast = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<SendBroadcastData, ThrowOnError>) => {
     return (options?.client ?? client).post<SendBroadcastResponse, SendBroadcastError, ThrowOnError>({
@@ -2588,6 +2604,7 @@ export const sendBroadcast = <ThrowOnError extends boolean = false>(options: Opt
 
 /**
  * Schedule broadcast for later
+ * Schedule a draft broadcast to be sent at a future date and time.
  */
 export const scheduleBroadcast = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<ScheduleBroadcastData, ThrowOnError>) => {
     return (options?.client ?? client).post<ScheduleBroadcastResponse, ScheduleBroadcastError, ThrowOnError>({
@@ -2598,6 +2615,7 @@ export const scheduleBroadcast = <ThrowOnError extends boolean = false>(options:
 
 /**
  * Cancel broadcast
+ * Cancel a scheduled or in-progress broadcast. Already-sent messages are not affected.
  */
 export const cancelBroadcast = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<CancelBroadcastData, ThrowOnError>) => {
     return (options?.client ?? client).post<CancelBroadcastResponse, CancelBroadcastError, ThrowOnError>({
@@ -2608,6 +2626,7 @@ export const cancelBroadcast = <ThrowOnError extends boolean = false>(options: O
 
 /**
  * List broadcast recipients
+ * Returns recipients for a broadcast with individual delivery status. Filter by status.
  */
 export const listBroadcastRecipients = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<ListBroadcastRecipientsData, ThrowOnError>) => {
     return (options?.client ?? client).get<ListBroadcastRecipientsResponse, ListBroadcastRecipientsError, ThrowOnError>({
@@ -2618,6 +2637,7 @@ export const listBroadcastRecipients = <ThrowOnError extends boolean = false>(op
 
 /**
  * Add recipients to a broadcast
+ * Add recipients by contact IDs, raw phone numbers, or from the broadcast's segment filters.
  */
 export const addBroadcastRecipients = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<AddBroadcastRecipientsData, ThrowOnError>) => {
     return (options?.client ?? client).post<AddBroadcastRecipientsResponse, AddBroadcastRecipientsError, ThrowOnError>({
@@ -2628,6 +2648,7 @@ export const addBroadcastRecipients = <ThrowOnError extends boolean = false>(opt
 
 /**
  * List sequences
+ * Returns sequences with enrollment stats. Filter by status, platform, or profile.
  */
 export const listSequences = <ThrowOnError extends boolean = false>(options?: OptionsLegacyParser<ListSequencesData, ThrowOnError>) => {
     return (options?.client ?? client).get<ListSequencesResponse, ListSequencesError, ThrowOnError>({
@@ -2638,6 +2659,7 @@ export const listSequences = <ThrowOnError extends boolean = false>(options?: Op
 
 /**
  * Create sequence
+ * Create a multi-step messaging sequence. Each step has a delay and a message or WhatsApp template.
  */
 export const createSequence = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<CreateSequenceData, ThrowOnError>) => {
     return (options?.client ?? client).post<CreateSequenceResponse, CreateSequenceError, ThrowOnError>({
@@ -2648,6 +2670,7 @@ export const createSequence = <ThrowOnError extends boolean = false>(options: Op
 
 /**
  * Get sequence with steps
+ * Returns a sequence with all its steps and enrollment stats.
  */
 export const getSequence = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetSequenceData, ThrowOnError>) => {
     return (options?.client ?? client).get<GetSequenceResponse, GetSequenceError, ThrowOnError>({
@@ -2658,6 +2681,7 @@ export const getSequence = <ThrowOnError extends boolean = false>(options: Optio
 
 /**
  * Update sequence
+ * Update a sequence's name, steps, or exit conditions. Active sequences can be updated without pausing.
  */
 export const updateSequence = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<UpdateSequenceData, ThrowOnError>) => {
     return (options?.client ?? client).patch<UpdateSequenceResponse, UpdateSequenceError, ThrowOnError>({
@@ -2668,6 +2692,7 @@ export const updateSequence = <ThrowOnError extends boolean = false>(options: Op
 
 /**
  * Delete sequence
+ * Permanently delete a sequence. Active enrollments are stopped.
  */
 export const deleteSequence = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<DeleteSequenceData, ThrowOnError>) => {
     return (options?.client ?? client).delete<DeleteSequenceResponse, DeleteSequenceError, ThrowOnError>({
@@ -2678,6 +2703,7 @@ export const deleteSequence = <ThrowOnError extends boolean = false>(options: Op
 
 /**
  * Activate sequence
+ * Start a draft or paused sequence. The sequence must have at least one step.
  */
 export const activateSequence = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<ActivateSequenceData, ThrowOnError>) => {
     return (options?.client ?? client).post<ActivateSequenceResponse, ActivateSequenceError, ThrowOnError>({
@@ -2688,6 +2714,7 @@ export const activateSequence = <ThrowOnError extends boolean = false>(options: 
 
 /**
  * Pause sequence
+ * Pause an active sequence. Enrolled contacts stop receiving messages until the sequence is reactivated.
  */
 export const pauseSequence = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<PauseSequenceData, ThrowOnError>) => {
     return (options?.client ?? client).post<PauseSequenceResponse, PauseSequenceError, ThrowOnError>({
@@ -2698,6 +2725,7 @@ export const pauseSequence = <ThrowOnError extends boolean = false>(options: Opt
 
 /**
  * Enroll contacts in a sequence
+ * Enroll one or more contacts into a sequence. Contacts already enrolled are skipped.
  */
 export const enrollContacts = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<EnrollContactsData, ThrowOnError>) => {
     return (options?.client ?? client).post<EnrollContactsResponse, EnrollContactsError, ThrowOnError>({
@@ -2708,6 +2736,7 @@ export const enrollContacts = <ThrowOnError extends boolean = false>(options: Op
 
 /**
  * Unenroll contact
+ * Remove a contact from a sequence. No further messages will be sent to this contact.
  */
 export const unenrollContact = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<UnenrollContactData, ThrowOnError>) => {
     return (options?.client ?? client).delete<UnenrollContactResponse, UnenrollContactError, ThrowOnError>({
@@ -2718,6 +2747,7 @@ export const unenrollContact = <ThrowOnError extends boolean = false>(options: O
 
 /**
  * List enrollments for a sequence
+ * Returns enrolled contacts with their progress, status, and next scheduled step.
  */
 export const listSequenceEnrollments = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<ListSequenceEnrollmentsData, ThrowOnError>) => {
     return (options?.client ?? client).get<ListSequenceEnrollmentsResponse, ListSequenceEnrollmentsError, ThrowOnError>({
@@ -2753,6 +2783,7 @@ export const createCommentAutomation = <ThrowOnError extends boolean = false>(op
 
 /**
  * Get automation details
+ * Returns an automation with its configuration, stats, and recent trigger logs.
  */
 export const getCommentAutomation = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetCommentAutomationData, ThrowOnError>) => {
     return (options?.client ?? client).get<GetCommentAutomationResponse, GetCommentAutomationError, ThrowOnError>({
@@ -2763,6 +2794,7 @@ export const getCommentAutomation = <ThrowOnError extends boolean = false>(optio
 
 /**
  * Update automation settings
+ * Update an automation's keywords, DM message, comment reply, or active status.
  */
 export const updateCommentAutomation = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<UpdateCommentAutomationData, ThrowOnError>) => {
     return (options?.client ?? client).patch<UpdateCommentAutomationResponse, UpdateCommentAutomationError, ThrowOnError>({
@@ -2773,6 +2805,7 @@ export const updateCommentAutomation = <ThrowOnError extends boolean = false>(op
 
 /**
  * Delete automation
+ * Permanently delete an automation and all its trigger logs.
  */
 export const deleteCommentAutomation = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<DeleteCommentAutomationData, ThrowOnError>) => {
     return (options?.client ?? client).delete<DeleteCommentAutomationResponse, DeleteCommentAutomationError, ThrowOnError>({
@@ -2795,7 +2828,7 @@ export const listCommentAutomationLogs = <ThrowOnError extends boolean = false>(
 /**
  * List ads
  * Returns a paginated list of ads with metrics computed over an optional date range.
- * Use `source=all` to include externally-synced ads from platform ad managers.
+ * Use source=all to include externally-synced ads from platform ad managers.
  * If no date range is provided, defaults to the last 90 days. Date range is capped at 90 days max.
  *
  */
@@ -2852,6 +2885,7 @@ export const getAdTree = <ThrowOnError extends boolean = false>(options?: Option
 
 /**
  * Get ad details
+ * Returns an ad with its creative, targeting, status, and performance metrics.
  */
 export const getAd = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetAdData, ThrowOnError>) => {
     return (options?.client ?? client).get<GetAdResponse, GetAdError, ThrowOnError>({

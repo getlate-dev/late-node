@@ -689,7 +689,7 @@ export type GoogleBusinessPlatformData = {
 export type type2 = 'LEARN_MORE' | 'BOOK' | 'ORDER' | 'SHOP' | 'SIGN_UP' | 'CALL';
 
 /**
- * The `account` context included in inbox webhook payloads.
+ * The account context included in inbox webhook payloads.
  */
 export type InboxWebhookAccount = {
     /**
@@ -702,7 +702,7 @@ export type InboxWebhookAccount = {
 };
 
 /**
- * The `conversation` context included in inbox webhook payloads.
+ * The conversation context included in inbox webhook payloads.
  */
 export type InboxWebhookConversation = {
     id: string;
@@ -717,7 +717,7 @@ export type InboxWebhookConversation = {
 export type status3 = 'active' | 'archived';
 
 /**
- * The `message` object included in inbox webhook payloads.
+ * The message object included in inbox webhook payloads.
  */
 export type InboxWebhookMessage = {
     /**
@@ -1651,13 +1651,13 @@ export type SocialAccount = {
     enabled?: boolean;
     /**
      * Platform-specific metadata. Fields vary by platform. For WhatsApp accounts, includes:
-     * - `qualityRating`: Phone number quality rating from Meta (`GREEN`, `YELLOW`, `RED`, or `UNKNOWN`)
-     * - `nameStatus`: Display name review status (`APPROVED`, `PENDING_REVIEW`, `DECLINED`, or `NONE`). Messages cannot be sent until the display name is approved by Meta.
-     * - `messagingLimitTier`: Maximum unique business-initiated conversations per 24h rolling window (`TIER_250`, `TIER_1K`, `TIER_10K`, `TIER_100K`, or `TIER_UNLIMITED`). Scales automatically as quality rating improves.
-     * - `verifiedName`: Meta-verified business display name
-     * - `displayPhoneNumber`: Formatted phone number (e.g., "+1 555-123-4567")
-     * - `wabaId`: WhatsApp Business Account ID
-     * - `phoneNumberId`: Meta phone number ID
+     * - qualityRating: Phone number quality rating from Meta (GREEN, YELLOW, RED, or UNKNOWN)
+     * - nameStatus: Display name review status (APPROVED, PENDING_REVIEW, DECLINED, or NONE). Messages cannot be sent until the display name is approved by Meta.
+     * - messagingLimitTier: Maximum unique business-initiated conversations per 24h rolling window (TIER_250, TIER_1K, TIER_10K, TIER_100K, or TIER_UNLIMITED). Scales automatically as quality rating improves.
+     * - verifiedName: Meta-verified business display name
+     * - displayPhoneNumber: Formatted phone number (e.g., "+1 555-123-4567")
+     * - wabaId: WhatsApp Business Account ID
+     * - phoneNumberId: Meta phone number ID
      *
      */
     metadata?: {
@@ -1716,17 +1716,17 @@ export type ThreadsPlatformData = {
  * Photo carousels up to 35 images. Video titles up to 2200 chars, photo titles truncated to 90 chars.
  * privacyLevel must match creator_info options. Both camelCase and snake_case accepted.
  *
- * **Creator Inbox (draft mode):** Set `draft: true` to send content to the TikTok Creator Inbox
+ * Creator Inbox (draft mode): Set draft: true to send content to the TikTok Creator Inbox
  * instead of publishing immediately. The creator receives an inbox notification and completes
- * the post using TikTok's editing flow. This maps to TikTok's `post_mode: "MEDIA_UPLOAD"` internally.
+ * the post using TikTok's editing flow. This maps to TikTok's post_mode: "MEDIA_UPLOAD" internally.
  *
- * **Important:** The field `publish_type` is NOT supported. Use `draft: true` for Creator Inbox flow.
+ * Important: The field publish_type is NOT supported. Use draft: true for Creator Inbox flow.
  *
- * **Photo drafts** use the `/v2/post/publish/content/init/` endpoint with `post_mode: "MEDIA_UPLOAD"`.
- * **Video drafts** use the dedicated `/v2/post/publish/inbox/video/init/` endpoint.
+ * Photo drafts use the /v2/post/publish/content/init/ endpoint with post_mode: "MEDIA_UPLOAD".
+ * Video drafts use the dedicated /v2/post/publish/inbox/video/init/ endpoint.
  *
- * When `draft: true`, the `video.upload` scope is required. When `draft` is false or omitted
- * (direct post), the `video.publish` scope is required. For Creator Inbox, TikTok app version
+ * When draft: true, the video.upload scope is required. When draft is false or omitted
+ * (direct post), the video.publish scope is required. For Creator Inbox, TikTok app version
  * must be 31.8 or higher.
  *
  */
@@ -1734,9 +1734,9 @@ export type TikTokPlatformData = {
     /**
      * When true, sends the post to the TikTok Creator Inbox as a draft instead of publishing
      * immediately. The creator receives an inbox notification to complete posting via TikTok's
-     * editing flow. Maps to TikTok API `post_mode: "MEDIA_UPLOAD"` (photos) or the dedicated
-     * inbox endpoint (videos). When false or omitted, publishes directly via `post_mode: "DIRECT_POST"`.
-     * Note: `publish_type` is not a supported field. Use this field instead.
+     * editing flow. Maps to TikTok API post_mode: "MEDIA_UPLOAD" (photos) or the dedicated
+     * inbox endpoint (videos). When false or omitted, publishes directly via post_mode: "DIRECT_POST".
+     * Note: publish_type is not a supported field. Use this field instead.
      *
      */
     draft?: boolean;
@@ -2223,12 +2223,12 @@ export type WebhookPayloadMessage = {
 export type event4 = 'message.received';
 
 /**
- * Webhook payload for `message.deleted` events. Fires when the sender
+ * Webhook payload for message.deleted events. Fires when the sender
  * deletes (unsends) a message. Supported platforms: Instagram (incoming
  * unsend) and WhatsApp (when the business deletes an outgoing message
  * via the Cloud API).
  *
- * The `message.text` and `message.attachments` fields retain the content
+ * The message.text and message.attachments fields retain the content
  * that existed before the delete. The Zernio dashboard UI does not show
  * this content, but authorized API consumers may access it for
  * moderation, compliance, or archival use cases.
@@ -2247,14 +2247,14 @@ export type WebhookPayloadMessageDeleted = {
 export type event5 = 'message.deleted';
 
 /**
- * Shared payload for `message.delivered`, `message.read`, and
- * `message.failed` events. Fires when the platform reports a new
+ * Shared payload for message.delivered, message.read, and
+ * message.failed events. Fires when the platform reports a new
  * delivery state for an outgoing message.
  *
  * Platform support:
- * * `message.delivered` — WhatsApp, Facebook Messenger.
- * * `message.read`      — WhatsApp, Facebook Messenger, Instagram.
- * * `message.failed`    — WhatsApp only (other platforms don't expose
+ * * message.delivered — WhatsApp, Facebook Messenger.
+ * * message.read      — WhatsApp, Facebook Messenger, Instagram.
+ * * message.failed    — WhatsApp only (other platforms don't expose
  * per-message failure via webhook).
  *
  */
@@ -2267,7 +2267,7 @@ export type WebhookPayloadMessageDeliveryStatus = {
      */
     statusAt: string;
     /**
-     * Populated only on `message.failed`.
+     * Populated only on message.failed.
      */
     error?: {
         code?: number;
@@ -2282,10 +2282,10 @@ export type WebhookPayloadMessageDeliveryStatus = {
 export type event6 = 'message.delivered' | 'message.read' | 'message.failed';
 
 /**
- * Webhook payload for `message.edited` events. Fires when the sender
+ * Webhook payload for message.edited events. Fires when the sender
  * edits a previously-sent message. Supported platforms: Instagram,
- * Facebook Messenger, Telegram. The `message` object reflects the
- * LATEST state; `editHistory` contains every prior version in order
+ * Facebook Messenger, Telegram. The message object reflects the
+ * LATEST state; editHistory contains every prior version in order
  * (oldest first), so the last entry is the version immediately before
  * the current content.
  *
@@ -7010,19 +7010,19 @@ export type CreateInboxConversationData = {
          */
         accountId: string;
         /**
-         * Twitter numeric user ID of the recipient. Provide either this or `participantUsername`.
+         * Twitter numeric user ID of the recipient. Provide either this or participantUsername.
          */
         participantId?: string;
         /**
-         * Twitter username (with or without @) of the recipient. Resolved to a user ID via lookup. Provide either this or `participantId`.
+         * Twitter username (with or without @) of the recipient. Resolved to a user ID via lookup. Provide either this or participantId.
          */
         participantUsername?: string;
         /**
-         * Text content of the message. At least one of `message` or attachment is required.
+         * Text content of the message. At least one of message or attachment is required.
          */
         message?: string;
         /**
-         * Skip the `receives_your_dm` eligibility check before sending. Use if you have already verified the recipient accepts DMs.
+         * Skip the receives_your_dm eligibility check before sending. Use if you have already verified the recipient accepts DMs.
          */
         skipDmCheck?: boolean;
     };
@@ -7239,7 +7239,7 @@ export type GetInboxConversationMessagesResponse = ({
             editedAt?: string;
         }>;
         /**
-         * True if the sender has deleted (unsent) this message. The original `message` and `attachments` fields remain populated.
+         * True if the sender has deleted (unsent) this message. The original message and attachments fields remain populated.
          */
         isDeleted?: boolean;
         deletedAt?: (string) | null;
@@ -7254,7 +7254,7 @@ export type GetInboxConversationMessagesResponse = ({
          */
         sentAt?: (string) | null;
         /**
-         * Populated when `deliveryStatus === "failed"`.
+         * Populated when deliveryStatus === "failed".
          */
         deliveryError?: {
             code?: number;
@@ -8507,7 +8507,7 @@ export type CreateWhatsAppTemplateData = {
         /**
          * Name of a pre-built template from Meta's template library (e.g., "appointment_reminder",
          * "auto_pay_reminder_1", "address_update"). When provided, the template is pre-approved
-         * by Meta with no review wait. Omit `components` when using this field.
+         * by Meta with no review wait. Omit components when using this field.
          *
          */
         library_template_name?: string;
