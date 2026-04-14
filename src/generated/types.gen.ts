@@ -11136,7 +11136,13 @@ export type UpdateAdData = {
             ageMin?: number;
             ageMax?: number;
             countries?: Array<(string)>;
-            interests?: Array<(string)>;
+            /**
+             * Interest objects from /v1/ads/interests. Each must include id and name.
+             */
+            interests?: Array<{
+                id: string;
+                name: string;
+            }>;
         };
         name?: string;
     };
@@ -11276,7 +11282,13 @@ export type BoostPostData = {
             ageMin?: number;
             ageMax?: number;
             countries?: Array<(string)>;
-            interests?: Array<(string)>;
+            /**
+             * Interest objects from /v1/ads/interests. Each must include id and name.
+             */
+            interests?: Array<{
+                id: string;
+                name: string;
+            }>;
         };
         /**
          * Max bid cap (Meta only)
@@ -11346,7 +11358,13 @@ export type CreateStandaloneAdData = {
         countries?: Array<(string)>;
         ageMin?: number;
         ageMax?: number;
-        interests?: Array<(string)>;
+        /**
+         * Interest objects from /v1/ads/interests. Each must include id and name.
+         */
+        interests?: Array<{
+            id: string;
+            name: string;
+        }>;
         /**
          * Required for lifetime budgets
          */
