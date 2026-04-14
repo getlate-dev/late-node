@@ -275,7 +275,6 @@ try {
 | Method | Description |
 |--------|-------------|
 | `logs.listLogs()` | List activity logs |
-| `logs.getPostLogs()` | Get post logs |
 
 ### Connect (OAuth)
 | Method | Description |

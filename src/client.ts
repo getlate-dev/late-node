@@ -108,7 +108,6 @@ import {
   getPendingOAuthData,
   getPinterestBoards,
   getPost,
-  getPostLogs,
   getPostTimeline,
   getPostingFrequency,
   getProfile,
@@ -559,7 +558,6 @@ export class Zernio {
    */
   logs = {
     listLogs: listLogs,
-    getPostLogs: getPostLogs,
   };
 
   /**

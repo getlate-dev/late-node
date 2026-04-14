@@ -1306,93 +1306,6 @@ export type PostGetResponse = {
     post?: Post;
 };
 
-/**
- * Publishing log entry showing details of a post publishing attempt
- */
-export type PostLog = {
-    _id?: string;
-    postId?: (string | {
-    _id?: string;
-    content?: string;
-    status?: string;
-});
-    userId?: string;
-    profileId?: string;
-    platform?: 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat' | 'discord';
-    accountId?: string;
-    accountUsername?: string;
-    /**
-     * Type of action logged: publish (initial attempt), retry (after failure), media_upload, rate_limit_pause, token_refresh, cancelled
-     */
-    action?: 'publish' | 'retry' | 'media_upload' | 'rate_limit_pause' | 'token_refresh' | 'cancelled';
-    status?: 'success' | 'failed' | 'pending' | 'skipped';
-    /**
-     * HTTP status code from platform API
-     */
-    statusCode?: number;
-    /**
-     * Platform API endpoint called
-     */
-    endpoint?: string;
-    request?: {
-        /**
-         * First 200 chars of caption
-         */
-        contentPreview?: string;
-        mediaCount?: number;
-        mediaTypes?: Array<(string)>;
-        /**
-         * URLs of media items sent to platform
-         */
-        mediaUrls?: Array<(string)>;
-        scheduledFor?: string;
-        /**
-         * Full request body JSON (max 5000 chars)
-         */
-        rawBody?: string;
-    };
-    response?: {
-        /**
-         * ID returned by platform on success
-         */
-        platformPostId?: string;
-        /**
-         * URL of published post
-         */
-        platformPostUrl?: string;
-        /**
-         * Error message on failure
-         */
-        errorMessage?: string;
-        /**
-         * Platform-specific error code
-         */
-        errorCode?: string;
-        /**
-         * Full response body JSON (max 5000 chars)
-         */
-        rawBody?: string;
-    };
-    /**
-     * How long the operation took in milliseconds
-     */
-    durationMs?: number;
-    /**
-     * Attempt number (1 for first try, 2+ for retries)
-     */
-    attemptNumber?: number;
-    createdAt?: string;
-};
-
-export type platform3 = 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat' | 'discord';
-
-/**
- * Type of action logged: publish (initial attempt), retry (after failure), media_upload, rate_limit_pause, token_refresh, cancelled
- */
-export type action = 'publish' | 'retry' | 'media_upload' | 'rate_limit_pause' | 'token_refresh' | 'cancelled';
-
-export type status6 = 'success' | 'failed' | 'pending' | 'skipped';
-
 export type PostRetryResponse = {
     message?: string;
     post?: Post;
@@ -1749,7 +1662,7 @@ export type SocialAccount = {
     };
 };
 
-export type platform4 = 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat' | 'discord' | 'whatsapp' | 'linkedinads' | 'metaads' | 'pinterestads' | 'tiktokads' | 'xads' | 'googleads';
+export type platform3 = 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat' | 'discord' | 'whatsapp' | 'linkedinads' | 'metaads' | 'pinterestads' | 'tiktokads' | 'xads' | 'googleads';
 
 /**
  * Text, images (up to 10), videos (up to 10), and mixed media albums. Captions up to 1024 chars for media, 4096 for text-only.
@@ -1958,7 +1871,7 @@ export type UploadTokenResponse = {
     status?: 'pending' | 'completed' | 'expired';
 };
 
-export type status7 = 'pending' | 'completed' | 'expired';
+export type status6 = 'pending' | 'completed' | 'expired';
 
 export type UploadTokenStatusResponse = {
     token?: string;
@@ -2186,7 +2099,7 @@ export type WebhookPayloadComment = {
 
 export type event3 = 'comment.received';
 
-export type platform5 = 'instagram' | 'facebook' | 'twitter' | 'youtube' | 'linkedin' | 'bluesky' | 'reddit';
+export type platform4 = 'instagram' | 'facebook' | 'twitter' | 'youtube' | 'linkedin' | 'bluesky' | 'reddit';
 
 /**
  * Webhook payload for message received events
@@ -6974,34 +6887,6 @@ export type ListLogsResponse = ({
 export type ListLogsError = ({
     error?: string;
 });
-
-export type GetPostLogsData = {
-    path: {
-        /**
-         * The post ID
-         */
-        postId: string;
-    };
-    query?: {
-        /**
-         * Maximum number of logs to return (max 100)
-         */
-        limit?: number;
-    };
-};
-
-export type GetPostLogsResponse = ({
-    logs?: Array<PostLog>;
-    /**
-     * Number of logs returned
-     */
-    count?: number;
-    postId?: string;
-});
-
-export type GetPostLogsError = ({
-    error?: string;
-} | unknown);
 
 export type ListInboxConversationsData = {
     query?: {

@@ -376,11 +376,6 @@ describe('Endpoint Methods', () => {
       expect(client.logs.listLogs).toBeTypeOf('function');
     });
 
-    it('should have getPostLogs method', () => {
-      expect(client.logs.getPostLogs).toBeDefined();
-      expect(client.logs.getPostLogs).toBeTypeOf('function');
-    });
-
   });
 
   describe('media', () => {
