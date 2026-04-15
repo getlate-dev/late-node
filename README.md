@@ -352,6 +352,7 @@ try {
 |--------|-------------|
 | `ads.listAdAccounts()` | List ad accounts |
 | `ads.listAds()` | List ads |
+| `ads.listConversionDestinations()` | List destinations for the Conversions API |
 | `ads.createStandaloneAd()` | Create standalone ad |
 | `ads.getAd()` | Get ad details |
 | `ads.getAdAnalytics()` | Get ad analytics |
@@ -359,6 +360,7 @@ try {
 | `ads.deleteAd()` | Cancel an ad |
 | `ads.boostPost()` | Boost post as ad |
 | `ads.searchAdInterests()` | Search targeting interests |
+| `ads.sendConversions()` | Send conversion events to an ad platform |
 
 ### Broadcasts
 | Method | Description |

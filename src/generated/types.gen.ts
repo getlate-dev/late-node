@@ -534,6 +534,134 @@ export type BlueskyPlatformData = {
     }>;
 };
 
+/**
+ * A single conversion event to relay to the ad platform. All PII fields
+ * (email, phone, names) are hashed with SHA-256 server-side using each
+ * platform's normalization rules before they leave Zernio. Callers send
+ * plaintext.
+ *
+ */
+export type ConversionEvent = {
+    /**
+     * Standard event name (Purchase, Lead, CompleteRegistration, AddToCart,
+     * InitiateCheckout, AddPaymentInfo, Subscribe, StartTrial, ViewContent,
+     * Search, Contact, SubmitApplication, Schedule) or a custom string
+     * (only supported on platforms that accept custom events).
+     *
+     */
+    eventName: string;
+    /**
+     * When the conversion happened, in unix seconds.
+     */
+    eventTime: number;
+    /**
+     * Unique dedup key. The same eventId must be used on pixel + CAPI
+     * to prevent double-counting. Mapped to event_id on Meta and
+     * transactionId on Google.
+     *
+     */
+    eventId: string;
+    /**
+     * Conversion value in the specified currency.
+     */
+    value?: number;
+    /**
+     * ISO 4217 currency code.
+     */
+    currency?: string;
+    /**
+     * User identity fields. More signals mean higher match rates.
+     */
+    user: {
+        /**
+         * Plaintext email. Hashed server-side.
+         */
+        email?: string;
+        /**
+         * Phone number, ideally E.164. Hashed server-side.
+         */
+        phone?: string;
+        /**
+         * Plaintext first name. Hashed server-side.
+         */
+        firstName?: string;
+        /**
+         * Plaintext last name. Hashed server-side.
+         */
+        lastName?: string;
+        /**
+         * Stable customer identifier (e.g. CRM user ID). Hashed server-side.
+         */
+        externalId?: string;
+        /**
+         * Client IP address. Sent plaintext.
+         */
+        ipAddress?: string;
+        /**
+         * Client user-agent string. Sent plaintext.
+         */
+        userAgent?: string;
+        /**
+         * ISO 3166-1 alpha-2 country code, e.g. 'us'.
+         */
+        country?: string;
+        /**
+         * Platform click identifiers captured from the originating ad click.
+         */
+        clickIds?: {
+            /**
+             * Meta click ID (from fbclid URL param).
+             */
+            fbc?: string;
+            /**
+             * Meta browser ID (_fbp cookie).
+             */
+            fbp?: string;
+            /**
+             * Google click ID (from gclid URL param).
+             */
+            gclid?: string;
+            /**
+             * Google iOS 14.5+ app attribution ID.
+             */
+            gbraid?: string;
+            /**
+             * Google iOS 14.5+ web-to-app attribution ID.
+             */
+            wbraid?: string;
+        };
+    };
+    /**
+     * Item-level detail for ecommerce events.
+     */
+    items?: Array<{
+        id?: string;
+        name?: string;
+        price?: number;
+        quantity?: number;
+        category?: string;
+    }>;
+    /**
+     * URL where the conversion originated (used by Meta).
+     */
+    sourceUrl?: string;
+    /**
+     * Where the conversion happened. Used by Meta; Google ignores.
+     */
+    actionSource?: 'web' | 'app' | 'offline' | 'crm' | 'phone_call' | 'system_generated';
+    /**
+     * Escape hatch for platform-specific fields we haven't normalized. Forwarded as-is.
+     */
+    platformData?: {
+        [key: string]: unknown;
+    };
+};
+
+/**
+ * Where the conversion happened. Used by Meta; Google ignores.
+ */
+export type actionSource = 'web' | 'app' | 'offline' | 'crm' | 'phone_call' | 'system_generated';
+
 export type ErrorResponse = {
     error?: string;
     details?: {
@@ -11454,5 +11582,99 @@ export type AddUsersToAdAudienceResponse = ({
 });
 
 export type AddUsersToAdAudienceError = (unknown | {
+    error?: string;
+});
+
+export type SendConversionsData = {
+    body: {
+        /**
+         * SocialAccount ID (metaads or googleads).
+         */
+        accountId: string;
+        /**
+         * Platform destination identifier. For Meta, the pixel/dataset
+         * ID. For Google, the conversion action resource name.
+         *
+         */
+        destinationId: string;
+        events: Array<ConversionEvent>;
+        /**
+         * Meta `test_event_code` passthrough. Ignored by Google.
+         */
+        testCode?: string;
+        /**
+         * Batch-level user consent. Required by Google for EEA/UK
+         * events under the Feb 2026 restrictions. Ignored by Meta.
+         *
+         */
+        consent?: {
+            adUserData?: 'GRANTED' | 'DENIED';
+            adPersonalization?: 'GRANTED' | 'DENIED';
+        };
+    };
+};
+
+export type SendConversionsResponse = ({
+    platform?: 'metaads' | 'googleads';
+    /**
+     * Events accepted by the platform.
+     */
+    eventsReceived?: number;
+    /**
+     * Events rejected (see failures).
+     */
+    eventsFailed?: number;
+    failures?: Array<{
+        /**
+         * Index into the submitted events array.
+         */
+        eventIndex?: number;
+        /**
+         * Echoes back the eventId of the failed event.
+         */
+        eventId?: string;
+        message?: string;
+        code?: (string | number);
+    }>;
+    /**
+     * Platform trace ID (fbtrace_id for Meta, requestId for Google) for debugging.
+     */
+    traceId?: string;
+});
+
+export type SendConversionsError = (unknown | {
+    error?: string;
+});
+
+export type ListConversionDestinationsData = {
+    path: {
+        /**
+         * SocialAccount ID (metaads or googleads).
+         */
+        accountId: string;
+    };
+};
+
+export type ListConversionDestinationsResponse = ({
+    platform?: 'metaads' | 'googleads';
+    destinations?: Array<{
+        /**
+         * Destination identifier. Meta: pixel ID. Google:
+         * conversion action resource name.
+         *
+         */
+        id?: string;
+        name?: string;
+        /**
+         * Present when the platform locks event type to the
+         * destination (Google conversion actions).
+         *
+         */
+        type?: string;
+        status?: 'active' | 'inactive';
+    }>;
+});
+
+export type ListConversionDestinationsError = (unknown | {
     error?: string;
 });

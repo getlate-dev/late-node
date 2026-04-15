@@ -149,6 +149,7 @@ import {
   listCommentAutomationLogs,
   listCommentAutomations,
   listContacts,
+  listConversionDestinations,
   listCustomFields,
   listFacebookPages,
   listGoogleBusinessLocations,
@@ -192,6 +193,7 @@ import {
   selectPinterestBoard,
   selectSnapchatProfile,
   sendBroadcast,
+  sendConversions,
   sendInboxMessage,
   sendPrivateReplyToComment,
   sendTypingIndicator,
@@ -764,6 +766,8 @@ export class Zernio {
     boostPost: boostPost,
     createStandaloneAd: createStandaloneAd,
     searchAdInterests: searchAdInterests,
+    sendConversions: sendConversions,
+    listConversionDestinations: listConversionDestinations,
   };
 
   /**
