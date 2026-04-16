@@ -2353,9 +2353,9 @@ export type WebhookPayloadComment = {
          */
         id: string;
         /**
-         * Internal post ID
+         * Internal post ID (null for posts not published through Zernio)
          */
-        postId: string;
+        postId: (string) | null;
         /**
          * Platform's post ID
          */
@@ -2386,9 +2386,9 @@ export type WebhookPayloadComment = {
     };
     post: {
         /**
-         * Internal post ID
+         * Internal post ID (null for posts not published through Zernio)
          */
-        id: string;
+        id: (string) | null;
         /**
          * Platform's post ID
          */
@@ -7827,7 +7827,7 @@ export type SendInboxMessageData = {
          */
         messageTag?: 'CONFIRMED_EVENT_UPDATE' | 'POST_PURCHASE_UPDATE' | 'ACCOUNT_UPDATE' | 'HUMAN_AGENT';
         /**
-         * Platform message ID to reply to (Telegram only).
+         * Platform message ID to quote-reply to. For WhatsApp, pass the wamid (available in message.platformMessageId from webhooks). For Telegram, pass the Telegram message ID.
          */
         replyTo?: string;
     };
