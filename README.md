@@ -420,6 +420,13 @@ try {
 | `customFields.clearContactFieldValue()` | Clear custom field value |
 | `customFields.setContactFieldValue()` | Set custom field value |
 
+### Discord
+| Method | Description |
+|--------|-------------|
+| `discord.getDiscordChannels()` | List Discord guild channels |
+| `discord.getDiscordSettings()` | Get Discord account settings |
+| `discord.updateDiscordSettings()` | Update Discord settings |
+
 ### GMB Attributes
 | Method | Description |
 |--------|-------------|

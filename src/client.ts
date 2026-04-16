@@ -82,6 +82,8 @@ import {
   getContactChannels,
   getContentDecay,
   getDailyMetrics,
+  getDiscordChannels,
+  getDiscordSettings,
   getFacebookPages,
   getFollowerStats,
   getGmbLocations,
@@ -217,6 +219,7 @@ import {
   updateCommentAutomation,
   updateContact,
   updateCustomField,
+  updateDiscordSettings,
   updateFacebookPage,
   updateGmbLocation,
   updateGoogleBusinessAttributes,
@@ -530,6 +533,15 @@ export class Zernio {
     listGoogleBusinessPlaceActions: listGoogleBusinessPlaceActions,
     createGoogleBusinessPlaceAction: createGoogleBusinessPlaceAction,
     deleteGoogleBusinessPlaceAction: deleteGoogleBusinessPlaceAction,
+  };
+
+  /**
+   * discord API
+   */
+  discord = {
+    getDiscordSettings: getDiscordSettings,
+    updateDiscordSettings: updateDiscordSettings,
+    getDiscordChannels: getDiscordChannels,
   };
 
   /**

@@ -89,7 +89,10 @@ export type Ad = {
     platform?: 'facebook' | 'instagram' | 'tiktok' | 'linkedin' | 'pinterest' | 'google' | 'twitter';
     status?: AdStatus;
     adType?: 'boost' | 'standalone';
-    goal?: 'engagement' | 'traffic' | 'awareness' | 'video_views';
+    /**
+     * Available goals vary by platform. Meta (Facebook/Instagram) and TikTok support all 7. LinkedIn supports all except app_promotion. Twitter/X supports engagement, traffic, awareness, video_views, app_promotion. Pinterest and Google Ads support only engagement, traffic, awareness, video_views.
+     */
+    goal?: 'engagement' | 'traffic' | 'awareness' | 'video_views' | 'lead_generation' | 'conversions' | 'app_promotion';
     /**
      * True for ads synced from platform ad managers
      */
@@ -206,7 +209,10 @@ export type platform = 'facebook' | 'instagram' | 'tiktok' | 'linkedin' | 'pinte
 
 export type adType = 'boost' | 'standalone';
 
-export type goal = 'engagement' | 'traffic' | 'awareness' | 'video_views';
+/**
+ * Available goals vary by platform. Meta (Facebook/Instagram) and TikTok support all 7. LinkedIn supports all except app_promotion. Twitter/X supports engagement, traffic, awareness, video_views, app_promotion. Pinterest and Google Ads support only engagement, traffic, awareness, video_views.
+ */
+export type goal = 'engagement' | 'traffic' | 'awareness' | 'video_views' | 'lead_generation' | 'conversions' | 'app_promotion';
 
 export type type = 'daily' | 'lifetime';
 
@@ -661,6 +667,152 @@ export type ConversionEvent = {
  * Where the conversion happened. Used by Meta; Google ignores.
  */
 export type actionSource = 'web' | 'app' | 'offline' | 'crm' | 'phone_call' | 'system_generated';
+
+/**
+ * Discord message settings. Supports plain text (2,000 chars), rich embeds (up to 10), native polls, forum posts, threads, and announcement crossposts. Media attachments support images (JPEG, PNG, GIF, WebP), videos (MP4), and documents (up to 10 files, 25 MB each). Webhook identity (username + avatar) can be customized per-account via PATCH /v1/connect/discord or per-post via webhookUsername/webhookAvatarUrl.
+ *
+ */
+export type DiscordPlatformData = {
+    /**
+     * Target channel snowflake ID. Determines which channel in the connected server receives the message.
+     */
+    channelId: string;
+    /**
+     * Up to 10 Discord embed objects (combined max 6,000 characters across all embeds). Sent alongside or instead of plain-text content.
+     */
+    embeds?: Array<{
+        /**
+         * Embed title (max 256 chars)
+         */
+        title?: string;
+        /**
+         * Embed body text (max 4,096 chars)
+         */
+        description?: string;
+        /**
+         * URL the title links to
+         */
+        url?: string;
+        /**
+         * Embed accent color as decimal integer (e.g. 5814783 for blue). Convert hex to decimal.
+         */
+        color?: number;
+        image?: {
+            url?: string;
+        };
+        thumbnail?: {
+            url?: string;
+        };
+        footer?: {
+            /**
+             * Footer text (max 2
+             */
+            text?: string;
+            icon_url?: string;
+        };
+        author?: {
+            /**
+             * Author name (max 256 chars)
+             */
+            name?: string;
+            url?: string;
+            icon_url?: string;
+        };
+        /**
+         * Up to 25 fields per embed
+         */
+        fields?: Array<{
+            /**
+             * Field name (max 256 chars)
+             */
+            name: string;
+            /**
+             * Field value (max 1
+             */
+            value: string;
+            /**
+             * Display fields side-by-side
+             */
+            inline?: boolean;
+        }>;
+    }>;
+    /**
+     * Native Discord poll. Cannot be combined with media attachments in the same message.
+     */
+    poll?: {
+        question?: {
+            /**
+             * Poll question (max 300 chars)
+             */
+            text: string;
+        };
+        /**
+         * 1-10 answer options
+         */
+        answers?: Array<{
+            poll_media?: {
+                /**
+                 * Answer text
+                 */
+                text?: string;
+            };
+        }>;
+        /**
+         * Poll duration in hours (1-768). Default 24.
+         */
+        duration?: number;
+        /**
+         * Allow users to select multiple answers. Default false.
+         */
+        allow_multiselect?: boolean;
+    };
+    /**
+     * Auto-crosspost to every server following this announcement channel (type 5). No-op for regular text channels.
+     */
+    crosspost?: boolean;
+    /**
+     * Thread title for forum channel posts (type 15). Required when posting to a forum channel.
+     */
+    forumThreadName?: string;
+    /**
+     * Tag snowflake IDs to apply to forum posts. Max 5 tags.
+     */
+    forumAppliedTags?: Array<(string)>;
+    /**
+     * Create a follow-up thread under the published message.
+     */
+    threadFromMessage?: {
+        /**
+         * Thread name (1-100 chars)
+         */
+        name?: string;
+        /**
+         * Auto-archive after inactivity (minutes)
+         */
+        autoArchiveDuration?: 60 | 1440 | 4320 | 10080;
+        /**
+         * Slow-mode duration in seconds (0-21600)
+         */
+        rateLimitPerUser?: number;
+    };
+    /**
+     * Send as text-to-speech message. Discord reads the message aloud in the channel.
+     */
+    tts?: boolean;
+    /**
+     * Override the webhook display name for this post only (1-80 chars). Falls back to the account-level default set via PATCH /v1/connect/discord.
+     */
+    webhookUsername?: string;
+    /**
+     * Override the webhook avatar URL for this post only. Falls back to the account-level default.
+     */
+    webhookAvatarUrl?: string;
+};
+
+/**
+ * Auto-archive after inactivity (minutes)
+ */
+export type autoArchiveDuration = 60 | 1440 | 4320 | 10080;
 
 export type ErrorResponse = {
     error?: string;
@@ -1276,6 +1428,10 @@ export type PinterestPlatformData = {
 export type PlatformAnalytics = {
     platform?: string;
     status?: 'published' | 'failed';
+    /**
+     * The native post ID on the platform (e.g. Instagram media ID, tweet ID)
+     */
+    platformPostId?: (string) | null;
     accountId?: string;
     accountUsername?: (string) | null;
     analytics?: (PostAnalytics) | null;
@@ -1315,7 +1471,7 @@ export type PlatformTarget = {
     /**
      * Platform-specific overrides and options.
      */
-    platformSpecificData?: (TwitterPlatformData | ThreadsPlatformData | FacebookPlatformData | InstagramPlatformData | LinkedInPlatformData | PinterestPlatformData | YouTubePlatformData | GoogleBusinessPlatformData | TikTokPlatformData | TelegramPlatformData | SnapchatPlatformData | RedditPlatformData | BlueskyPlatformData);
+    platformSpecificData?: (TwitterPlatformData | ThreadsPlatformData | FacebookPlatformData | InstagramPlatformData | LinkedInPlatformData | PinterestPlatformData | YouTubePlatformData | GoogleBusinessPlatformData | TikTokPlatformData | TelegramPlatformData | SnapchatPlatformData | RedditPlatformData | BlueskyPlatformData | DiscordPlatformData);
     /**
      * Platform-specific status: pending, publishing, published, failed
      */
@@ -3761,7 +3917,7 @@ export type CreatePostData = {
              * Optional per-platform scheduled time override. When omitted, the top-level scheduledFor is used.
              */
             scheduledFor?: string;
-            platformSpecificData?: (TwitterPlatformData | ThreadsPlatformData | FacebookPlatformData | InstagramPlatformData | LinkedInPlatformData | PinterestPlatformData | YouTubePlatformData | GoogleBusinessPlatformData | TikTokPlatformData | TelegramPlatformData | SnapchatPlatformData | RedditPlatformData | BlueskyPlatformData);
+            platformSpecificData?: (TwitterPlatformData | ThreadsPlatformData | FacebookPlatformData | InstagramPlatformData | LinkedInPlatformData | PinterestPlatformData | YouTubePlatformData | GoogleBusinessPlatformData | TikTokPlatformData | TelegramPlatformData | SnapchatPlatformData | RedditPlatformData | BlueskyPlatformData | DiscordPlatformData);
         }>;
         scheduledFor?: string;
         publishNow?: boolean;
@@ -6637,6 +6793,131 @@ export type GetRedditFlairsResponse = ({
 });
 
 export type GetRedditFlairsError = (unknown | {
+    error?: string;
+});
+
+export type GetDiscordSettingsData = {
+    path: {
+        accountId: string;
+    };
+};
+
+export type GetDiscordSettingsResponse = ({
+    account?: {
+        _id?: string;
+        platform?: string;
+        /**
+         * Channel name
+         */
+        username?: string;
+        /**
+         * Guild - #channel display name
+         */
+        displayName?: string;
+        /**
+         * Guild icon URL
+         */
+        profilePicture?: string;
+        /**
+         * Connected channel snowflake ID
+         */
+        channelId?: string;
+        /**
+         * Channel name
+         */
+        channelName?: string;
+        /**
+         * Channel type (0 = text, 5 = announcement, 15 = forum)
+         */
+        channelType?: string;
+        /**
+         * Guild (server) snowflake ID
+         */
+        guildId?: string;
+        /**
+         * Custom webhook display name (null = default "Zernio")
+         */
+        webhookUsername?: (string) | null;
+        /**
+         * Custom webhook avatar URL (null = default bot avatar)
+         */
+        webhookAvatarUrl?: (string) | null;
+    };
+});
+
+export type GetDiscordSettingsError = (unknown | {
+    error?: string;
+});
+
+export type UpdateDiscordSettingsData = {
+    body: {
+        /**
+         * Discord account ID
+         */
+        accountId: string;
+        /**
+         * Custom display name for the webhook (1-80 chars). Empty string resets to default ("Zernio"). Cannot contain "clyde" or "discord".
+         */
+        webhookUsername?: string;
+        /**
+         * Custom avatar URL. Empty string resets to default bot avatar.
+         */
+        webhookAvatarUrl?: string;
+        /**
+         * Switch to a different channel in the same guild. Must be a text (0), announcement (5), or forum (15) channel.
+         */
+        channelId?: string;
+    };
+    path: {
+        accountId: string;
+    };
+};
+
+export type UpdateDiscordSettingsResponse = ({
+    message?: string;
+    account?: {
+        _id?: string;
+        platform?: string;
+        username?: string;
+        displayName?: string;
+        profilePicture?: string;
+        channelId?: string;
+        channelName?: string;
+        channelType?: string;
+        guildId?: string;
+        webhookUsername?: (string) | null;
+        webhookAvatarUrl?: (string) | null;
+    };
+});
+
+export type UpdateDiscordSettingsError = (unknown | {
+    error?: string;
+});
+
+export type GetDiscordChannelsData = {
+    path: {
+        accountId: string;
+    };
+};
+
+export type GetDiscordChannelsResponse = ({
+    channels?: Array<{
+        /**
+         * Channel snowflake ID
+         */
+        id?: string;
+        /**
+         * Channel name
+         */
+        name?: string;
+        /**
+         * Channel type: 0 (text), 5 (announcement), 15 (forum)
+         */
+        type?: number;
+    }>;
+});
+
+export type GetDiscordChannelsError = (unknown | {
     error?: string;
 });
 
@@ -11278,7 +11559,10 @@ export type BoostPostData = {
          */
         adAccountId: string;
         name: string;
-        goal: 'engagement' | 'traffic' | 'awareness' | 'video_views';
+        /**
+         * Available goals vary by platform. Meta (Facebook/Instagram) and TikTok support all 7. LinkedIn supports all except app_promotion. Twitter/X supports engagement, traffic, awareness, video_views, app_promotion. Pinterest and Google Ads support only engagement, traffic, awareness, video_views.
+         */
+        goal: 'engagement' | 'traffic' | 'awareness' | 'video_views' | 'lead_generation' | 'conversions' | 'app_promotion';
         budget: {
             /**
              * Minimum varies: TikTok=$20, Pinterest=$5, others=$1
@@ -11338,7 +11622,10 @@ export type CreateStandaloneAdData = {
         accountId: string;
         adAccountId: string;
         name: string;
-        goal: 'engagement' | 'traffic' | 'awareness' | 'video_views';
+        /**
+         * Available goals vary by platform. Meta (Facebook/Instagram) and TikTok support all 7. LinkedIn supports all except app_promotion. Twitter/X supports engagement, traffic, awareness, video_views, app_promotion. Pinterest and Google Ads support only engagement, traffic, awareness, video_views.
+         */
+        goal: 'engagement' | 'traffic' | 'awareness' | 'video_views' | 'lead_generation' | 'conversions' | 'app_promotion';
         budgetAmount: number;
         budgetType: 'daily' | 'lifetime';
         currency?: string;
