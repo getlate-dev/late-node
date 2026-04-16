@@ -951,7 +951,7 @@ export type GeoRestriction = {
 };
 
 /**
- * Text and single image only (no videos). Optional call-to-action button. Posts appear on GBP, Google Search, and Maps. Use locationId for multi-location posting.
+ * Text and single image only (no videos). Supports STANDARD, EVENT, and OFFER post types. Posts appear on GBP, Google Search, and Maps. Use locationId for multi-location posting.
  */
 export type GoogleBusinessPlatformData = {
     /**
@@ -962,6 +962,10 @@ export type GoogleBusinessPlatformData = {
      * BCP 47 language code (e.g. "en", "de", "es"). Auto-detected if omitted. Set explicitly for short or mixed-language posts.
      */
     languageCode?: string;
+    /**
+     * Post type. STANDARD is a regular update. EVENT requires the event object. OFFER requires the offer object. Defaults to STANDARD if omitted.
+     */
+    topicType?: 'STANDARD' | 'EVENT' | 'OFFER';
     /**
      * Optional call-to-action button displayed on the post
      */
@@ -975,12 +979,87 @@ export type GoogleBusinessPlatformData = {
          */
         url: string;
     };
+    /**
+     * Event details. Required when topicType is EVENT. Google returns 400 if omitted for EVENT posts.
+     */
+    event?: {
+        /**
+         * Event name (displayed as the event heading on Google Search and Maps)
+         */
+        title: string;
+        /**
+         * Event date/time range. Uses Google's date format (NOT ISO 8601).
+         */
+        schedule: {
+            /**
+             * Event start date as { year, month, day }
+             */
+            startDate: {
+                year: number;
+                month: number;
+                day: number;
+            };
+            /**
+             * Optional start time as { hours, minutes } in 24h format
+             */
+            startTime?: {
+                hours?: number;
+                minutes?: number;
+            };
+            /**
+             * Event end date as { year, month, day }
+             */
+            endDate: {
+                year: number;
+                month: number;
+                day: number;
+            };
+            /**
+             * Optional end time as { hours, minutes } in 24h format
+             */
+            endTime?: {
+                hours?: number;
+                minutes?: number;
+            };
+        };
+    };
+    /**
+     * Offer details. Required when topicType is OFFER. All fields are optional per Google's API, but at least one is recommended.
+     */
+    offer?: {
+        /**
+         * Type of offer
+         */
+        offerType?: 'OFFER' | 'BUY_ONE_GET_ONE';
+        /**
+         * URL where the offer can be redeemed online
+         */
+        redeemOnlineUrl?: string;
+        /**
+         * Terms and conditions for the offer
+         */
+        termsConditions?: string;
+        /**
+         * Coupon code for the offer
+         */
+        couponCode?: string;
+    };
 };
+
+/**
+ * Post type. STANDARD is a regular update. EVENT requires the event object. OFFER requires the offer object. Defaults to STANDARD if omitted.
+ */
+export type topicType = 'STANDARD' | 'EVENT' | 'OFFER';
 
 /**
  * Button action type: LEARN_MORE, BOOK, ORDER, SHOP, SIGN_UP, CALL
  */
 export type type2 = 'LEARN_MORE' | 'BOOK' | 'ORDER' | 'SHOP' | 'SIGN_UP' | 'CALL';
+
+/**
+ * Type of offer
+ */
+export type offerType = 'OFFER' | 'BUY_ONE_GET_ONE';
 
 /**
  * The account context included in inbox webhook payloads.
