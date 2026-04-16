@@ -75,6 +75,11 @@ describe('Endpoint Methods', () => {
       expect(client.accounts.getGoogleBusinessReviews).toBeTypeOf('function');
     });
 
+    it('should have batchGetGoogleBusinessReviews method', () => {
+      expect(client.accounts.batchGetGoogleBusinessReviews).toBeDefined();
+      expect(client.accounts.batchGetGoogleBusinessReviews).toBeTypeOf('function');
+    });
+
     it('should have getLinkedInMentions method', () => {
       expect(client.accounts.getLinkedInMentions).toBeDefined();
       expect(client.accounts.getLinkedInMentions).toBeTypeOf('function');

@@ -6,6 +6,7 @@ import {
   addUsersToAdAudience,
   addWhatsAppGroupParticipants,
   approveWhatsAppGroupJoinRequests,
+  batchGetGoogleBusinessReviews,
   bookmarkPost,
   boostPost,
   bulkCreateContacts,
@@ -93,6 +94,7 @@ import {
   getGoogleBusinessPerformance,
   getGoogleBusinessReviews,
   getGoogleBusinessSearchKeywords,
+  getGoogleBusinessServices,
   getInboxConversation,
   getInboxConversationMessages,
   getInboxPostComments,
@@ -225,6 +227,8 @@ import {
   updateGoogleBusinessAttributes,
   updateGoogleBusinessFoodMenus,
   updateGoogleBusinessLocationDetails,
+  updateGoogleBusinessPlaceAction,
+  updateGoogleBusinessServices,
   updateInboxConversation,
   updateLinkedInOrganization,
   updatePinterestBoards,
@@ -422,6 +426,7 @@ export class Zernio {
     getAccountHealth: getAccountHealth,
     getTikTokCreatorInfo: getTikTokCreatorInfo,
     getGoogleBusinessReviews: getGoogleBusinessReviews,
+    batchGetGoogleBusinessReviews: batchGetGoogleBusinessReviews,
     getLinkedInMentions: getLinkedInMentions,
   };
 
@@ -533,6 +538,15 @@ export class Zernio {
     listGoogleBusinessPlaceActions: listGoogleBusinessPlaceActions,
     createGoogleBusinessPlaceAction: createGoogleBusinessPlaceAction,
     deleteGoogleBusinessPlaceAction: deleteGoogleBusinessPlaceAction,
+    updateGoogleBusinessPlaceAction: updateGoogleBusinessPlaceAction,
+  };
+
+  /**
+   * gmbservices API
+   */
+  gmbservices = {
+    getGoogleBusinessServices: getGoogleBusinessServices,
+    updateGoogleBusinessServices: updateGoogleBusinessServices,
   };
 
   /**

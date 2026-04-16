@@ -192,6 +192,7 @@ try {
 | `accounts.getTikTokCreatorInfo()` | Get TikTok creator info |
 | `accounts.updateAccount()` | Update account |
 | `accounts.deleteAccount()` | Disconnect account |
+| `accounts.batchGetGoogleBusinessReviews()` | Batch get reviews |
 
 ### Profiles
 | Method | Description |
@@ -457,7 +458,14 @@ try {
 |--------|-------------|
 | `gmbPlaceActions.listGoogleBusinessPlaceActions()` | List action links |
 | `gmbPlaceActions.createGoogleBusinessPlaceAction()` | Create action link |
+| `gmbPlaceActions.updateGoogleBusinessPlaceAction()` | Update action link |
 | `gmbPlaceActions.deleteGoogleBusinessPlaceAction()` | Delete action link |
+
+### GMB Services
+| Method | Description |
+|--------|-------------|
+| `gmbServices.getGoogleBusinessServices()` | Get services |
+| `gmbServices.updateGoogleBusinessServices()` | Replace services |
 
 ### Messages (Inbox)
 | Method | Description |

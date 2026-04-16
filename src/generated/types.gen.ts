@@ -951,7 +951,7 @@ export type GeoRestriction = {
 };
 
 /**
- * Text and single image only (no videos). Supports STANDARD, EVENT, and OFFER post types. Posts appear on GBP, Google Search, and Maps. Use locationId for multi-location posting.
+ * Text and single image only (no videos). Supports STANDARD, EVENT, OFFER, and ALERT post types. Posts appear on GBP, Google Search, and Maps. Use locationId for multi-location posting. Schedule dates accept both ISO 8601 strings (e.g. '2026-04-15T09:00:00Z') and Google's native {year, month, day} objects.
  */
 export type GoogleBusinessPlatformData = {
     /**
@@ -2329,7 +2329,7 @@ export type Webhook = {
     /**
      * Events subscribed to
      */
-    events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'message.sent' | 'message.edited' | 'message.deleted' | 'message.delivered' | 'message.read' | 'message.failed' | 'comment.received')>;
+    events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'message.sent' | 'message.edited' | 'message.deleted' | 'message.delivered' | 'message.read' | 'message.failed' | 'comment.received' | 'gbp.review.new' | 'gbp.review.updated' | 'gbp.media.new')>;
     /**
      * Whether webhook delivery is enabled
      */
@@ -5784,6 +5784,156 @@ export type DeleteGoogleBusinessPlaceActionResponse = ({
 
 export type DeleteGoogleBusinessPlaceActionError = (ErrorResponse);
 
+export type UpdateGoogleBusinessPlaceActionData = {
+    body: {
+        /**
+         * Resource name of the place action link (e.g. locations/123/placeActionLinks/456)
+         */
+        name: string;
+        /**
+         * New action URL
+         */
+        uri?: string;
+        /**
+         * New action type
+         */
+        placeActionType?: 'APPOINTMENT' | 'ONLINE_APPOINTMENT' | 'DINING_RESERVATION' | 'FOOD_ORDERING' | 'FOOD_DELIVERY' | 'FOOD_TAKEOUT' | 'SHOP_ONLINE';
+    };
+    path: {
+        accountId: string;
+    };
+    query?: {
+        /**
+         * Override which location to target. If omitted, uses the account's selected location.
+         */
+        locationId?: string;
+    };
+};
+
+export type UpdateGoogleBusinessPlaceActionResponse = ({
+    success?: boolean;
+    name?: string;
+    uri?: string;
+    placeActionType?: string;
+});
+
+export type UpdateGoogleBusinessPlaceActionError = (ErrorResponse);
+
+export type GetGoogleBusinessServicesData = {
+    path: {
+        accountId: string;
+    };
+    query?: {
+        /**
+         * Override which location to query. If omitted, uses the account's selected location.
+         */
+        locationId?: string;
+    };
+};
+
+export type GetGoogleBusinessServicesResponse = ({
+    success?: boolean;
+    accountId?: string;
+    locationId?: string;
+    services?: Array<{
+        structuredServiceItem?: {
+            serviceTypeId?: string;
+            description?: string;
+        };
+        freeFormServiceItem?: {
+            category?: string;
+            label?: {
+                displayName?: string;
+                description?: string;
+            };
+        };
+        price?: {
+            currencyCode?: string;
+            units?: string;
+            nanos?: number;
+        };
+    }>;
+});
+
+export type GetGoogleBusinessServicesError = (ErrorResponse);
+
+export type UpdateGoogleBusinessServicesData = {
+    body: {
+        serviceItems: Array<{
+            structuredServiceItem?: {
+                serviceTypeId?: string;
+                description?: string;
+            };
+            freeFormServiceItem?: {
+                category?: string;
+                label?: {
+                    displayName?: string;
+                    description?: string;
+                };
+            };
+            price?: {
+                currencyCode?: string;
+                units?: string;
+                nanos?: number;
+            };
+        }>;
+    };
+    path: {
+        accountId: string;
+    };
+    query?: {
+        /**
+         * Override which location to target. If omitted, uses the account's selected location.
+         */
+        locationId?: string;
+    };
+};
+
+export type UpdateGoogleBusinessServicesResponse = ({
+    success?: boolean;
+    services?: Array<{
+        [key: string]: unknown;
+    }>;
+});
+
+export type UpdateGoogleBusinessServicesError = (ErrorResponse);
+
+export type BatchGetGoogleBusinessReviewsData = {
+    body: {
+        /**
+         * Array of full location resource names (e.g. ['accounts/123/locations/456'])
+         */
+        locationNames: Array<(string)>;
+        /**
+         * Number of reviews per page (max 50)
+         */
+        pageSize?: number;
+        /**
+         * Pagination token from previous response
+         */
+        pageToken?: string;
+    };
+    path: {
+        accountId: string;
+    };
+};
+
+export type BatchGetGoogleBusinessReviewsResponse = ({
+    success?: boolean;
+    accountId?: string;
+    locationReviews?: Array<{
+        locationName?: string;
+        reviews?: Array<{
+            [key: string]: unknown;
+        }>;
+        averageRating?: number;
+        totalReviewCount?: number;
+    }>;
+    nextPageToken?: string;
+});
+
+export type BatchGetGoogleBusinessReviewsError = (ErrorResponse);
+
 export type GetPendingOAuthDataData = {
     query: {
         /**
@@ -7209,7 +7359,7 @@ export type CreateWebhookSettingsData = {
         /**
          * Events to subscribe to
          */
-        events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'comment.received')>;
+        events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'comment.received' | 'gbp.review.new' | 'gbp.review.updated' | 'gbp.media.new')>;
         /**
          * Enable or disable webhook delivery
          */
@@ -7253,7 +7403,7 @@ export type UpdateWebhookSettingsData = {
         /**
          * Events to subscribe to
          */
-        events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'comment.received')>;
+        events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'comment.received' | 'gbp.review.new' | 'gbp.review.updated' | 'gbp.media.new')>;
         /**
          * Enable or disable webhook delivery
          */
