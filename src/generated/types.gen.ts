@@ -2329,7 +2329,7 @@ export type Webhook = {
     /**
      * Events subscribed to
      */
-    events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'message.sent' | 'message.edited' | 'message.deleted' | 'message.delivered' | 'message.read' | 'message.failed' | 'comment.received' | 'gbp.review.new' | 'gbp.review.updated' | 'gbp.media.new')>;
+    events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'message.sent' | 'message.edited' | 'message.deleted' | 'message.delivered' | 'message.read' | 'message.failed' | 'comment.received')>;
     /**
      * Whether webhook delivery is enabled
      */
@@ -7359,7 +7359,7 @@ export type CreateWebhookSettingsData = {
         /**
          * Events to subscribe to
          */
-        events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'comment.received' | 'gbp.review.new' | 'gbp.review.updated' | 'gbp.media.new')>;
+        events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'comment.received')>;
         /**
          * Enable or disable webhook delivery
          */
@@ -7403,7 +7403,7 @@ export type UpdateWebhookSettingsData = {
         /**
          * Events to subscribe to
          */
-        events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'comment.received' | 'gbp.review.new' | 'gbp.review.updated' | 'gbp.media.new')>;
+        events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'comment.received')>;
         /**
          * Enable or disable webhook delivery
          */
