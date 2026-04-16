@@ -822,7 +822,8 @@ export type ErrorResponse = {
 };
 
 /**
- * Feed posts support up to 10 images (no mixed video+image). Stories require single media (24h, no captions). Reels require single vertical video (9:16, 3-60s).
+ * Feed posts support up to 10 images (no mixed video+image). Stories require single media (24h, no captions). Reels require single vertical video (9:16, 3-60s). Geo-restriction is a hard visibility restriction: users outside the specified countries cannot see the post. Not supported for stories.
+ *
  */
 export type FacebookPlatformData = {
     /**
@@ -845,6 +846,7 @@ export type FacebookPlatformData = {
      * Target Facebook Page ID for multi-page posting. If omitted, uses the default page. Use GET /v1/accounts/{id}/facebook-page to list pages.
      */
     pageId?: string;
+    geoRestriction?: GeoRestriction;
 };
 
 /**
@@ -934,6 +936,18 @@ export type FoodMenuLabel = {
 export type FoodMenuSection = {
     labels: Array<FoodMenuLabel>;
     items?: Array<FoodMenuItem>;
+};
+
+/**
+ * Country-level geo-restriction (allowlist). When set, the post is only visible to users in the specified countries. Supported on Facebook (feed posts, videos, reels), X/Twitter (media-level restriction), and LinkedIn (organization pages only, min 300 targeted followers). Ignored on unsupported platforms. Stories (Facebook, Instagram) do not support geo-restriction.
+ *
+ */
+export type GeoRestriction = {
+    /**
+     * ISO 3166-1 alpha-2 country codes (uppercase). Only users in these countries can see the post. Maximum 25 countries per post. Example: ["US", "CA", "GB", "ES"].
+     *
+     */
+    countries: Array<(string)>;
 };
 
 /**
@@ -1310,7 +1324,8 @@ export type LinkedInAggregateAnalyticsTotalResponse = {
 export type aggregation3 = 'TOTAL';
 
 /**
- * Up to 20 images, no multi-video. Single PDF supported (max 100MB). Link previews auto-generated when no media attached. Use organizationUrn for multi-org posting.
+ * Up to 20 images, no multi-video. Single PDF supported (max 100MB). Link previews auto-generated when no media attached. Use organizationUrn for multi-org posting. Geo-restriction only works for organization pages (not personal profiles) and requires the targeted audience to exceed 300 followers.
+ *
  */
 export type LinkedInPlatformData = {
     /**
@@ -1329,6 +1344,7 @@ export type LinkedInPlatformData = {
      * Set to true to disable automatic link previews for URLs in the post content (default is false)
      */
     disableLinkPreview?: boolean;
+    geoRestriction?: GeoRestriction;
 };
 
 /**
@@ -2100,6 +2116,10 @@ export type commercialContentType = 'none' | 'brand_organic' | 'brand_content';
  */
 export type mediaType2 = 'video' | 'photo';
 
+/**
+ * X (Twitter) geo-restriction applies at the media level. Media in geo-restricted tweets will be hidden for users outside the specified countries; the tweet text itself remains visible globally. Requires media to be attached (ignored for text-only tweets).
+ *
+ */
 export type TwitterPlatformData = {
     /**
      * ID of an existing tweet to reply to. The published tweet will appear as a reply in that tweet's thread. For threads, only the first tweet replies to the target; subsequent tweets chain normally.
@@ -2134,6 +2154,7 @@ export type TwitterPlatformData = {
      * Enable long video uploads (over 140 seconds) using amplify_video media category. Requires the connected X account to have an active X Premium subscription. When true, videos are uploaded with the amplify_video category which supports longer durations (up to 10 minutes via API). When false or omitted, the standard tweet_video category is used (140 second limit). Note that not all Premium accounts have API long-video access, as X may require separate allowlisting.
      */
     longVideo?: boolean;
+    geoRestriction?: GeoRestriction;
 };
 
 /**
