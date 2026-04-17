@@ -2329,7 +2329,7 @@ export type Webhook = {
     /**
      * Events subscribed to
      */
-    events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'message.sent' | 'message.edited' | 'message.deleted' | 'message.delivered' | 'message.read' | 'message.failed' | 'comment.received')>;
+    events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'message.sent' | 'message.edited' | 'message.deleted' | 'message.delivered' | 'message.read' | 'message.failed' | 'comment.received' | 'review.new' | 'review.updated')>;
     /**
      * Whether webhook delivery is enabled
      */
@@ -2585,26 +2585,70 @@ export type WebhookPayloadMessage = {
      */
     metadata?: {
         /**
-         * Payload from a quick reply tap (Meta platforms)
+         * Payload from a quick reply tap (Facebook/Instagram Messenger).
          */
         quickReplyPayload?: string;
         /**
-         * Payload from a postback button tap (Meta platforms)
+         * Payload from a postback button tap (Facebook/Instagram Messenger).
          */
         postbackPayload?: string;
         /**
-         * Title of the tapped postback button (Meta platforms)
+         * Title of the tapped postback button (Facebook/Instagram Messenger).
          */
         postbackTitle?: string;
         /**
-         * Callback data from an inline keyboard button tap (Telegram)
+         * Callback data from an inline keyboard button tap (Telegram).
          */
         callbackData?: string;
+        /**
+         * WhatsApp only. Which kind of interactive reply the user sent:
+         * `button_reply` (tap on an interactive button), `list_reply` (tap on a
+         * list row), or `nfm_reply` (a WhatsApp Flow submission).
+         *
+         */
+        interactiveType?: 'button_reply' | 'list_reply' | 'nfm_reply';
+        /**
+         * WhatsApp only. The `id` of the tapped button or list row, matching the
+         * `id` you supplied when the message was sent. Not set for Flow responses.
+         *
+         */
+        interactiveId?: string;
+        /**
+         * WhatsApp only. Payload attached to a tapped template button. Template
+         * buttons emit a plain `button` webhook (not an interactive reply), so
+         * `interactiveType` is empty while this field is populated.
+         *
+         */
+        buttonPayload?: string;
+        /**
+         * WhatsApp only. Raw `nfm_reply.response_json` string returned by a
+         * Flow submission. Useful if you need the exact wire payload; for
+         * typed access use `flowResponseData` instead.
+         *
+         */
+        flowResponseJson?: string;
+        /**
+         * WhatsApp only. Parsed Flow response JSON. Populated when
+         * `flowResponseJson` is valid JSON; otherwise omitted. Keys and
+         * value types depend on the specific Flow that was submitted.
+         *
+         */
+        flowResponseData?: {
+            [key: string]: unknown;
+        };
     } | null;
     timestamp: string;
 };
 
 export type event4 = 'message.received';
+
+/**
+ * WhatsApp only. Which kind of interactive reply the user sent:
+ * `button_reply` (tap on an interactive button), `list_reply` (tap on a
+ * list row), or `nfm_reply` (a WhatsApp Flow submission).
+ *
+ */
+export type interactiveType = 'button_reply' | 'list_reply' | 'nfm_reply';
 
 /**
  * Webhook payload for message.deleted events. Fires when the sender
@@ -7359,7 +7403,7 @@ export type CreateWebhookSettingsData = {
         /**
          * Events to subscribe to
          */
-        events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'comment.received')>;
+        events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'comment.received' | 'review.new' | 'review.updated')>;
         /**
          * Enable or disable webhook delivery
          */
@@ -7403,7 +7447,7 @@ export type UpdateWebhookSettingsData = {
         /**
          * Events to subscribe to
          */
-        events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'comment.received')>;
+        events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'comment.received' | 'review.new' | 'review.updated')>;
         /**
          * Enable or disable webhook delivery
          */
@@ -8016,6 +8060,143 @@ export type SendInboxMessageData = {
                     payload?: string;
                 }>;
             }>;
+        };
+        /**
+         * WhatsApp-only. Rich interactive payload for list messages, CTA URL
+         * buttons, and Flow prompts. When set, takes priority over `buttons`
+         * and `quickReplies`. The shape mirrors Meta's Cloud API `interactive`
+         * object verbatim, so any payload that works against Meta directly
+         * will also work here.
+         *
+         * Use `buttons` / `quickReplies` for simple button replies
+         * (WhatsApp's `interactive.type: "button"`) — the abstraction caps at
+         * 3 buttons and handles the auto-conversion for you. Use this field
+         * only for `list`, `cta_url`, or `flow` messages.
+         *
+         * Tap events come back via the `message.received` webhook with
+         * `metadata.interactiveType` set to `list_reply` or `nfm_reply`.
+         *
+         */
+        interactive?: {
+            /**
+             * Which interactive layout to render.
+             */
+            type: 'list' | 'cta_url' | 'flow';
+            /**
+             * Optional header shown above the body.
+             */
+            header?: {
+                type?: 'text' | 'image' | 'video' | 'document';
+                /**
+                 * Required when header type is text.
+                 */
+                text?: string;
+                image?: {
+                    link?: string;
+                };
+                video?: {
+                    link?: string;
+                };
+                document?: {
+                    link?: string;
+                };
+            };
+            body: {
+                /**
+                 * Main body text.
+                 */
+                text: string;
+            };
+            /**
+             * Optional footer shown below the action.
+             */
+            footer?: {
+                text?: string;
+            };
+            action: ({
+    /**
+     * CTA label that opens the list (max ~20 chars).
+     */
+    button: string;
+    /**
+     * 1-10 sections. Total rows across all sections cannot exceed 10.
+     */
+    sections: Array<{
+        /**
+         * Optional section header (max 24 chars).
+         */
+        title?: string;
+        rows: Array<{
+            /**
+             * Identifier returned in the webhook as metadata.interactiveId (max 200 chars).
+             */
+            id: string;
+            /**
+             * Row label (max 24 chars).
+             */
+            title: string;
+            /**
+             * Optional description below the title (max 72 chars).
+             */
+            description?: string;
+        }>;
+    }>;
+} | {
+    name: 'cta_url';
+    parameters: {
+        /**
+         * Button label (max 20 chars).
+         */
+        display_text: string;
+        /**
+         * Target URL opened when the user taps the button.
+         */
+        url: string;
+    };
+} | {
+    name: 'flow';
+    parameters: {
+        /**
+         * Defaults to "3" when omitted.
+         */
+        flow_message_version?: '3';
+        /**
+         * Opaque token you choose to correlate Flow responses with your own state (max 200 chars).
+         */
+        flow_token: string;
+        /**
+         * Published Flow ID from Meta Business Manager.
+         */
+        flow_id: string;
+        /**
+         * Button label that opens the Flow (max 20 chars).
+         */
+        flow_cta: string;
+        /**
+         * `navigate` sends the user to `flow_action_payload.screen`; `data_exchange` posts data to your Flow endpoint.
+         */
+        flow_action: 'navigate' | 'data_exchange';
+        /**
+         * Required when flow_action is `navigate`.
+         */
+        flow_action_payload?: {
+            /**
+             * First screen to show.
+             */
+            screen?: string;
+            /**
+             * Optional pre-filled data passed to the screen.
+             */
+            data?: {
+                [key: string]: unknown;
+            };
+        };
+        /**
+         * Set to `draft` to test an unpublished Flow.
+         */
+        mode?: 'draft';
+    };
+});
         };
         /**
          * Telegram-native keyboard markup. Ignored on other platforms.
