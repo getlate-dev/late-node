@@ -7389,23 +7389,23 @@ export type GetWebhookSettingsError = ({
 export type CreateWebhookSettingsData = {
     body: {
         /**
-         * Webhook name (max 50 characters)
+         * Webhook name (1-50 characters)
          */
-        name?: string;
+        name: string;
         /**
-         * Webhook endpoint URL (must be HTTPS in production)
+         * Webhook endpoint URL (must be a valid URL, whitespace trimmed)
          */
-        url?: string;
+        url: string;
         /**
          * Secret key for HMAC-SHA256 signature verification
          */
         secret?: string;
         /**
-         * Events to subscribe to
+         * Events to subscribe to (at least one required)
          */
-        events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'comment.received' | 'review.new' | 'review.updated')>;
+        events: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'comment.received' | 'review.new' | 'review.updated')>;
         /**
-         * Enable or disable webhook delivery
+         * Enable or disable webhook delivery. Defaults to `true` when omitted.
          */
         isActive?: boolean;
         /**
@@ -7433,11 +7433,11 @@ export type UpdateWebhookSettingsData = {
          */
         _id: string;
         /**
-         * Webhook name (max 50 characters)
+         * Webhook name (1-50 characters). Must be non-empty if provided.
          */
         name?: string;
         /**
-         * Webhook endpoint URL (must be HTTPS in production)
+         * Webhook endpoint URL (must be a valid URL, whitespace trimmed). Must be a valid URL if provided.
          */
         url?: string;
         /**
@@ -7445,7 +7445,7 @@ export type UpdateWebhookSettingsData = {
          */
         secret?: string;
         /**
-         * Events to subscribe to
+         * Events to subscribe to. Must contain at least one event if provided.
          */
         events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'comment.received' | 'review.new' | 'review.updated')>;
         /**
