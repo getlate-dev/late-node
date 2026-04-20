@@ -11884,6 +11884,10 @@ export type UpdateAdData = {
                 id: string;
                 name: string;
             }>;
+            /**
+             * Meta only. Omit to preserve the existing setting on update. 0 = disabled, 1 = enabled.
+             */
+            advantage_audience?: 0 | 1;
         };
         name?: string;
     };
@@ -12033,6 +12037,10 @@ export type BoostPostData = {
                 id: string;
                 name: string;
             }>;
+            /**
+             * Meta only. 0 = disabled (default), 1 = enabled.
+             */
+            advantage_audience?: 0 | 1;
         };
         /**
          * Max bid cap (Meta only)
@@ -12136,6 +12144,10 @@ export type CreateStandaloneAdData = {
          * Google Search RSA only. Extra descriptions.
          */
         additionalDescriptions?: Array<(string)>;
+        /**
+         * Meta only. Controls the Advantage audience feature (targeting_automation). 0 = disabled (default), 1 = enabled. Meta Marketing API requires this field on all ad set creation requests.
+         */
+        advantageAudience?: 0 | 1;
     };
 };
 
