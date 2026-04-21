@@ -1142,10 +1142,48 @@ export type InboxWebhookMessage = {
         };
     }>;
     sender: {
+        /**
+         * Sender's platform identifier. For WhatsApp this is the phone number
+         * (without leading `+`) when available, otherwise the `businessScopedUserId`.
+         * For other platforms, the platform's own user ID.
+         *
+         */
         id: string;
         name?: string;
         username?: string;
         picture?: string;
+        /**
+         * WhatsApp only. Sender's phone number in E.164 format (with leading `+`).
+         *
+         * **Nullable during the BSUID rollout (April 2026+).** WhatsApp users
+         * who adopt a username can message businesses without exposing a phone
+         * number — this field is omitted for them. Match by `businessScopedUserId`
+         * instead. See `docs/whatsapp-bsuid-migration.md`.
+         *
+         */
+        phoneNumber?: (string) | null;
+        /**
+         * WhatsApp only. Business-scoped user ID (BSUID) — Meta's canonical
+         * identifier for a WhatsApp user within your business. Present when
+         * Meta includes it in the inbound payload (rollout in progress since
+         * early April 2026). **Recommended primary identity anchor** going
+         * forward; fall back to `phoneNumber` only when this field is absent.
+         *
+         */
+        businessScopedUserId?: string;
+        /**
+         * WhatsApp only. Parent BSUID for businesses with linked business
+         * portfolios. Omitted for standalone portfolios.
+         *
+         */
+        parentBusinessScopedUserId?: string;
+        /**
+         * WhatsApp only. User's WhatsApp username (e.g. `@jane`). Not a
+         * stable identifier — users can change it. Useful for display, not
+         * recommended as an identity anchor.
+         *
+         */
+        whatsappUsername?: string;
         /**
          * Instagram profile data. Only present for Instagram conversations.
          */
@@ -2560,10 +2598,50 @@ export type WebhookPayloadMessage = {
             };
         }>;
         sender: {
+            /**
+             * Sender's platform identifier. For WhatsApp this is the phone
+             * number (without leading `+`) when available, otherwise the
+             * `businessScopedUserId`.
+             *
+             */
             id: string;
             name?: string;
             username?: string;
             picture?: string;
+            /**
+             * WhatsApp only. Sender's phone number in E.164 format (with leading `+`).
+             *
+             * **Nullable during the BSUID rollout (April 2026+).** WhatsApp
+             * users who adopt a username can message businesses without
+             * exposing a phone number — this field is omitted for them.
+             * Match by `businessScopedUserId` instead. See
+             * `docs/whatsapp-bsuid-migration.md`.
+             *
+             */
+            phoneNumber?: (string) | null;
+            /**
+             * WhatsApp only. Business-scoped user ID (BSUID) — Meta's canonical
+             * identifier for a WhatsApp user within your business. Present
+             * when Meta includes it in the inbound payload (rollout in
+             * progress since early April 2026). **Recommended primary identity
+             * anchor** going forward; fall back to `phoneNumber` only when
+             * this field is absent.
+             *
+             */
+            businessScopedUserId?: string;
+            /**
+             * WhatsApp only. Parent BSUID for businesses with linked business
+             * portfolios. Omitted for standalone portfolios.
+             *
+             */
+            parentBusinessScopedUserId?: string;
+            /**
+             * WhatsApp only. User's WhatsApp username (e.g. `@jane`). Not a
+             * stable identifier — users can change it. Useful for display,
+             * not recommended as an identity anchor.
+             *
+             */
+            whatsappUsername?: string;
             /**
              * Instagram profile data for the sender. Only present for Instagram conversations.
              */
