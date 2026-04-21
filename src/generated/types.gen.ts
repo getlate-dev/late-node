@@ -7357,10 +7357,6 @@ export type GetDiscordSettingsError = (unknown | {
 export type UpdateDiscordSettingsData = {
     body: {
         /**
-         * Discord account ID
-         */
-        accountId: string;
-        /**
          * Custom display name for the webhook (1-80 chars). Empty string resets to default ("Zernio"). Cannot contain "clyde" or "discord".
          */
         webhookUsername?: string;
@@ -11906,7 +11902,7 @@ export type ListAdsData = {
          */
         profileId?: string;
         /**
-         * zernio = Zernio-created only, all = include external ads
+         * all (default) = Zernio-created + platform-discovered ads. zernio = restrict to Zernio-created only.
          */
         source?: 'zernio' | 'all';
         status?: AdStatus;
@@ -11947,7 +11943,7 @@ export type ListAdCampaignsData = {
          */
         profileId?: string;
         /**
-         * `zernio` (default) returns only ads created via Zernio (isExternal=false). `all` additionally returns ads discovered from the platform's ad manager (isExternal=true). Status is NOT filtered by default — use the `status` param for that.
+         * `all` (default) returns both Zernio-created ads and those discovered from the platform's ad manager — matches the web UI's default view. Pass `zernio` to restrict to isExternal=false only. Status is NOT filtered by default — use the `status` param for that.
          */
         source?: 'zernio' | 'all';
         /**
@@ -12214,7 +12210,7 @@ export type GetAdTreeData = {
          */
         profileId?: string;
         /**
-         * `zernio` (default) returns only ads created via Zernio (isExternal=false). `all` additionally returns ads discovered from the platform's ad manager (isExternal=true). Status is NOT filtered by default — use the `status` param for that.
+         * `all` (default) returns both Zernio-created ads and those discovered from the platform's ad manager — matches the web UI's default view. Pass `zernio` to restrict to isExternal=false only. Status is NOT filtered by default — use the `status` param for that.
          */
         source?: 'zernio' | 'all';
         /**
