@@ -345,8 +345,14 @@ try {
 | Method | Description |
 |--------|-------------|
 | `adCampaigns.listAdCampaigns()` | List campaigns |
+| `adCampaigns.bulkUpdateAdCampaignStatus()` | Pause or resume many campaigns |
 | `adCampaigns.getAdTree()` | Get campaign tree |
+| `adCampaigns.updateAdCampaign()` | Update a campaign (budget) |
 | `adCampaigns.updateAdCampaignStatus()` | Pause or resume a campaign |
+| `adCampaigns.updateAdSet()` | Update an ad set (budget and/or status) |
+| `adCampaigns.updateAdSetStatus()` | Pause or resume a single ad set |
+| `adCampaigns.deleteAdCampaign()` | Delete a campaign |
+| `adCampaigns.duplicateAdCampaign()` | Duplicate a campaign |
 
 ### Ads
 | Method | Description |

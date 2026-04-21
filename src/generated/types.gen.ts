@@ -216,19 +216,63 @@ export type goal = 'engagement' | 'traffic' | 'awareness' | 'video_views' | 'lea
 
 export type type = 'daily' | 'lifetime';
 
+/**
+ * Budget amount in the ad account's native currency (see the campaign's `currency` field for the code).
+ */
+export type AdBudget = {
+    amount: number;
+    type: 'daily' | 'lifetime';
+};
+
 export type AdCampaign = {
     platformCampaignId?: string;
     platform?: 'facebook' | 'instagram' | 'tiktok' | 'linkedin' | 'pinterest' | 'google' | 'twitter';
     campaignName?: string;
     /**
-     * Derived from child ad statuses
+     * Delivery status derived from child ad statuses. Distinct from `reviewStatus`.
      */
     status?: (AdStatus);
+    /**
+     * Platform-side review state of the campaign. See AdTreeCampaign.reviewStatus for the full description.
+     */
+    reviewStatus?: ('in_review' | 'approved' | 'rejected' | 'with_issues') | null;
+    /**
+     * Raw platform-level campaign status (Meta `effective_status`).
+     */
+    platformCampaignStatus?: (string) | null;
+    /**
+     * Platform-reported campaign issues (Meta `issues_info[]`).
+     */
+    campaignIssuesInfo?: Array<{
+        [key: string]: unknown;
+    }> | null;
     adCount?: number;
+    /**
+     * Effective budget (back-compat). Use `budgetLevel` to disambiguate CBO vs ABO.
+     */
     budget?: {
         amount?: number;
         type?: 'daily' | 'lifetime';
     } | null;
+    /**
+     * Campaign-level budget (CBO). Null for ABO campaigns.
+     */
+    campaignBudget?: {
+        amount?: number;
+        type?: 'daily' | 'lifetime';
+    } | null;
+    /**
+     * Canonical CBO/ABO indicator. See AdTreeCampaign.budgetLevel.
+     */
+    budgetLevel?: ('campaign' | 'adset') | null;
+    /**
+     * Meta-only. Mirrors Campaign.is_budget_schedule_enabled.
+     */
+    isBudgetScheduleEnabled?: boolean;
+    /**
+     * ISO 4217 currency code for all budget amounts. Budgets are NOT normalized to USD.
+     */
+    currency?: (string) | null;
     metrics?: AdMetrics;
     platformAdAccountId?: string;
     accountId?: string;
@@ -256,6 +300,16 @@ export type AdCampaign = {
     earliestAd?: string;
     latestAd?: string;
 };
+
+/**
+ * Platform-side review state of the campaign. See AdTreeCampaign.reviewStatus for the full description.
+ */
+export type reviewStatus = 'in_review' | 'approved' | 'rejected' | 'with_issues';
+
+/**
+ * Canonical CBO/ABO indicator. See AdTreeCampaign.budgetLevel.
+ */
+export type budgetLevel = 'campaign' | 'adset';
 
 export type AdMetrics = {
     spend?: number;
@@ -308,7 +362,17 @@ export type AdTreeAdSet = {
      */
     status?: (AdStatus);
     adCount?: number;
+    /**
+     * Effective budget at this level (back-compat). For CBO campaigns this mirrors the parent campaign's budget; for ABO this is the ad-set-specific budget. Use `adSetBudget` / parent `campaignBudget` + `budgetLevel` to disambiguate.
+     */
     budget?: {
+        amount?: number;
+        type?: 'daily' | 'lifetime';
+    } | null;
+    /**
+     * Ad-set-level budget (ABO). Null for CBO campaigns where the budget is set on the campaign.
+     */
+    adSetBudget?: {
         amount?: number;
         type?: 'daily' | 'lifetime';
     } | null;
@@ -343,18 +407,60 @@ export type AdTreeCampaign = {
     platform?: 'facebook' | 'instagram' | 'tiktok' | 'linkedin' | 'pinterest' | 'google' | 'twitter';
     campaignName?: string;
     /**
-     * Derived from child ad statuses
+     * Delivery status derived from child ad statuses. Distinct from `reviewStatus`, which reflects the platform-side review state.
      */
     status?: (AdStatus);
+    /**
+     * Platform-side review state of the campaign. Independent of the
+     * children-derived delivery `status`: a campaign can have ads
+     * already active (status=active) while the campaign itself is
+     * still being reviewed by the platform (reviewStatus=in_review).
+     * For Meta, derived from `effective_status` + `issues_info` on
+     * the Campaign, plus ad-level PENDING_REVIEW rollup.
+     *
+     */
+    reviewStatus?: ('in_review' | 'approved' | 'rejected' | 'with_issues') | null;
+    /**
+     * Raw platform-level campaign status (Meta `effective_status`: ACTIVE, PAUSED, DELETED, ARCHIVED, IN_PROCESS, WITH_ISSUES). Distinct from per-ad `platformStatus`.
+     */
+    platformCampaignStatus?: (string) | null;
+    /**
+     * Platform-reported campaign issues (Meta `issues_info[]`). Populated only when the platform has delivery issues to report; contains the specific error codes and messages.
+     */
+    campaignIssuesInfo?: Array<{
+        [key: string]: unknown;
+    }> | null;
     /**
      * Total ads across all ad sets
      */
     adCount?: number;
     adSetCount?: number;
+    /**
+     * Effective budget (back-compat). For CBO this mirrors `campaignBudget`, for ABO this mirrors the child ad-set budget. Use `budgetLevel` to disambiguate.
+     */
     budget?: {
         amount?: number;
         type?: 'daily' | 'lifetime';
     } | null;
+    /**
+     * Campaign-level budget (Campaign Budget Optimization / CBO). Populated only when the platform set the budget at the campaign level. For ABO campaigns this is null and the budget lives on the child ad set.
+     */
+    campaignBudget?: {
+        amount?: number;
+        type?: 'daily' | 'lifetime';
+    } | null;
+    /**
+     * Canonical CBO/ABO indicator. `campaign` = CBO (Advantage Campaign Budget, budget lives on the campaign). `adset` = ABO (budget lives on each ad set). Route budget updates to the matching Meta entity.
+     */
+    budgetLevel?: ('campaign' | 'adset') | null;
+    /**
+     * Meta-only. Mirrors Campaign.is_budget_schedule_enabled — true when the campaign uses budget scheduling (time-based budget changes). Independent of CBO/ABO.
+     */
+    isBudgetScheduleEnabled?: boolean;
+    /**
+     * ISO 4217 currency code (e.g. USD, EUR, CLP, JPY) for all budget amounts in this campaign node. Budgets are NOT normalized to USD.
+     */
+    currency?: (string) | null;
     metrics?: AdMetrics;
     platformAdAccountId?: string;
     accountId?: string;
@@ -11840,6 +11946,9 @@ export type ListAdCampaignsData = {
          * Profile ID
          */
         profileId?: string;
+        /**
+         * `zernio` (default) returns only ads created via Zernio (isExternal=false). `all` additionally returns ads discovered from the platform's ad manager (isExternal=true). Status is NOT filtered by default — use the `status` param for that.
+         */
         source?: 'zernio' | 'all';
         /**
          * Filter by derived campaign status (post-aggregation)
@@ -11890,6 +11999,193 @@ export type UpdateAdCampaignStatusError = (unknown | {
     error?: string;
 });
 
+export type UpdateAdCampaignData = {
+    body: {
+        platform: 'facebook' | 'instagram';
+        budget: {
+            /**
+             * Budget amount in the ad account's currency
+             */
+            amount: number;
+            type: 'daily' | 'lifetime';
+        };
+    };
+    path: {
+        /**
+         * Platform campaign ID
+         */
+        campaignId: string;
+    };
+};
+
+export type UpdateAdCampaignResponse = ({
+    updated?: number;
+    budget?: AdBudget;
+    budgetLevel?: 'campaign';
+});
+
+export type UpdateAdCampaignError = (unknown | {
+    error?: string;
+});
+
+export type DeleteAdCampaignData = {
+    body: {
+        platform: 'facebook' | 'instagram';
+    };
+    path: {
+        /**
+         * Platform campaign ID
+         */
+        campaignId: string;
+    };
+};
+
+export type DeleteAdCampaignResponse = ({
+    deleted?: boolean;
+    /**
+     * Number of local Ad docs marked cancelled
+     */
+    adCount?: number;
+});
+
+export type DeleteAdCampaignError = ({
+    error?: string;
+} | unknown);
+
+export type BulkUpdateAdCampaignStatusData = {
+    body: {
+        status: 'active' | 'paused';
+        campaigns: Array<{
+            platformCampaignId: string;
+            platform: 'facebook' | 'instagram' | 'tiktok' | 'linkedin' | 'pinterest' | 'google' | 'twitter';
+        }>;
+    };
+};
+
+export type BulkUpdateAdCampaignStatusResponse = ({
+    status?: 'active' | 'paused';
+    totals?: {
+        updated?: number;
+        skipped?: number;
+        failed?: number;
+    };
+    results?: Array<{
+        platformCampaignId?: string;
+        platform?: string;
+        updated?: number;
+        skipped?: number;
+        error?: string;
+    }>;
+});
+
+export type BulkUpdateAdCampaignStatusError = (unknown | {
+    error?: string;
+});
+
+export type DuplicateAdCampaignData = {
+    body: {
+        platform: 'facebook' | 'instagram';
+        /**
+         * Copy child ad sets + ads + creatives + targeting
+         */
+        deepCopy?: boolean;
+        statusOption?: 'ACTIVE' | 'PAUSED' | 'INHERITED_FROM_SOURCE';
+        /**
+         * Reschedule the copied hierarchy's start time
+         */
+        startTime?: string;
+        endTime?: string;
+        renameStrategy?: 'DEEP_RENAME' | 'ONLY_TOP_LEVEL_RENAME' | 'NO_RENAME';
+        renamePrefix?: string;
+        renameSuffix?: string;
+        /**
+         * Trigger ads discovery on the owning account after the copy succeeds
+         */
+        syncAfter?: boolean;
+    };
+    path: {
+        /**
+         * Source platform campaign ID
+         */
+        campaignId: string;
+    };
+};
+
+export type DuplicateAdCampaignResponse = ({
+    /**
+     * Platform ID of the new campaign
+     */
+    copiedCampaignId?: string;
+    discovery?: 'triggered' | 'skipped' | 'failed';
+    /**
+     * Platform-native response from the copy endpoint (Meta includes ad_object_ids for child copies)
+     */
+    raw?: {
+        [key: string]: unknown;
+    };
+});
+
+export type DuplicateAdCampaignError = (unknown | {
+    error?: string;
+});
+
+export type UpdateAdSetData = {
+    body: {
+        platform: 'facebook' | 'instagram' | 'tiktok' | 'linkedin' | 'pinterest' | 'google' | 'twitter';
+        /**
+         * Omit if only toggling status
+         */
+        budget?: {
+            amount?: number;
+            type?: 'daily' | 'lifetime';
+        };
+        /**
+         * Omit if only updating budget
+         */
+        status?: 'active' | 'paused';
+    };
+    path: {
+        /**
+         * Platform ad set ID
+         */
+        adSetId: string;
+    };
+};
+
+export type UpdateAdSetResponse = ({
+    budget?: AdBudget;
+    budgetLevel?: 'adset';
+    status?: 'active' | 'paused';
+    statusUpdated?: number;
+    statusSkipped?: number;
+});
+
+export type UpdateAdSetError = (unknown | {
+    error?: string;
+});
+
+export type UpdateAdSetStatusData = {
+    body: {
+        status: 'active' | 'paused';
+        platform: 'facebook' | 'instagram' | 'tiktok' | 'linkedin' | 'pinterest' | 'google' | 'twitter';
+    };
+    path: {
+        /**
+         * Platform ad set ID
+         */
+        adSetId: string;
+    };
+};
+
+export type UpdateAdSetStatusResponse = ({
+    updated?: number;
+    skipped?: number;
+});
+
+export type UpdateAdSetStatusError = (unknown | {
+    error?: string;
+});
+
 export type GetAdTreeData = {
     query?: {
         /**
@@ -11917,6 +12213,9 @@ export type GetAdTreeData = {
          * Profile ID
          */
         profileId?: string;
+        /**
+         * `zernio` (default) returns only ads created via Zernio (isExternal=false). `all` additionally returns ads discovered from the platform's ad manager (isExternal=true). Status is NOT filtered by default — use the `status` param for that.
+         */
         source?: 'zernio' | 'all';
         /**
          * Filter by derived campaign status (post-aggregation)
