@@ -276,6 +276,20 @@ export type AdMetrics = {
     cpm?: number;
     engagement?: number;
     /**
+     * Count of conversion events matching the campaign's promoted_object.custom_event_type (PURCHASE, LEAD, etc.) over the requested date range. 0 for non-conversion campaigns or when no events have fired. Meta-only at time of writing; other platforms return 0.
+     */
+    conversions?: number;
+    /**
+     * Derived spend / conversions in the same currency as spend. 0 when conversions is 0.
+     */
+    costPerConversion?: number;
+    /**
+     * Raw per-action-type counts from Meta's Insights actions[] array, summed over the date range. Keys are Meta action_type strings (e.g. link_click, offsite_conversion.fb_pixel_purchase, onsite_conversion.lead_grouped). Use this to extract any conversion event (purchases, leads, add_to_cart, etc.) without relying on the derived conversions field. Empty object when no actions are reported.
+     */
+    actions?: {
+        [key: string]: (number);
+    };
+    /**
      * Present on individual ads only, not on campaign aggregations
      */
     lastSyncedAt?: string;
