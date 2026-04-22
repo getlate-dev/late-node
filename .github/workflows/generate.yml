@@ -38,7 +38,7 @@ jobs:
 
       - name: Fetch latest OpenAPI spec
         run: |
-          curl -f -o openapi.yaml https://zernio.com/openapi.yaml
+          curl -f --retry 5 --retry-delay 2 --retry-all-errors --max-time 60 -o openapi.yaml https://zernio.com/openapi.yaml
           echo "Fetched OpenAPI spec:"
           head -20 openapi.yaml
 
@@ -99,7 +99,14 @@ jobs:
 
           - Auto-generated SDK updates
           - Version: $NEW_VERSION"
-          git push
+          # Retry with rebase to survive concurrent dispatches that land
+          # back-to-back pushes to main.
+          for attempt in 1 2 3; do
+            if git push; then break; fi
+            echo "Push attempt $attempt failed; rebasing and retrying..."
+            git pull --rebase origin main
+            sleep $((attempt * 5))
+          done
 
       - name: Check if version already published
         if: steps.changes.outputs.has_changes == 'true'
