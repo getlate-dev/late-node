@@ -12476,14 +12476,20 @@ export type CreateStandaloneAdData = {
         adAccountId: string;
         name: string;
         /**
-         * Available goals vary by platform. Meta (Facebook/Instagram) and TikTok support all 7. LinkedIn supports all except app_promotion. Twitter/X supports engagement, traffic, awareness, video_views, app_promotion. Pinterest and Google Ads support only engagement, traffic, awareness, video_views.
+         * Required on legacy + multi-creative shapes. Inherited from the ad set on the attach shape. Available goals vary by platform.
          */
-        goal: 'engagement' | 'traffic' | 'awareness' | 'video_views' | 'lead_generation' | 'conversions' | 'app_promotion';
-        budgetAmount: number;
-        budgetType: 'daily' | 'lifetime';
+        goal?: 'engagement' | 'traffic' | 'awareness' | 'video_views' | 'lead_generation' | 'conversions' | 'app_promotion';
+        /**
+         * Required on legacy + multi-creative shapes. Inherited on attach.
+         */
+        budgetAmount?: number;
+        /**
+         * Required on legacy + multi-creative shapes. Inherited on attach.
+         */
+        budgetType?: 'daily' | 'lifetime';
         currency?: string;
         /**
-         * Required for most platforms. Max: Meta=255, Google=30, Pinterest=100
+         * Required on legacy + attach shapes (skip for multi-creative — use `creatives[].headline`). Max: Meta=255, Google=30, Pinterest=100
          */
         headline?: string;
         /**
@@ -12491,18 +12497,43 @@ export type CreateStandaloneAdData = {
          */
         longHeadline?: string;
         /**
-         * Max: Google=90, Pinterest=500
+         * Required on legacy + attach shapes. Max: Google=90, Pinterest=500
          */
-        body: string;
+        body?: string;
         /**
-         * Meta only
+         * Required on legacy + attach shapes. Meta only.
          */
         callToAction?: 'LEARN_MORE' | 'SHOP_NOW' | 'SIGN_UP' | 'BOOK_TRAVEL' | 'CONTACT_US' | 'DOWNLOAD' | 'GET_OFFER' | 'GET_QUOTE' | 'SUBSCRIBE' | 'WATCH_MORE';
+        /**
+         * Required on legacy + attach shapes. Skip for multi-creative.
+         */
         linkUrl?: string;
         /**
-         * Image URL (or video URL for TikTok). Not required for Google Search campaigns.
+         * Required on legacy + attach shapes. Not required for Google Search campaigns.
          */
         imageUrl?: string;
+        /**
+         * Meta-only. When present, switches to the multi-creative shape:
+         * creates 1 campaign + 1 ad set + N ads (one per entry here).
+         * Top-level `headline` / `body` / `imageUrl` / `linkUrl` /
+         * `callToAction` are ignored in this mode. Mutually exclusive with `adSetId`.
+         *
+         */
+        creatives?: Array<{
+            headline: string;
+            body: string;
+            imageUrl: string;
+            linkUrl: string;
+            callToAction: 'LEARN_MORE' | 'SHOP_NOW' | 'SIGN_UP' | 'BOOK_TRAVEL' | 'CONTACT_US' | 'DOWNLOAD' | 'GET_OFFER' | 'GET_QUOTE' | 'SUBSCRIBE' | 'WATCH_MORE';
+        }>;
+        /**
+         * Meta-only. When present, switches to the attach shape: adds
+         * one new ad to this existing ad set without creating a new
+         * campaign. Budget, targeting, goal, and schedule are inherited
+         * from the ad set on Meta. Mutually exclusive with `creatives[]`.
+         *
+         */
+        adSetId?: string;
         /**
          * Google Display only
          */
@@ -12552,10 +12583,15 @@ export type CreateStandaloneAdData = {
     };
 };
 
-export type CreateStandaloneAdResponse = ({
+export type CreateStandaloneAdResponse = (({
     ad?: Ad;
     message?: string;
-});
+} | {
+    ads?: Array<Ad>;
+    platformCampaignId?: string;
+    platformAdSetId?: string;
+    message?: string;
+}));
 
 export type CreateStandaloneAdError = (unknown | {
     error?: string;
