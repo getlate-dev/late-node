@@ -344,6 +344,20 @@ export type AdMetrics = {
         [key: string]: (number);
     };
     /**
+     * Monetary mirror of `actions`, from Meta's Insights `action_values[]` array. Same keying — values are the revenue attributed to each action_type, in ad-account native currency (same unit as `spend`; see the campaign node's `currency` field). Use this to compute revenue-per-event (e.g. avg purchase value). Meta-only; other platforms return {}.
+     */
+    actionValues?: {
+        [key: string]: (number);
+    };
+    /**
+     * Convenience sum of purchase-type action values — picked from `actionValues` via the same priority list as `conversions` so both fields describe the same events. In ad-account native currency. 0 when the campaign has no purchase event configured. Meta-only.
+     */
+    purchaseValue?: number;
+    /**
+     * Return on ad spend — derived as `purchaseValue / spend`. 0 when `spend` is 0. Equivalent to Meta's `purchase_roas` under default attribution. At ad-set and campaign levels this is recomputed from summed purchaseValue + spend (NOT averaged across children) so it's mathematically correct at every rollup level.
+     */
+    roas?: number;
+    /**
      * Present on individual ads only, not on campaign aggregations
      */
     lastSyncedAt?: string;
