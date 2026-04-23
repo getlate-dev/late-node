@@ -2162,6 +2162,53 @@ export type RedditPost = {
 };
 
 /**
+ * Review data shared by review.new and review.updated payloads.
+ */
+export type ReviewWebhookReview = {
+    /**
+     * Platform review ID (e.g. "accounts/123/locations/456/reviews/789" for Google Business).
+     */
+    id: string;
+    /**
+     * Platform the review originated on. Currently Google Business Profile only.
+     */
+    platform: 'googlebusiness';
+    /**
+     * Star rating the reviewer gave.
+     */
+    rating: number;
+    /**
+     * Review text content. May be empty if the reviewer left only a rating.
+     */
+    text: string;
+    reviewer: {
+        /**
+         * Platform reviewer ID. Null when the platform does not expose it (common on Google Business anonymous reviews).
+         */
+        id: (string) | null;
+        name: string;
+        profileImage: (string) | null;
+    };
+    createdAt: string;
+    /**
+     * Whether the connected account has replied to this review.
+     */
+    hasReply: boolean;
+    /**
+     * Present when `hasReply` is true.
+     */
+    reply?: {
+        text: string;
+        createdAt: string;
+    };
+};
+
+/**
+ * Platform the review originated on. Currently Google Business Profile only.
+ */
+export type platform3 = 'googlebusiness';
+
+/**
  * Requires a Public Profile. Single media item only. Content types: story (ephemeral 24h), saved_story (permanent, title max 45 chars), spotlight (video, max 160 chars).
  */
 export type SnapchatPlatformData = {
@@ -2229,7 +2276,7 @@ export type SocialAccount = {
     };
 };
 
-export type platform3 = 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat' | 'discord' | 'whatsapp' | 'linkedinads' | 'metaads' | 'pinterestads' | 'tiktokads' | 'xads' | 'googleads';
+export type platform4 = 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat' | 'discord' | 'whatsapp' | 'linkedinads' | 'metaads' | 'pinterestads' | 'tiktokads' | 'xads' | 'googleads';
 
 /**
  * Text, images (up to 10), videos (up to 10), and mixed media albums. Captions up to 1024 chars for media, 4096 for text-only.
@@ -2695,7 +2742,7 @@ export type WebhookPayloadComment = {
 
 export type event3 = 'comment.received';
 
-export type platform4 = 'instagram' | 'facebook' | 'twitter' | 'youtube' | 'linkedin' | 'bluesky' | 'reddit';
+export type platform5 = 'instagram' | 'facebook' | 'twitter' | 'youtube' | 'linkedin' | 'bluesky' | 'reddit';
 
 /**
  * Webhook payload for message received events
@@ -3105,6 +3152,50 @@ export type WebhookPayloadPost = {
 export type event9 = 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled';
 
 /**
+ * Webhook payload for the `review.new` event (new review posted on a connected account).
+ */
+export type WebhookPayloadReviewNew = {
+    /**
+     * Stable webhook event ID
+     */
+    id: string;
+    event: 'review.new';
+    review: ReviewWebhookReview;
+    account: {
+        id: string;
+        platform: string;
+        username: string;
+    };
+    timestamp: string;
+};
+
+export type event10 = 'review.new';
+
+/**
+ * Webhook payload for the `review.updated` event. Fired when the reviewer edits
+ * their text or rating, or when a reply is added (via the API or directly on the
+ * platform). Same shape as `review.new`; when a reply is present `review.hasReply`
+ * is `true` and `review.reply` is populated.
+ *
+ */
+export type WebhookPayloadReviewUpdated = {
+    /**
+     * Stable webhook event ID
+     */
+    id: string;
+    event: 'review.updated';
+    review: ReviewWebhookReview;
+    account: {
+        id: string;
+        platform: string;
+        username: string;
+    };
+    timestamp: string;
+};
+
+export type event11 = 'review.updated';
+
+/**
  * Webhook payload for test deliveries
  */
 export type WebhookPayloadTest = {
@@ -3120,7 +3211,7 @@ export type WebhookPayloadTest = {
     timestamp: string;
 };
 
-export type event10 = 'webhook.test';
+export type event12 = 'webhook.test';
 
 export type WhatsAppBodyComponent = {
     type: 'body';
