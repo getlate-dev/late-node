@@ -2195,7 +2195,7 @@ export type ReviewWebhookReview = {
      */
     hasReply: boolean;
     /**
-     * Present when `hasReply` is true.
+     * Present when hasReply is true.
      */
     reply?: {
         text: string;
@@ -2696,8 +2696,8 @@ export type WebhookPayloadComment = {
         parentCommentId: (string) | null;
         /**
          * Ad context. Present only when the comment was made on paid content.
-         * Instagram: populated from the webhook payload's `value.media.ad_id`/`ad_title`.
-         * Facebook: populated via a Graph API lookup of the parent post's `promotion_status`.
+         * Instagram: populated from the webhook payload's value.media.ad_id and value.media.ad_title.
+         * Facebook: populated via a Graph API lookup of the parent post's promotion_status.
          * Absent for comments on organic posts that are not currently promoted.
          *
          */
@@ -2713,7 +2713,7 @@ export type WebhookPayloadComment = {
             /**
              * Facebook promotion status returned by Graph API. Common values:
              * "active" (organic post currently boosted), "ineligible" (dark
-             * post / ad creative — not promotable because it already is an ad).
+             * post or ad creative, not promotable because it already is an ad).
              *
              */
             promotionStatus?: string;
@@ -3152,7 +3152,7 @@ export type WebhookPayloadPost = {
 export type event9 = 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled';
 
 /**
- * Webhook payload for the `review.new` event (new review posted on a connected account).
+ * Webhook payload for the review.new event (new review posted on a connected account).
  */
 export type WebhookPayloadReviewNew = {
     /**
@@ -3172,10 +3172,10 @@ export type WebhookPayloadReviewNew = {
 export type event10 = 'review.new';
 
 /**
- * Webhook payload for the `review.updated` event. Fired when the reviewer edits
+ * Webhook payload for the review.updated event. Fired when the reviewer edits
  * their text or rating, or when a reply is added (via the API or directly on the
- * platform). Same shape as `review.new`; when a reply is present `review.hasReply`
- * is `true` and `review.reply` is populated.
+ * platform). Same shape as review.new. When a reply is present, review.hasReply
+ * is true and review.reply is populated.
  *
  */
 export type WebhookPayloadReviewUpdated = {
@@ -12515,7 +12515,7 @@ export type GetAdCommentsResponse = ({
          */
         platformAdId: string;
         /**
-         * Underlying post ID the comments belong to (effective_object_story_id for FB, effective_instagram_media_id for IG).
+         * Underlying post ID the comments belong to. effective_object_story_id for Facebook, effective_instagram_media_id for Instagram.
          */
         effectiveStoryId: string;
         /**
