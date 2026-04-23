@@ -12489,15 +12489,15 @@ export type CreateStandaloneAdData = {
         budgetType?: 'daily' | 'lifetime';
         currency?: string;
         /**
-         * Required on legacy + attach shapes (skip for multi-creative — use `creatives[].headline`). Max: Meta=255, Google=30, Pinterest=100
+         * Required for Meta, Google, and Pinterest on legacy + attach shapes (skip for multi-creative — use `creatives[].headline`). Ignored for TikTok and X/Twitter. Max: Meta=255, Google=30, Pinterest=100.
          */
         headline?: string;
         /**
-         * Google Display only
+         * Google Display only. Defaults to `headline` if omitted.
          */
         longHeadline?: string;
         /**
-         * Required on legacy + attach shapes. Max: Google=90, Pinterest=500
+         * Required on legacy + attach shapes. For X/Twitter this is the tweet text (max 280 chars including a ~24-char URL when `linkUrl` is set). Max: Google=90, Pinterest=500.
          */
         body?: string;
         /**
@@ -12509,9 +12509,22 @@ export type CreateStandaloneAdData = {
          */
         linkUrl?: string;
         /**
-         * Required on legacy + attach shapes. Not required for Google Search campaigns.
+         * Image creative for Meta/Google/Pinterest on legacy + attach shapes (mutually exclusive with `video`). Not required for Google Search campaigns. For TikTok, this field carries the VIDEO URL (the TikTok ads endpoint is video-only; the field retains the `imageUrl` name for cross-platform consistency). Ignored for X/Twitter.
          */
         imageUrl?: string;
+        /**
+         * Meta only (facebook, instagram). When set, creates a VIDEO ad on the legacy or attach shape. Mutually exclusive with `imageUrl`. For multi-creative, set `video` per entry inside `creatives[]` instead.
+         */
+        video?: {
+            /**
+             * Public URL of the video. Uploaded to Meta via chunked transfer on /act_X/advideos; then the request blocks on Meta's transcoding until status.video_status === 'ready'.
+             */
+            url: string;
+            /**
+             * Public URL of a still-image thumbnail for the video. Required by Meta on every video creative. Uploaded to Meta as an ad image and referenced as the thumbnail in object_story_spec.video_data.
+             */
+            thumbnailUrl: string;
+        };
         /**
          * Meta-only. When present, switches to the multi-creative shape:
          * creates 1 campaign + 1 ad set + N ads (one per entry here).
@@ -12522,7 +12535,17 @@ export type CreateStandaloneAdData = {
         creatives?: Array<{
             headline: string;
             body: string;
-            imageUrl: string;
+            /**
+             * Image creative. Mutually exclusive with `video`.
+             */
+            imageUrl?: string;
+            /**
+             * Video creative for this entry. Mutually exclusive with `imageUrl`.
+             */
+            video?: {
+                url: string;
+                thumbnailUrl: string;
+            };
             linkUrl: string;
             callToAction: 'LEARN_MORE' | 'SHOP_NOW' | 'SIGN_UP' | 'BOOK_TRAVEL' | 'CONTACT_US' | 'DOWNLOAD' | 'GET_OFFER' | 'GET_QUOTE' | 'SUBSCRIBE' | 'WATCH_MORE';
         }>;

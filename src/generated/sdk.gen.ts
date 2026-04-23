@@ -3188,6 +3188,18 @@ export const boostPost = <ThrowOnError extends boolean = false>(options: Options
  *
  * `creatives[]` and `adSetId` are mutually exclusive; specifying both returns 400.
  *
+ * **Per-platform required fields** (the platform is inferred from `accountId`):
+ * - **Meta (facebook, instagram)**: `accountId`, `adAccountId`, `name`, `goal`, `budgetAmount`, `budgetType`, `headline`, `body`, `imageUrl`, `linkUrl`, `callToAction`.
+ * - **Google Ads (Display)**: `accountId`, `adAccountId`, `name`, `goal`, `budgetAmount`, `budgetType`, `headline`, `body`, `linkUrl`, `imageUrl`, `businessName`. `longHeadline` defaults to `headline` if omitted (max 90 chars).
+ * - **Google Ads (Search)**: `accountId`, `adAccountId`, `name`, `goal`, `budgetAmount`, `budgetType`, `headline`, `body`, `linkUrl`, `businessName`. `imageUrl` is NOT required for Search. Set `campaignType: "search"`.
+ * - **TikTok**: `accountId`, `adAccountId`, `name`, `goal`, `budgetAmount`, `budgetType`, `body`, `linkUrl`, `imageUrl` (this field **carries the VIDEO URL** for TikTok; the TikTok ads endpoint is video-only and the field is named `imageUrl` for cross-platform consistency).
+ * - **Pinterest**: `accountId`, `adAccountId`, `name`, `goal`, `budgetAmount`, `budgetType`, `headline`, `body`, `imageUrl`, `linkUrl`. Optional `boardId` (auto-creates "Zernio Ads" board if omitted).
+ * - **X / Twitter**: `accountId` (the posting account, internally resolved to the linked X Ads credential), `adAccountId`, `name`, `goal`, `budgetAmount`, `budgetType`, `body` (the tweet text, max 280 chars with `linkUrl` adding ~24). `headline`, `imageUrl`, `callToAction`, and targeting fields are ignored. Requires a connected X Ads account (`/v1/connect/twitter/ads`); otherwise 422.
+ *
+ * **Budget minimums** are enforced per platform in USD: TikTok=$20, Pinterest=$5, all others=$1. If you pass `currency` other than USD, this minimum is currently still evaluated as USD. Pass the ad account's native currency on every request so Meta-side amount conversion is correct.
+ *
+ * **Video ads (Meta only).** Meta (facebook, instagram) supports video creatives on all three shapes (legacy, multi-creative via `creatives[].video`, attach). Set `video: { url, thumbnailUrl }` at the request root (for legacy/attach) or per-entry inside `creatives[]` (for multi-creative). `video` and `imageUrl` are mutually exclusive per creative; supply exactly one. `video.thumbnailUrl` is required because Meta requires a thumbnail on every video creative. The video is uploaded to Meta via chunked transfer and the request blocks on Meta's transcoding (`status.video_status === 'ready'`). This path can take several minutes for longer videos; this endpoint is configured with `maxDuration = 800` on Vercel (13 min) to cover it, but your HTTP client should allow for the same. If transcoding hasn't finished within 10 minutes, the request fails with a `platform_error`. Video on non-Meta platforms is NOT supported here: TikTok uses its own flow (pass the video URL via `imageUrl`); other platforms are image-only.
+ *
  */
 export const createStandaloneAd = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<CreateStandaloneAdData, ThrowOnError>) => {
     return (options?.client ?? client).post<CreateStandaloneAdResponse, CreateStandaloneAdError, ThrowOnError>({
