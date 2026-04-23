@@ -12479,6 +12479,57 @@ export type GetAdAnalyticsError = ({
     error?: string;
 } | unknown);
 
+export type GetAdCommentsData = {
+    path: {
+        /**
+         * Internal Zernio ad ID (ObjectId).
+         */
+        adId: string;
+    };
+    query?: {
+        /**
+         * Pagination cursor from a previous response.
+         */
+        cursor?: string;
+        limit?: number;
+    };
+};
+
+export type GetAdCommentsResponse = ({
+    status: 'success';
+    comments: Array<{
+        [key: string]: unknown;
+    }>;
+    pagination: {
+        hasMore?: boolean;
+        cursor?: string;
+    };
+    meta: {
+        platform: 'facebook' | 'instagram';
+        /**
+         * Internal Zernio ad ID.
+         */
+        adId: string;
+        /**
+         * Meta ad ID.
+         */
+        platformAdId: string;
+        /**
+         * Underlying post ID the comments belong to (effective_object_story_id for FB, effective_instagram_media_id for IG).
+         */
+        effectiveStoryId: string;
+        /**
+         * Social account ID (ads SocialAccount).
+         */
+        accountId: string;
+        lastUpdated: string;
+    };
+});
+
+export type GetAdCommentsError = (unknown | {
+    error?: string;
+});
+
 export type ListAdAccountsData = {
     query: {
         /**

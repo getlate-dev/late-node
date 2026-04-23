@@ -363,6 +363,7 @@ try {
 | `ads.createStandaloneAd()` | Create standalone ad |
 | `ads.getAd()` | Get ad details |
 | `ads.getAdAnalytics()` | Get ad analytics |
+| `ads.getAdComments()` | List comments on an ad |
 | `ads.updateAd()` | Update ad |
 | `ads.deleteAd()` | Cancel an ad |
 | `ads.boostPost()` | Boost post as ad |
