@@ -210,15 +210,20 @@ try {
 | `analytics.getBestTimeToPost()` | Get best times to post |
 | `analytics.getContentDecay()` | Get content performance decay |
 | `analytics.getDailyMetrics()` | Get daily aggregated metrics |
+| `analytics.getFacebookPageInsights()` | Get Facebook Page insights |
 | `analytics.getGoogleBusinessPerformance()` | Get GBP performance metrics |
 | `analytics.getGoogleBusinessSearchKeywords()` | Get GBP search keywords |
 | `analytics.getInstagramAccountInsights()` | Get Instagram insights |
 | `analytics.getInstagramDemographics()` | Get Instagram demographics |
+| `analytics.getInstagramFollowerHistory()` | Get Instagram follower history |
 | `analytics.getLinkedInAggregateAnalytics()` | Get LinkedIn aggregate stats |
+| `analytics.getLinkedInOrgAggregateAnalytics()` | Get LinkedIn organization page aggregate analytics |
 | `analytics.getLinkedInPostAnalytics()` | Get LinkedIn post stats |
 | `analytics.getLinkedInPostReactions()` | Get LinkedIn post reactions |
 | `analytics.getPostingFrequency()` | Get frequency vs engagement |
 | `analytics.getPostTimeline()` | Get post analytics timeline |
+| `analytics.getTikTokAccountInsights()` | Get TikTok account-level insights |
+| `analytics.getYouTubeChannelInsights()` | Get YouTube channel-level insights |
 | `analytics.getYouTubeDailyViews()` | Get YouTube daily views |
 | `analytics.getYouTubeDemographics()` | Get YouTube demographics |
 

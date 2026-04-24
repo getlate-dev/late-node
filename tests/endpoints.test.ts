@@ -93,14 +93,39 @@ describe('Endpoint Methods', () => {
       expect(client.analytics.getAnalytics).toBeTypeOf('function');
     });
 
+    it('should have getYouTubeChannelInsights method', () => {
+      expect(client.analytics.getYouTubeChannelInsights).toBeDefined();
+      expect(client.analytics.getYouTubeChannelInsights).toBeTypeOf('function');
+    });
+
+    it('should have getLinkedInOrgAggregateAnalytics method', () => {
+      expect(client.analytics.getLinkedInOrgAggregateAnalytics).toBeDefined();
+      expect(client.analytics.getLinkedInOrgAggregateAnalytics).toBeTypeOf('function');
+    });
+
+    it('should have getTikTokAccountInsights method', () => {
+      expect(client.analytics.getTikTokAccountInsights).toBeDefined();
+      expect(client.analytics.getTikTokAccountInsights).toBeTypeOf('function');
+    });
+
     it('should have getYouTubeDailyViews method', () => {
       expect(client.analytics.getYouTubeDailyViews).toBeDefined();
       expect(client.analytics.getYouTubeDailyViews).toBeTypeOf('function');
     });
 
+    it('should have getFacebookPageInsights method', () => {
+      expect(client.analytics.getFacebookPageInsights).toBeDefined();
+      expect(client.analytics.getFacebookPageInsights).toBeTypeOf('function');
+    });
+
     it('should have getInstagramAccountInsights method', () => {
       expect(client.analytics.getInstagramAccountInsights).toBeDefined();
       expect(client.analytics.getInstagramAccountInsights).toBeTypeOf('function');
+    });
+
+    it('should have getInstagramFollowerHistory method', () => {
+      expect(client.analytics.getInstagramFollowerHistory).toBeDefined();
+      expect(client.analytics.getInstagramFollowerHistory).toBeTypeOf('function');
     });
 
     it('should have getInstagramDemographics method', () => {

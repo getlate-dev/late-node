@@ -1322,13 +1322,24 @@ export type platform2 = 'instagram' | 'facebook' | 'telegram' | 'whatsapp';
 
 export type direction = 'incoming' | 'outgoing';
 
+/**
+ * Shared account-insights response envelope used by every platform-level
+ * analytics endpoint (/v1/analytics/{facebook|instagram|youtube|linkedin|tiktok}*).
+ * The name is historical - the shape was first shipped for Instagram and every
+ * new platform endpoint reuses it for response-shape consistency. The platform
+ * field echoes back which platform served the response.
+ *
+ */
 export type InstagramAccountInsightsResponse = {
     success?: boolean;
     /**
      * The Zernio SocialAccount ID
      */
     accountId?: string;
-    platform?: string;
+    /**
+     * Platform that served this response.
+     */
+    platform?: 'facebook' | 'instagram' | 'youtube' | 'linkedin' | 'tiktok';
     dateRange?: {
         since?: string;
         until?: string;
@@ -1367,6 +1378,11 @@ export type InstagramAccountInsightsResponse = {
     };
     dataDelay?: string;
 };
+
+/**
+ * Platform that served this response.
+ */
+export type platform3 = 'facebook' | 'instagram' | 'youtube' | 'linkedin' | 'tiktok';
 
 export type metricType = 'time_series' | 'total_value';
 
@@ -1518,6 +1534,20 @@ export type LinkedInAggregateAnalyticsDailyResponse = {
             date?: string;
             count?: number;
         }>;
+        /**
+         * Daily saves (personal accounts only)
+         */
+        saves?: Array<{
+            date?: string;
+            count?: number;
+        }>;
+        /**
+         * Daily sends via LinkedIn messaging (personal accounts only)
+         */
+        sends?: Array<{
+            date?: string;
+            count?: number;
+        }>;
     };
     /**
      * Metrics that were skipped due to API limitations
@@ -1563,6 +1593,14 @@ export type LinkedInAggregateAnalyticsTotalResponse = {
          * Total reshares across all posts
          */
         shares?: number;
+        /**
+         * Total times posts were saved (personal accounts only)
+         */
+        saves?: number;
+        /**
+         * Total times posts were sent via LinkedIn messaging (personal accounts only)
+         */
+        sends?: number;
         /**
          * Overall engagement rate as percentage
          */
@@ -2206,7 +2244,7 @@ export type ReviewWebhookReview = {
 /**
  * Platform the review originated on. Currently Google Business Profile only.
  */
-export type platform3 = 'googlebusiness';
+export type platform4 = 'googlebusiness';
 
 /**
  * Requires a Public Profile. Single media item only. Content types: story (ephemeral 24h), saved_story (permanent, title max 45 chars), spotlight (video, max 160 chars).
@@ -2276,7 +2314,7 @@ export type SocialAccount = {
     };
 };
 
-export type platform4 = 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat' | 'discord' | 'whatsapp' | 'linkedinads' | 'metaads' | 'pinterestads' | 'tiktokads' | 'xads' | 'googleads';
+export type platform5 = 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat' | 'discord' | 'whatsapp' | 'linkedinads' | 'metaads' | 'pinterestads' | 'tiktokads' | 'xads' | 'googleads';
 
 /**
  * Text, images (up to 10), videos (up to 10), and mixed media albums. Captions up to 1024 chars for media, 4096 for text-only.
@@ -2742,7 +2780,7 @@ export type WebhookPayloadComment = {
 
 export type event3 = 'comment.received';
 
-export type platform5 = 'instagram' | 'facebook' | 'twitter' | 'youtube' | 'linkedin' | 'bluesky' | 'reddit';
+export type platform6 = 'instagram' | 'facebook' | 'twitter' | 'youtube' | 'linkedin' | 'bluesky' | 'reddit';
 
 /**
  * Webhook payload for message received events
@@ -3643,6 +3681,154 @@ export type GetAnalyticsError = ({
     code?: string;
 } | AnalyticsSinglePostResponse | ErrorResponse);
 
+export type GetYouTubeChannelInsightsData = {
+    query: {
+        /**
+         * The Zernio SocialAccount ID for the YouTube account.
+         */
+        accountId: string;
+        /**
+         * Comma-separated list. Defaults to "views,estimatedMinutesWatched,subscribersGained,subscribersLost".
+         *
+         * Live YouTube Analytics v2 metrics:
+         * - views
+         * - estimatedMinutesWatched
+         * - averageViewDuration          (ratio - weighted mean computed across days)
+         * - subscribersGained
+         * - subscribersLost
+         *
+         * Zernio-synthesized from daily follower snapshots (cross-platform parity):
+         * - followers_gained
+         * - followers_lost
+         *
+         */
+        metrics?: string;
+        /**
+         * "total_value" (default) returns aggregated totals.
+         * "time_series" returns per-day values in the "values" array.
+         *
+         */
+        metricType?: 'time_series' | 'total_value';
+        /**
+         * Start date (YYYY-MM-DD). Defaults to 30 days ago.
+         */
+        since?: string;
+        /**
+         * End date (YYYY-MM-DD). Defaults to today. YouTube Analytics has a 2-3 day delay,
+         * so the fetch is internally clamped to 3 days ago; any requested range extending
+         * beyond that returns zero values for the tail days. The response's dateRange.until
+         * field reflects your requested value.
+         *
+         */
+        until?: string;
+    };
+};
+
+export type GetYouTubeChannelInsightsResponse = (InstagramAccountInsightsResponse);
+
+export type GetYouTubeChannelInsightsError = (unknown | {
+    error?: string;
+} | YouTubeScopeMissingResponse);
+
+export type GetLinkedInOrgAggregateAnalyticsData = {
+    query: {
+        /**
+         * The Zernio SocialAccount ID for the LinkedIn organization account.
+         */
+        accountId: string;
+        /**
+         * Comma-separated list. Defaults to
+         * "impressions,clicks,engagement_rate,organic_followers_gained,followers_gained,followers_lost".
+         *
+         * Share statistics (support both total_value and time_series):
+         * - impressions
+         * - unique_impressions
+         * - clicks
+         * - likes
+         * - comments
+         * - shares
+         * - engagement_rate       (0..1, LinkedIn-computed)
+         *
+         * Follower-gain statistics (support total_value and time_series):
+         * - organic_followers_gained   (per-day organic gains for time_series; sum of organic gains over the range for total_value)
+         * - paid_followers_gained      (per-day paid gains for time_series; sum of paid gains over the range for total_value)
+         *
+         * Page-view statistics (total_value ONLY - LinkedIn platform limit):
+         * - page_views_total
+         * - page_views_overview
+         * - page_views_careers
+         * - page_views_jobs
+         * - page_views_life
+         *
+         * Zernio-synthesized from daily follower snapshots:
+         * - followers_gained
+         * - followers_lost
+         *
+         */
+        metrics?: string;
+        metricType?: 'time_series' | 'total_value';
+        /**
+         * Start date (YYYY-MM-DD). Defaults to 30 days ago.
+         */
+        since?: string;
+        /**
+         * End date (YYYY-MM-DD). Defaults to today.
+         */
+        until?: string;
+    };
+};
+
+export type GetLinkedInOrgAggregateAnalyticsResponse = (InstagramAccountInsightsResponse);
+
+export type GetLinkedInOrgAggregateAnalyticsError = (unknown | {
+    error?: string;
+});
+
+export type GetTikTokAccountInsightsData = {
+    query: {
+        /**
+         * The Zernio SocialAccount ID for the TikTok account.
+         */
+        accountId: string;
+        /**
+         * Comma-separated list. Defaults to
+         * "follower_count,likes_count,video_count,followers_gained,followers_lost".
+         *
+         * Live from /v2/user/info/ (requires user.info.stats scope):
+         * - follower_count  (cumulative; time series joined from AccountStats)
+         * - following_count (cumulative; time series joined from AccountStats.metadata)
+         * - likes_count     (cumulative; time series joined from AccountStats.metadata)
+         * - video_count     (cumulative; time series joined from AccountStats.metadata)
+         *
+         * Zernio-synthesized:
+         * - followers_gained  (sum of positive daily follower deltas)
+         * - followers_lost    (sum of absolute negative daily deltas)
+         *
+         */
+        metrics?: string;
+        /**
+         * "total_value" returns the latest cumulative counter value.
+         * "time_series" returns daily values joined from AccountStats snapshots.
+         *
+         */
+        metricType?: 'time_series' | 'total_value';
+        /**
+         * Start date (YYYY-MM-DD). Defaults to 30 days ago.
+         */
+        since?: string;
+        /**
+         * End date (YYYY-MM-DD). Defaults to today.
+         */
+        until?: string;
+    };
+};
+
+export type GetTikTokAccountInsightsResponse = (InstagramAccountInsightsResponse);
+
+export type GetTikTokAccountInsightsError = (unknown | {
+    error?: string;
+});
+
 export type GetYouTubeDailyViewsData = {
     query: {
         /**
@@ -3676,6 +3862,54 @@ export type GetYouTubeDailyViewsError = ({
     error?: string;
 });
 
+export type GetFacebookPageInsightsData = {
+    query: {
+        /**
+         * The Zernio SocialAccount ID for the connected Facebook Page.
+         */
+        accountId: string;
+        /**
+         * Comma-separated list of metrics. Defaults to
+         * "page_media_view,page_post_engagements,page_follows,followers_gained,followers_lost".
+         *
+         * Live Meta metrics (current names, post-Nov-2025):
+         * - page_media_view       (replaces deprecated page_impressions)
+         * - page_views_total
+         * - page_post_engagements
+         * - page_video_views
+         * - page_video_view_time
+         * - page_follows          (replaces deprecated page_fans)
+         *
+         * Zernio-synthesized from daily follower snapshots (filling the Nov-2025 gap
+         * left by the page_fan_adds / page_fan_removes deprecation):
+         * - followers_gained
+         * - followers_lost
+         *
+         */
+        metrics?: string;
+        /**
+         * "total_value" (default) returns aggregated totals only.
+         * "time_series" returns daily values in the "values" array.
+         *
+         */
+        metricType?: 'time_series' | 'total_value';
+        /**
+         * Start date (YYYY-MM-DD). Defaults to 30 days ago.
+         */
+        since?: string;
+        /**
+         * End date (YYYY-MM-DD). Defaults to today.
+         */
+        until?: string;
+    };
+};
+
+export type GetFacebookPageInsightsResponse = (InstagramAccountInsightsResponse);
+
+export type GetFacebookPageInsightsError = (unknown | {
+    error?: string;
+});
+
 export type GetInstagramAccountInsightsData = {
     query: {
         /**
@@ -3692,7 +3926,10 @@ export type GetInstagramAccountInsightsData = {
          * Comma-separated list of metrics. Defaults to "reach,views,accounts_engaged,total_interactions".
          * Valid metrics: reach, views, accounts_engaged, total_interactions, comments, likes, saves, shares,
          * replies, reposts, follows_and_unfollows, profile_links_taps.
-         * Note: only "reach" supports metricType=time_series. All other metrics are total_value only.
+         * Note: only "reach" supports metricType=time_series. All other metrics (including
+         * follows_and_unfollows) are total_value only. This is an Instagram Graph API limitation,
+         * not a Zernio limitation - the IG API does not return time-series data for these metrics.
+         * For a daily running follower count, use /v1/analytics/instagram/follower-history instead.
          *
          */
         metrics?: string;
@@ -3720,6 +3957,43 @@ export type GetInstagramAccountInsightsError = ({
 } | {
     error?: string;
     code?: string;
+});
+
+export type GetInstagramFollowerHistoryData = {
+    query: {
+        /**
+         * The Zernio SocialAccount ID for the Instagram account.
+         */
+        accountId: string;
+        /**
+         * Comma-separated list. Defaults to "follower_count,followers_gained,followers_lost".
+         * - follower_count   : per-day raw follower count
+         * - followers_gained : sum of positive daily deltas
+         * - followers_lost   : sum of absolute negative daily deltas
+         *
+         */
+        metrics?: string;
+        /**
+         * "total_value" returns aggregated totals (latest for follower_count, sum for gained/lost).
+         * "time_series" returns per-day values in the "values" array.
+         *
+         */
+        metricType?: 'time_series' | 'total_value';
+        /**
+         * Start date (YYYY-MM-DD). Defaults to 30 days ago.
+         */
+        since?: string;
+        /**
+         * End date (YYYY-MM-DD). Defaults to today.
+         */
+        until?: string;
+    };
+};
+
+export type GetInstagramFollowerHistoryResponse = (InstagramAccountInsightsResponse);
+
+export type GetInstagramFollowerHistoryError = (unknown | {
+    error?: string;
 });
 
 export type GetInstagramDemographicsData = {
@@ -6955,7 +7229,7 @@ export type GetLinkedInAggregateAnalyticsData = {
          */
         endDate?: string;
         /**
-         * Comma-separated metrics: IMPRESSION, MEMBERS_REACHED, REACTION, COMMENT, RESHARE. Omit for all.
+         * Comma-separated metrics: IMPRESSION, MEMBERS_REACHED, REACTION, COMMENT, RESHARE, POST_SAVE, POST_SEND. Omit for all.
          */
         metrics?: string;
         /**
@@ -7025,6 +7299,14 @@ export type GetLinkedInPostAnalyticsResponse = ({
          * Reshares of the post
          */
         shares?: number;
+        /**
+         * Times the post was saved (personal accounts only; 0 for organization accounts)
+         */
+        saves?: number;
+        /**
+         * Times the post was sent via LinkedIn messaging (personal accounts only; 0 for organization accounts)
+         */
+        sends?: number;
         /**
          * Clicks on the post (organization accounts only)
          */
