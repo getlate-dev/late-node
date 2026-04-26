@@ -12192,8 +12192,22 @@ export type GetCommentAutomationResponse = ({
         commenterId?: string;
         commenterName?: string;
         commentText?: string;
+        /**
+         * DM outcome
+         */
         status?: 'sent' | 'failed' | 'skipped';
+        /**
+         * DM error message if status is failed
+         */
         error?: string;
+        /**
+         * Outcome of the optional public reply on the triggering comment. 'skipped' if no commentReply was configured or if the DM failed (the public reply is not attempted in that case).
+         */
+        commentReplyStatus?: 'sent' | 'failed' | 'skipped';
+        /**
+         * Public-reply error message if commentReplyStatus is failed
+         */
+        commentReplyError?: string;
         createdAt?: string;
     }>;
 });
@@ -12268,8 +12282,22 @@ export type ListCommentAutomationLogsResponse = ({
         commenterId?: string;
         commenterName?: string;
         commentText?: string;
+        /**
+         * DM outcome
+         */
         status?: 'sent' | 'failed' | 'skipped';
+        /**
+         * DM error message if status is failed
+         */
         error?: string;
+        /**
+         * Outcome of the optional public reply on the triggering comment. 'skipped' if no commentReply was configured or if the DM failed (the public reply is not attempted in that case).
+         */
+        commentReplyStatus?: 'sent' | 'failed' | 'skipped';
+        /**
+         * Public-reply error message if commentReplyStatus is failed
+         */
+        commentReplyError?: string;
         createdAt?: string;
     }>;
     pagination?: {
