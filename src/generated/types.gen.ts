@@ -13438,3 +13438,229 @@ export type ListConversionDestinationsResponse = ({
 export type ListConversionDestinationsError = (unknown | {
     error?: string;
 });
+
+export type SendWhatsAppConversionData = {
+    body: {
+        /**
+         * WhatsApp SocialAccount ID.
+         */
+        accountId: string;
+        /**
+         * Live-verified allowlist of event names accepted by Meta's
+         * CAPI for Business Messaging (Graph API v25.0). Other
+         * standard pixel events including `Lead`,
+         * `CompleteRegistration`, `Subscribe`, `Schedule`, `Contact`,
+         * `StartTrial`, `AddPaymentInfo`, `Search`, and
+         * `SubmitApplication` are rejected with subcode 2804066
+         * ("Messaging Event Invalid Event Type") on
+         * `action_source = business_messaging` events. Custom event
+         * names are also rejected.
+         *
+         * Use `LeadSubmitted` (NOT `Lead`) for lead-style conversions.
+         *
+         */
+        eventName: 'LeadSubmitted' | 'Purchase' | 'AddToCart' | 'InitiateCheckout' | 'ViewContent';
+        /**
+         * Unix seconds. Defaults to the time of the request when
+         * omitted. Meta's attribution window is 7 days from click;
+         * events older than that lose attribution.
+         *
+         */
+        eventTime?: number;
+        /**
+         * Stable dedup key. Reuse to suppress duplicate events
+         * (Meta dedupes against pixel events with the same id).
+         *
+         */
+        eventId: string;
+        /**
+         * Zernio Conversation `_id` (preferred lookup). The
+         * conversation must have a captured `ctwa_clid` in metadata
+         * (set automatically by the WhatsApp webhook on the first
+         * inbound message after a CTWA ad click).
+         *
+         */
+        conversationId?: string;
+        /**
+         * Contact phone number, digits only with no '+'. When used
+         * in lieu of `conversationId`, the handler resolves to the
+         * most recent CTWA-attributed conversation for this phone
+         * on the supplied account.
+         *
+         */
+        phoneE164?: string;
+        /**
+         * Conversion value (e.g. order total).
+         */
+        value?: number;
+        /**
+         * ISO 4217 currency code (e.g. `USD`).
+         */
+        currency?: string;
+        /**
+         * Optional product / content identifiers.
+         */
+        contentIds?: Array<(string)>;
+        /**
+         * User email. Normalized + SHA-256 hashed before sending to Meta.
+         */
+        email?: string;
+        /**
+         * Stable customer identifier. Lowercased + SHA-256 hashed
+         * before sending to Meta.
+         *
+         */
+        externalId?: string;
+        /**
+         * Meta `test_event_code` passthrough. Routes the event to
+         * the Test Events tab in Events Manager instead of the
+         * production dataset, useful for development.
+         *
+         */
+        testCode?: string;
+    };
+};
+
+export type SendWhatsAppConversionResponse = ({
+    platform?: 'metaads';
+    /**
+     * Events accepted by Meta.
+     */
+    eventsReceived?: number;
+    /**
+     * Events rejected by Meta (see failures).
+     */
+    eventsFailed?: number;
+    /**
+     * Per-event failure detail. Empty when all events were
+     * accepted.
+     *
+     */
+    failures?: Array<{
+        /**
+         * Index into the submitted events array.
+         */
+        eventIndex?: number;
+        /**
+         * Echoes back the eventId of the failed event.
+         */
+        eventId?: string;
+        message?: string;
+        code?: (string | number);
+    }>;
+    /**
+     * Meta `fbtrace_id` for debugging. Surface in support
+     * tickets.
+     *
+     */
+    traceId?: string;
+});
+
+export type SendWhatsAppConversionError = (unknown | {
+    error?: string;
+});
+
+export type CreateCtwaAdData = {
+    body: {
+        /**
+         * Facebook or Instagram SocialAccount ID.
+         */
+        accountId: string;
+        /**
+         * Meta ad account ID, e.g. `act_123456789`.
+         */
+        adAccountId: string;
+        /**
+         * Ad display name. Used to derive campaign / ad set names.
+         */
+        name: string;
+        headline: string;
+        /**
+         * Primary text shown above the image / video.
+         */
+        body: string;
+        /**
+         * Image asset for image creatives. Mutually exclusive with
+         * `video`. Required if `video` is not supplied.
+         *
+         */
+        imageUrl?: string;
+        /**
+         * Video creative. Mutually exclusive with `imageUrl`.
+         * Required if `imageUrl` is not supplied.
+         *
+         */
+        video?: {
+            url: string;
+            /**
+             * Required by Meta for every video creative. Used as the
+             * ad thumbnail.
+             *
+             */
+            thumbnailUrl: string;
+        };
+        /**
+         * Budget amount in the ad account's currency major units
+         * (e.g. dollars for USD, not cents). Must be positive.
+         *
+         */
+        budgetAmount: number;
+        budgetType: 'daily' | 'lifetime';
+        /**
+         * ISO 4217 currency code matching the ad account's currency
+         * (e.g. `USD`). Optional — Meta infers from the ad account
+         * when omitted.
+         *
+         */
+        currency?: string;
+        /**
+         * ISO 8601 datetime. Required when `budgetType` is `lifetime`.
+         *
+         */
+        endDate?: string;
+        /**
+         * ISO 3166-1 alpha-2 country codes. Defaults to `["US"]`.
+         */
+        countries?: Array<(string)>;
+        ageMin?: number;
+        ageMax?: number;
+        interests?: Array<{
+            id: string;
+            name?: string;
+        }>;
+        /**
+         * Custom audience ID to target.
+         */
+        audienceId?: string;
+        /**
+         * Meta's Advantage+ audience expansion. `0` (default) keeps
+         * targeting strict; `1` lets Meta expand beyond the supplied
+         * targeting when its delivery system finds better matches.
+         * Always sent on CREATE (Meta requires it).
+         *
+         */
+        advantageAudience?: 0 | 1;
+        /**
+         * Defaults to `OUTCOME_ENGAGEMENT` (the broadly-supported CTWA
+         * objective). `OUTCOME_SALES` and `OUTCOME_LEADS` require
+         * additional account configuration (Dataset linked to the WABA
+         * for sales) and may be rejected by Meta if missing.
+         *
+         */
+        objective?: 'OUTCOME_ENGAGEMENT' | 'OUTCOME_SALES' | 'OUTCOME_LEADS';
+    };
+};
+
+export type CreateCtwaAdResponse = ({
+    /**
+     * The persisted Ad document.
+     */
+    ad?: {
+        [key: string]: unknown;
+    };
+    message?: string;
+});
+
+export type CreateCtwaAdError = (unknown | {
+    error?: string;
+});

@@ -365,6 +365,7 @@ try {
 | `ads.listAdAccounts()` | List ad accounts |
 | `ads.listAds()` | List ads |
 | `ads.listConversionDestinations()` | List destinations for the Conversions API |
+| `ads.createCtwaAd()` | Create a Click-to-WhatsApp (CTWA) ad |
 | `ads.createStandaloneAd()` | Create standalone ad |
 | `ads.getAd()` | Get ad details |
 | `ads.getAdAnalytics()` | Get ad analytics |
@@ -557,6 +558,7 @@ try {
 | `whatsapp.approveWhatsAppGroupJoinRequests()` | Approve join requests |
 | `whatsapp.rejectWhatsAppGroupJoinRequests()` | Reject join requests |
 | `whatsapp.removeWhatsAppGroupParticipants()` | Remove participants |
+| `whatsapp.sendWhatsAppConversion()` | Send a WhatsApp conversation event to Meta CAPI for Business Messaging |
 | `whatsapp.uploadWhatsAppProfilePhoto()` | Upload profile picture |
 
 ### WhatsApp Flows

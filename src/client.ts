@@ -24,6 +24,7 @@ import {
   createBroadcast,
   createCommentAutomation,
   createContact,
+  createCtwaAd,
   createCustomField,
   createGoogleBusinessMedia,
   createGoogleBusinessPlaceAction,
@@ -210,6 +211,7 @@ import {
   sendInboxMessage,
   sendPrivateReplyToComment,
   sendTypingIndicator,
+  sendWhatsAppConversion,
   sendWhatsAppFlowMessage,
   setContactFieldValue,
   setInstagramIceBreakers,
@@ -699,6 +701,7 @@ export class Zernio {
     listWhatsAppGroupJoinRequests: listWhatsAppGroupJoinRequests,
     approveWhatsAppGroupJoinRequests: approveWhatsAppGroupJoinRequests,
     rejectWhatsAppGroupJoinRequests: rejectWhatsAppGroupJoinRequests,
+    sendWhatsAppConversion: sendWhatsAppConversion,
   };
 
   /**
@@ -812,6 +815,7 @@ export class Zernio {
     searchAdInterests: searchAdInterests,
     sendConversions: sendConversions,
     listConversionDestinations: listConversionDestinations,
+    createCtwaAd: createCtwaAd,
   };
 
   /**
