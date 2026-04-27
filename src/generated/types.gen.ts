@@ -13601,7 +13601,7 @@ export type CreateCtwaAdData = {
         };
         /**
          * Budget amount in the ad account's currency major units
-         * (e.g. dollars for USD, not cents). Must be positive.
+         * (e.g. dollars for USD, not cents). Must be > 0.
          *
          */
         budgetAmount: number;
