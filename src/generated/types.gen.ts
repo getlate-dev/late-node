@@ -2599,7 +2599,7 @@ export type Webhook = {
     /**
      * Events subscribed to
      */
-    events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'message.sent' | 'message.edited' | 'message.deleted' | 'message.delivered' | 'message.read' | 'message.failed' | 'comment.received' | 'review.new' | 'review.updated')>;
+    events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'account.ads.initial_sync_completed' | 'message.received' | 'message.sent' | 'message.edited' | 'message.deleted' | 'message.delivered' | 'message.read' | 'message.failed' | 'comment.received' | 'review.new' | 'review.updated')>;
     /**
      * Whether webhook delivery is enabled
      */
@@ -2619,6 +2619,70 @@ export type Webhook = {
         [key: string]: (string);
     };
 };
+
+/**
+ * Webhook payload for `account.ads.initial_sync_completed` events.
+ * Fired once per ads-enabled account when the initial discovery + 90-day
+ * ad backfill finishes (whether it succeeded fully, partially, or failed).
+ *
+ */
+export type WebhookPayloadAccountAdsInitialSyncCompleted = {
+    /**
+     * Stable webhook event ID
+     */
+    id: string;
+    event: 'account.ads.initial_sync_completed';
+    account: {
+        /**
+         * The account's unique identifier (same as used in /v1/accounts/{accountId})
+         */
+        accountId: string;
+        /**
+         * The profile's unique identifier this account belongs to
+         */
+        profileId: string;
+        platform: string;
+        username: string;
+        displayName?: string;
+        /**
+         * The platform-side account/ad-account ID (e.g. Meta ad account ID).
+         */
+        platformUserId?: string;
+        /**
+         * URL of the account's profile picture, when available.
+         */
+        profilePicture?: string;
+    };
+    /**
+     * Summary of the initial ads sync backfill results.
+     */
+    sync: {
+        /**
+         * Overall outcome of the initial sync.
+         */
+        status: 'success' | 'failure';
+        /**
+         * Total number of ads discovered for backfill.
+         */
+        totalAds: number;
+        /**
+         * Number of ads successfully synced.
+         */
+        synced: number;
+        /**
+         * Number of ads that failed to sync.
+         */
+        failed: number;
+    };
+    timestamp: string;
+};
+
+export type event = 'account.ads.initial_sync_completed';
+
+/**
+ * Overall outcome of the initial sync.
+ */
+export type status6 = 'success' | 'failure';
 
 /**
  * Webhook payload for account connected events
@@ -2645,7 +2709,7 @@ export type WebhookPayloadAccountConnected = {
     timestamp: string;
 };
 
-export type event = 'account.connected';
+export type event2 = 'account.connected';
 
 /**
  * Webhook payload for account disconnected events
@@ -2680,7 +2744,7 @@ export type WebhookPayloadAccountDisconnected = {
     timestamp: string;
 };
 
-export type event2 = 'account.disconnected';
+export type event3 = 'account.disconnected';
 
 /**
  * Whether the disconnection was intentional (user action) or unintentional (token expired/revoked)
@@ -2778,7 +2842,7 @@ export type WebhookPayloadComment = {
     timestamp: string;
 };
 
-export type event3 = 'comment.received';
+export type event4 = 'comment.received';
 
 export type platform6 = 'instagram' | 'facebook' | 'twitter' | 'youtube' | 'linkedin' | 'bluesky' | 'reddit';
 
@@ -2974,7 +3038,7 @@ export type WebhookPayloadMessage = {
     timestamp: string;
 };
 
-export type event4 = 'message.received';
+export type event5 = 'message.received';
 
 /**
  * WhatsApp only. Which kind of interactive reply the user sent:
@@ -3006,7 +3070,7 @@ export type WebhookPayloadMessageDeleted = {
     timestamp: string;
 };
 
-export type event5 = 'message.deleted';
+export type event6 = 'message.deleted';
 
 /**
  * Shared payload for message.delivered, message.read, and
@@ -3041,7 +3105,7 @@ export type WebhookPayloadMessageDeliveryStatus = {
     timestamp: string;
 };
 
-export type event6 = 'message.delivered' | 'message.read' | 'message.failed';
+export type event7 = 'message.delivered' | 'message.read' | 'message.failed';
 
 /**
  * Webhook payload for message.edited events. Fires when the sender
@@ -3083,7 +3147,7 @@ export type WebhookPayloadMessageEdited = {
     timestamp: string;
 };
 
-export type event7 = 'message.edited';
+export type event8 = 'message.edited';
 
 /**
  * Webhook payload for message sent events (fired when a message is sent via the API)
@@ -3159,7 +3223,7 @@ export type WebhookPayloadMessageSent = {
     timestamp: string;
 };
 
-export type event8 = 'message.sent';
+export type event9 = 'message.sent';
 
 /**
  * Webhook payload for post events
@@ -3187,7 +3251,7 @@ export type WebhookPayloadPost = {
     timestamp: string;
 };
 
-export type event9 = 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled';
+export type event10 = 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled';
 
 /**
  * Webhook payload for the review.new event (new review posted on a connected account).
@@ -3207,7 +3271,7 @@ export type WebhookPayloadReviewNew = {
     timestamp: string;
 };
 
-export type event10 = 'review.new';
+export type event11 = 'review.new';
 
 /**
  * Webhook payload for the review.updated event. Fired when the reviewer edits
@@ -3231,7 +3295,7 @@ export type WebhookPayloadReviewUpdated = {
     timestamp: string;
 };
 
-export type event11 = 'review.updated';
+export type event12 = 'review.updated';
 
 /**
  * Webhook payload for test deliveries
@@ -3249,7 +3313,7 @@ export type WebhookPayloadTest = {
     timestamp: string;
 };
 
-export type event12 = 'webhook.test';
+export type event13 = 'webhook.test';
 
 export type WhatsAppBodyComponent = {
     type: 'body';
@@ -8021,7 +8085,7 @@ export type CreateWebhookSettingsData = {
         /**
          * Events to subscribe to (at least one required)
          */
-        events: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'comment.received' | 'review.new' | 'review.updated')>;
+        events: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'account.ads.initial_sync_completed' | 'message.received' | 'comment.received' | 'review.new' | 'review.updated')>;
         /**
          * Enable or disable webhook delivery. Defaults to `true` when omitted.
          */
@@ -8065,7 +8129,7 @@ export type UpdateWebhookSettingsData = {
         /**
          * Events to subscribe to. Must contain at least one event if provided.
          */
-        events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'message.received' | 'comment.received' | 'review.new' | 'review.updated')>;
+        events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'account.ads.initial_sync_completed' | 'message.received' | 'comment.received' | 'review.new' | 'review.updated')>;
         /**
          * Enable or disable webhook delivery
          */
