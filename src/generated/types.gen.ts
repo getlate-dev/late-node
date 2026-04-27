@@ -4678,6 +4678,10 @@ export type GetUsageStatsError = ({
 
 export type ListPostsData = {
     query?: {
+        /**
+         * Filter posts to those published via a specific social account (24-char hex ObjectId).
+         */
+        accountId?: string;
         createdBy?: string;
         dateFrom?: string;
         dateTo?: string;
