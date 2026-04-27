@@ -3034,6 +3034,29 @@ export type WebhookPayloadMessage = {
         flowResponseData?: {
             [key: string]: unknown;
         };
+        /**
+         * WhatsApp only. Click-to-WhatsApp (CTWA) ad attribution. Present
+         * only on the FIRST inbound message after a user reaches the
+         * business via a CTWA ad. Forwarded verbatim from Meta's referral
+         * envelope so it can be replayed to the Conversions API for
+         * Business Messaging. Attribution window is 7 days from click.
+         *
+         */
+        referral?: {
+            /**
+             * Meta's GCLID-equivalent click identifier.
+             */
+            ctwa_clid?: string;
+            source_id?: string;
+            source_type?: string;
+            source_url?: string;
+            headline?: string;
+            body?: string;
+            media_type?: string;
+            image_url?: string;
+            video_url?: string;
+            thumbnail_url?: string;
+        };
     } | null;
     timestamp: string;
 };
@@ -8563,11 +8586,44 @@ export type GetInboxConversationMessagesData = {
          * Social account ID
          */
         accountId: string;
+        /**
+         * Opaque pagination cursor. Pass `pagination.nextCursor` from a prior response.
+         */
+        cursor?: string;
+        /**
+         * Number of messages to return per page. Default 100, max 100.
+         */
+        limit?: number;
+        /**
+         * Order of returned messages. Default `asc` (oldest first, chat style).
+         * For Twitter, Facebook and Bluesky, only intra-page ordering is
+         * affected — pages always walk newest→oldest. See `sortOrderApplied`
+         * in the response.
+         *
+         */
+        sortOrder?: 'asc' | 'desc';
     };
 };
 
 export type GetInboxConversationMessagesResponse = ({
     status?: string;
+    pagination?: {
+        /**
+         * Whether more messages are available beyond this page.
+         */
+        hasMore?: boolean;
+        /**
+         * Opaque cursor to fetch the next page. `null` on the last page.
+         */
+        nextCursor?: (string) | null;
+    };
+    /**
+     * Sort order actually applied to the returned page. May
+     * differ from the requested `sortOrder` for Twitter,
+     * Facebook and Bluesky (always `desc` regardless of request).
+     *
+     */
+    sortOrderApplied?: 'asc' | 'desc';
     messages?: Array<{
         id?: string;
         conversationId?: string;
