@@ -13160,6 +13160,10 @@ export type CreateStandaloneAdData = {
          * Meta only. Controls the Advantage audience feature (targeting_automation). 0 = disabled (default), 1 = enabled. Meta Marketing API requires this field on all ad set creation requests.
          */
         advantageAudience?: 0 | 1;
+        /**
+         * Meta only. Restrict the audience by gender. 'male' targets men only, 'female' targets women only, 'all' (default) targets everyone. Ignored by non-Meta platforms.
+         */
+        gender?: 'all' | 'male' | 'female';
     };
 };
 
