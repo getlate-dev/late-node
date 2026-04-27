@@ -3482,7 +3482,7 @@ export const listConversionDestinations = <ThrowOnError extends boolean = false>
 };
 
 /**
- * Send a WhatsApp conversation event to Meta CAPI for Business Messaging
+ * Send WhatsApp conversion event
  * Forward a WhatsApp Business Messaging conversion event (`LeadSubmitted`,
  * `Purchase`, `AddToCart`, `InitiateCheckout`, `ViewContent`) to Meta's
  * Conversions API with `action_source = business_messaging` and
@@ -3497,14 +3497,14 @@ export const listConversionDestinations = <ThrowOnError extends boolean = false>
  * WhatsApp Business number.
  *
  * Identify the conversation by either `conversationId` (preferred) or
- * `phoneE164` (digits only, no '+') — at least one is required. If the
- * conversation has no captured `ctwa_clid`, the request returns 422 —
- * there's nothing to attribute.
+ * `phoneE164` (digits only, no `+`). At least one is required. If the
+ * conversation has no captured `ctwa_clid`, the request returns 422
+ * because there is nothing to attribute.
  *
- * Token + dataset coupling: the WhatsApp account's accessToken must have
- * access to the configured `metaCapiDatasetId`. By default a WABA's
+ * Token and dataset coupling: the WhatsApp account's accessToken must
+ * have access to the configured `metaCapiDatasetId`. By default a WABA's
  * system-user token is scoped to the WABA's own Business Manager and
- * cannot post to a pixel owned by a different Business — Meta returns
+ * cannot post to a pixel owned by a different Business; Meta returns
  * code 100 in that case. Either share the dataset with the WhatsApp
  * app's Business in BM, or use a dataset already in the same Business
  * as the WABA.
@@ -3518,18 +3518,18 @@ export const sendWhatsAppConversion = <ThrowOnError extends boolean = false>(opt
 };
 
 /**
- * Create a Click-to-WhatsApp (CTWA) ad
- * Create a CTWA ad on Meta — when tapped, the ad opens a WhatsApp
- * conversation with the business attached to the supplied Facebook
- * Page. The full hierarchy (campaign → ad set → creative → ad) is
- * created and activated in one call.
+ * Create Click-to-WhatsApp ad
+ * Create a Click-to-WhatsApp (CTWA) ad on Meta. When tapped, the ad
+ * opens a WhatsApp conversation with the business attached to the
+ * supplied Facebook Page. The full hierarchy (campaign, ad set,
+ * creative, ad) is created and activated in one call.
  *
  * The CTA is locked to `WHATSAPP_MESSAGE` and the destination is
- * hard-coded to `https://api.whatsapp.com/send` — Meta resolves the
+ * hard-coded to `https://api.whatsapp.com/send`. Meta resolves the
  * actual WhatsApp number from the Page-to-WA pairing the user
  * configured in Page settings or Business Manager.
  *
- * Prerequisites enforced by Meta (failure surfaces as a `platform_error`):
+ * Prerequisites enforced by Meta (failure surfaces as a platform_error):
  * - The Facebook Page must already be paired with a verified WhatsApp
  * Business number.
  * - The WhatsApp Business Account must be business-verified.

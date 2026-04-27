@@ -13608,7 +13608,7 @@ export type CreateCtwaAdData = {
         budgetType: 'daily' | 'lifetime';
         /**
          * ISO 4217 currency code matching the ad account's currency
-         * (e.g. `USD`). Optional — Meta infers from the ad account
+         * (e.g. `USD`). Optional; Meta infers from the ad account
          * when omitted.
          *
          */
