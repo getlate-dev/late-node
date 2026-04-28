@@ -12982,6 +12982,14 @@ export type ListAdAccountsResponse = ({
         name?: string;
         currency?: string;
         status?: string;
+        /**
+         * IANA timezone of the ad account (Meta only). Drives daily-budget reset and Insights day boundaries.
+         */
+        timezoneName?: string;
+        /**
+         * Signed UTC offset in hours, reflecting current DST (Meta only).
+         */
+        timezoneOffsetHoursUtc?: number;
     }>;
 });
 
