@@ -13058,6 +13058,20 @@ export type BoostPostData = {
          * Meta only. Required for housing, employment, credit, or political ads.
          */
         specialAdCategories?: Array<('HOUSING' | 'EMPLOYMENT' | 'CREDIT' | 'ISSUES_ELECTIONS_POLITICS')>;
+        /**
+         * Name of the legal entity benefiting from the ad.
+         * Required by Meta when targeting EU users (DSA Article 26).
+         * Not enforced at schema level; enforced server-side when targeting intersects EU member states.
+         *
+         */
+        dsaBeneficiary?: string;
+        /**
+         * Name of the legal entity paying for the ad.
+         * Required by Meta when targeting EU users (DSA Article 26).
+         * Note Meta API spelling: dsa_payor (not dsa_payer).
+         *
+         */
+        dsaPayor?: string;
     };
 };
 
@@ -13220,6 +13234,20 @@ export type CreateStandaloneAdData = {
          * Meta only. Restrict the audience by gender. 'male' targets men only, 'female' targets women only, 'all' (default) targets everyone. Ignored by non-Meta platforms.
          */
         gender?: 'all' | 'male' | 'female';
+        /**
+         * Name of the legal entity benefiting from the ad.
+         * Required by Meta when targeting EU users (DSA Article 26).
+         * Not enforced at schema level; enforced server-side when targeting intersects EU member states.
+         *
+         */
+        dsaBeneficiary?: string;
+        /**
+         * Name of the legal entity paying for the ad.
+         * Required by Meta when targeting EU users (DSA Article 26).
+         * Note Meta API spelling: dsa_payor (not dsa_payer).
+         *
+         */
+        dsaPayor?: string;
     };
 };
 
@@ -13708,6 +13736,20 @@ export type CreateCtwaAdData = {
          *
          */
         objective?: 'OUTCOME_ENGAGEMENT' | 'OUTCOME_SALES' | 'OUTCOME_LEADS';
+        /**
+         * Name of the legal entity benefiting from the ad.
+         * Required by Meta when targeting EU users (DSA Article 26).
+         * Not enforced at schema level; enforced server-side when targeting intersects EU member states.
+         *
+         */
+        dsaBeneficiary?: string;
+        /**
+         * Name of the legal entity paying for the ad.
+         * Required by Meta when targeting EU users (DSA Article 26).
+         * Note Meta API spelling: dsa_payor (not dsa_payer).
+         *
+         */
+        dsaPayor?: string;
     };
 };
 
