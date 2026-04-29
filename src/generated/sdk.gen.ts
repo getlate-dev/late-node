@@ -3350,26 +3350,7 @@ export const boostPost = <ThrowOnError extends boolean = false>(options: Options
 
 /**
  * Create standalone ad
- * Creates a paid ad with custom creative. The request body supports three mutually-exclusive shapes:
- *
- * 1. **Legacy single-creative** (all platforms). Top-level `headline` + `body` + `imageUrl` + `linkUrl` + `callToAction` create 1 campaign + 1 ad set + 1 ad.
- * 2. **Multi-creative** (Meta only — use `creatives[]` array). Creates 1 campaign + 1 ad set + N ads sharing the same budget / targeting / schedule. This is the standard performance-marketing creative-testing flow — Meta's delivery algorithm A/B tests the creatives inside a single ad set so budget isn't fragmented across N parallel campaigns.
- * 3. **Attach to existing ad set** (Meta only — pass `adSetId` + a single creative). Adds one new ad to an existing ad set without creating a new campaign. Budget, targeting, goal are inherited from the ad set on Meta.
- *
- * `creatives[]` and `adSetId` are mutually exclusive; specifying both returns 400.
- *
- * **Per-platform required fields** (the platform is inferred from `accountId`):
- * - **Meta (facebook, instagram)**: `accountId`, `adAccountId`, `name`, `goal`, `budgetAmount`, `budgetType`, `headline`, `body`, `imageUrl`, `linkUrl`, `callToAction`.
- * - **Google Ads (Display)**: `accountId`, `adAccountId`, `name`, `goal`, `budgetAmount`, `budgetType`, `headline`, `body`, `linkUrl`, `images.landscape` (1.91:1) + `images.square` (1:1), `businessName`. Google's Responsive Display Ads require BOTH a landscape and a square marketing image; supplying only one is rejected by Google as "Too few.". The legacy top-level `imageUrl` is accepted as an alias for `images.landscape` for back-compat. `longHeadline` defaults to `headline` if omitted (max 90 chars).
- * - **Google Ads (Search)**: `accountId`, `adAccountId`, `name`, `goal`, `budgetAmount`, `budgetType`, `headline`, `body`, `linkUrl`, `businessName`. `imageUrl` is NOT required for Search. Set `campaignType: "search"`.
- * - **TikTok**: `accountId`, `adAccountId`, `name`, `goal`, `budgetAmount`, `budgetType`, `body`, `linkUrl`, `imageUrl` (this field **carries the VIDEO URL** for TikTok; the TikTok ads endpoint is video-only and the field is named `imageUrl` for cross-platform consistency).
- * - **Pinterest**: `accountId`, `adAccountId`, `name`, `goal`, `budgetAmount`, `budgetType`, `headline`, `body`, `imageUrl`, `linkUrl`. Optional `boardId` (auto-creates "Zernio Ads" board if omitted).
- * - **X / Twitter**: `accountId` (the posting account, internally resolved to the linked X Ads credential), `adAccountId`, `name`, `goal`, `budgetAmount`, `budgetType`, `body` (the tweet text, max 280 chars with `linkUrl` adding ~24). `headline`, `imageUrl`, `callToAction`, and targeting fields are ignored. Requires a connected X Ads account (`/v1/connect/twitter/ads`); otherwise 422.
- *
- * **Budget minimums** are enforced per platform in USD: TikTok=$20, Pinterest=$5, all others=$1. If you pass `currency` other than USD, this minimum is currently still evaluated as USD. Pass the ad account's native currency on every request so Meta-side amount conversion is correct.
- *
- * **Video ads (Meta only).** Meta (facebook, instagram) supports video creatives on all three shapes (legacy, multi-creative via `creatives[].video`, attach). Set `video: { url, thumbnailUrl }` at the request root (for legacy/attach) or per-entry inside `creatives[]` (for multi-creative). `video` and `imageUrl` are mutually exclusive per creative; supply exactly one. `video.thumbnailUrl` is required because Meta requires a thumbnail on every video creative. The video is uploaded to Meta via chunked transfer and the request blocks on Meta's transcoding (`status.video_status === 'ready'`). This path can take several minutes for longer videos; this endpoint is configured with `maxDuration = 800` on Vercel (13 min) to cover it, but your HTTP client should allow for the same. If transcoding hasn't finished within 10 minutes, the request fails with a `platform_error`. Video on non-Meta platforms is NOT supported here: TikTok uses its own flow (pass the video URL via `imageUrl`); other platforms are image-only.
- *
+ * Creates a paid ad with custom creative across Meta, Google Ads, Pinterest, TikTok, and X/Twitter. Supports three mutually-exclusive request shapes selected by the body, a legacy single-creative shape (all platforms, default), a Meta-only multi-creative shape via the creatives array (one ad set with N ads sharing budget and targeting), and a Meta-only attach shape via adSetId (adds one new ad to an existing ad set). Per-platform required fields, budget minimums, and video-ad rules (Meta only) are documented on each property below.
  */
 export const createStandaloneAd = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<CreateStandaloneAdData, ThrowOnError>) => {
     return (options?.client ?? client).post<CreateStandaloneAdResponse, CreateStandaloneAdError, ThrowOnError>({
@@ -3537,22 +3518,7 @@ export const sendWhatsAppConversion = <ThrowOnError extends boolean = false>(opt
 
 /**
  * Create Click-to-WhatsApp ad
- * Create a Click-to-WhatsApp (CTWA) ad on Meta. When tapped, the ad
- * opens a WhatsApp conversation with the business attached to the
- * supplied Facebook Page. The full hierarchy (campaign, ad set,
- * creative, ad) is created and activated in one call.
- *
- * The CTA is locked to `WHATSAPP_MESSAGE` and the destination is
- * hard-coded to `https://api.whatsapp.com/send`. Meta resolves the
- * actual WhatsApp number from the Page-to-WA pairing the user
- * configured in Page settings or Business Manager.
- *
- * Prerequisites enforced by Meta (failure surfaces as a platform_error):
- * - The Facebook Page must already be paired with a verified WhatsApp
- * Business number.
- * - The WhatsApp Business Account must be business-verified.
- * - The Meta access token must carry `ads_management`.
- *
+ * Creates a Click-to-WhatsApp (CTWA) ad on Meta. When tapped, the ad opens a WhatsApp conversation with the business attached to the supplied Facebook Page, and the full hierarchy (campaign, ad set, creative, ad) is created and activated in one call. The CTA is locked to WHATSAPP_MESSAGE and the destination is hard-coded to api.whatsapp.com/send; Meta resolves the actual WhatsApp number from the Page-to-WA pairing configured in Page settings or Business Manager. Prerequisites enforced by Meta (surfaced as platform_error on failure), the Facebook Page must be paired with a verified WhatsApp Business number, the WhatsApp Business Account must be business-verified, and the Meta access token must carry ads_management.
  */
 export const createCtwaAd = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<CreateCtwaAdData, ThrowOnError>) => {
     return (options?.client ?? client).post<CreateCtwaAdResponse, CreateCtwaAdError, ThrowOnError>({

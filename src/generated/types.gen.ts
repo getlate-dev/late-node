@@ -6036,6 +6036,36 @@ export type GetGoogleBusinessLocationDetailsResponse = ({
     accountId?: string;
     locationId?: string;
     /**
+     * Compact public-facing summary derived from `metadata`. Useful for
+     * surfacing the "leave a review" URL (e.g. behind a QR code) without
+     * parsing Google's raw `metadata` block. Populated when the readMask
+     * includes `metadata` (the default). For unverified or new locations,
+     * Google omits placeId/reviewUrl/mapsUri, so those return as null.
+     *
+     */
+    location?: {
+        /**
+         * Business name as set in GBP
+         */
+        name?: (string) | null;
+        /**
+         * Google Maps Place ID for this location
+         */
+        placeId?: (string) | null;
+        /**
+         * Public "write a review" URL Google generates for this place
+         */
+        reviewUrl?: (string) | null;
+        /**
+         * Public Google Maps URL for this location
+         */
+        mapsUri?: (string) | null;
+        /**
+         * True when the location has Voice of Merchant (verified + live on Google)
+         */
+        isVerified?: boolean;
+    } | null;
+    /**
      * Business name
      */
     title?: string;
