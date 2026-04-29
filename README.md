@@ -376,7 +376,6 @@ try {
 | `ads.boostPost()` | Boost post as ad |
 | `ads.searchAdInterests()` | Search targeting interests |
 | `ads.sendConversions()` | Send conversion events to an ad platform |
-| `ads.triggerAdsInitialSync()` | Re-sync an ads account |
 
 ### Broadcasts
 | Method | Description |

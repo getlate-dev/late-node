@@ -13179,31 +13179,6 @@ export type ListAdsBusinessCentersError = ({
     error?: string;
 } | unknown);
 
-export type TriggerAdsInitialSyncData = {
-    body: {
-        /**
-         * ID of the ads SocialAccount to re-sync (e.g. `metaads` / `tiktokads` doc).
-         * Posting accounts (`facebook` / `tiktok`) are rejected — pass the ads-side
-         * account ID that owns the platform tokens.
-         *
-         */
-        accountId: string;
-    };
-};
-
-export type TriggerAdsInitialSyncResponse = ({
-    status?: 'queued' | 'already_queued';
-    /**
-     * Trace ID for the enqueued job. Reused on `already_queued`.
-     */
-    traceId?: (string) | null;
-    message?: string;
-});
-
-export type TriggerAdsInitialSyncError = (unknown | {
-    error?: string;
-});
-
 export type ListAdAccountsData = {
     query: {
         /**
