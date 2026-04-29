@@ -352,9 +352,9 @@ try {
 | `adCampaigns.listAdCampaigns()` | List campaigns |
 | `adCampaigns.bulkUpdateAdCampaignStatus()` | Pause or resume many campaigns |
 | `adCampaigns.getAdTree()` | Get campaign tree |
-| `adCampaigns.updateAdCampaign()` | Update a campaign (budget) |
+| `adCampaigns.updateAdCampaign()` | Update a campaign (budget and/or bid strategy) |
 | `adCampaigns.updateAdCampaignStatus()` | Pause or resume a campaign |
-| `adCampaigns.updateAdSet()` | Update an ad set (budget and/or status) |
+| `adCampaigns.updateAdSet()` | Update an ad set (budget, status, and/or bid strategy) |
 | `adCampaigns.updateAdSetStatus()` | Pause or resume a single ad set |
 | `adCampaigns.deleteAdCampaign()` | Delete a campaign |
 | `adCampaigns.duplicateAdCampaign()` | Duplicate a campaign |

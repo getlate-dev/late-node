@@ -3139,9 +3139,14 @@ export const updateAdCampaignStatus = <ThrowOnError extends boolean = false>(opt
 };
 
 /**
- * Update a campaign (budget)
- * Campaign-level edits. Currently supports updating the CBO (Campaign Budget Optimization) budget.
- * For ABO campaigns (where the budget lives on the ad set), use PUT /v1/ads/ad-sets/{adSetId} instead — this endpoint will return 409 with code BUDGET_LEVEL_MISMATCH.
+ * Update a campaign (budget and/or bid strategy)
+ * Campaign-level edits. At least one of `budget` or `bidStrategy` is required.
+ *
+ * - `budget` updates the CBO (Campaign Budget Optimization) budget. For ABO campaigns
+ * (where the budget lives on the ad set), use PUT /v1/ads/ad-sets/{adSetId} instead — this endpoint
+ * will return 409 with code BUDGET_LEVEL_MISMATCH.
+ * - `bidStrategy` sets the campaign-level default bid strategy. Per Meta's spec, `bid_amount` and
+ * `bid_constraints` do NOT exist at the campaign level — pass them via PUT /v1/ads/ad-sets/{adSetId}.
  *
  * Meta-only for now. Other platforms return 501 Not Implemented.
  *
@@ -3207,9 +3212,15 @@ export const duplicateAdCampaign = <ThrowOnError extends boolean = false>(option
 };
 
 /**
- * Update an ad set (budget and/or status)
- * Ad-set-level writes. Use this for ABO budget updates and ad-set-scoped
- * pause/resume. Provide `budget` and/or `status` in the body.
+ * Update an ad set (budget, status, and/or bid strategy)
+ * Ad-set-level writes. Use this for ABO budget updates, ad-set-scoped
+ * pause/resume, and bid-strategy edits. At least one of `budget`,
+ * `status`, or `bidStrategy` is required.
+ *
+ * Bid strategy compatibility (per Meta's spec):
+ * - `LOWEST_COST_WITHOUT_CAP`: no `bidAmount`, no `roasAverageFloor`.
+ * - `LOWEST_COST_WITH_BID_CAP` / `COST_CAP`: `bidAmount` REQUIRED (whole currency units).
+ * - `LOWEST_COST_WITH_MIN_ROAS`: `roasAverageFloor` REQUIRED (decimal multiplier, e.g. 2.0 = 2.0x ROAS).
  *
  * When updating `budget` on an ABO campaign: if the parent campaign is
  * CBO, the response is 409 with code BUDGET_LEVEL_MISMATCH — route to
@@ -3328,7 +3339,15 @@ export const getAdComments = <ThrowOnError extends boolean = false>(options: Opt
 
 /**
  * List ad accounts
- * Returns the platform ad accounts available for the given social account (e.g. Meta ad accounts, TikTok advertiser IDs, Google Ads customer IDs).
+ * Returns the platform ad accounts available for the given social account (e.g. Meta ad
+ * accounts, TikTok advertiser IDs, Google Ads customer IDs).
+ *
+ * For TikTok agencies: enumerates every advertiser under every Business Center the token
+ * can read (paginated server-side), then chunks the lookup against TikTok's
+ * `/advertiser/info/` endpoint (which has a per-call cap of ≤100 IDs). Solo advertisers
+ * without a BC fall back to the OAuth-time `advertiser_ids` list. Cached for 1h on the
+ * SocialAccount; lazy-refreshed on first call after expiry.
+ *
  */
 export const listAdAccounts = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<ListAdAccountsData, ThrowOnError>) => {
     return (options?.client ?? client).get<ListAdAccountsResponse, ListAdAccountsError, ThrowOnError>({

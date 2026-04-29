@@ -117,9 +117,39 @@ export type Ad = {
      */
     optimizationGoal?: (string) | null;
     /**
-     * Bid strategy (e.g. LOWEST_COST_WITHOUT_CAP, COST_CAP, LOWEST_COST_WITH_MIN_ROAS). Ad set level overrides campaign level. Only present for Meta ads.
+     * Ad-set bid strategy (overrides campaign level on Meta). Populated for Meta and
+     * TikTok. TikTok's native `bid_type` is normalized to the cross-platform Meta enum:
+     * `BID_TYPE_NO_BID` -> `LOWEST_COST_WITHOUT_CAP`, `BID_TYPE_CUSTOM` ->
+     * `LOWEST_COST_WITH_BID_CAP`, deep_bid_type=MIN_ROAS or roas_bid>0 ->
+     * `LOWEST_COST_WITH_MIN_ROAS`, `BID_TYPE_MAX_CONVERSION` -> `LOWEST_COST_WITHOUT_CAP`.
+     *
      */
-    bidStrategy?: (string) | null;
+    bidStrategy?: ((BidStrategy) | null);
+    /**
+     * Bid cap in WHOLE currency units of the ad account (USD: 5 = $5.00; JPY: 100 = ¥100).
+     * Populated when bidStrategy is `LOWEST_COST_WITH_BID_CAP` or `COST_CAP`. `null` for
+     * auto-bid (`LOWEST_COST_WITHOUT_CAP`).
+     *
+     * - Meta source: `bid_amount` on the ad set (smallest-denomination int, decoded here).
+     * - TikTok source: priority order `bid_price` -> `conversion_bid_price` -> `deep_cpa_bid`
+     * (whichever is set on the ad group). TikTok stores all three in whole currency units.
+     *
+     * Source: facebook-business-sdk-codegen api_specs/specs/AdSet.json (`bid_amount`).
+     *
+     */
+    bidAmount?: (number) | null;
+    /**
+     * Minimum ROAS as a decimal multiplier (2.0 = 2.0x ROAS). Populated when bidStrategy
+     * is `LOWEST_COST_WITH_MIN_ROAS`.
+     *
+     * - Meta source: decoded from `bid_constraints.roas_average_floor` (Meta stores as
+     * fixed-point int × 10000; we return the decimal).
+     * - TikTok source: `roas_bid` on the ad group (already a decimal).
+     *
+     * Source: facebook-business-sdk-codegen api_specs/specs/AdCampaignBidConstraint.json.
+     *
+     */
+    roasAverageFloor?: (number) | null;
     /**
      * Meta promoted object containing conversion event details. Structure varies by objective. Only present for Meta ads.
      */
@@ -286,9 +316,17 @@ export type AdCampaign = {
      */
     optimizationGoal?: (string) | null;
     /**
-     * Campaign-level bid strategy (e.g. LOWEST_COST_WITHOUT_CAP, COST_CAP, LOWEST_COST_WITH_MIN_ROAS)
+     * Campaign-level bid strategy. Ad sets inherit this unless they override.
      */
-    bidStrategy?: (string) | null;
+    bidStrategy?: ((BidStrategy) | null);
+    /**
+     * Representative bid cap from the top-spending ad set (whole currency units). Populated when bidStrategy is LOWEST_COST_WITH_BID_CAP or COST_CAP.
+     */
+    bidAmount?: (number) | null;
+    /**
+     * Representative ROAS floor from the top-spending ad set. Decimal multiplier (2.0 = 2.0x).
+     */
+    roasAverageFloor?: (number) | null;
     /**
      * Meta promoted object at campaign level (conversion event details)
      */
@@ -398,7 +436,15 @@ export type AdTreeAdSet = {
     /**
      * Bid strategy for this ad set (overrides campaign level when set)
      */
-    bidStrategy?: (string) | null;
+    bidStrategy?: ((BidStrategy) | null);
+    /**
+     * Bid cap in whole currency units. Populated when bidStrategy is LOWEST_COST_WITH_BID_CAP or COST_CAP.
+     */
+    bidAmount?: (number) | null;
+    /**
+     * Minimum ROAS as a decimal multiplier (2.0 = 2.0x). Populated when bidStrategy is LOWEST_COST_WITH_MIN_ROAS.
+     */
+    roasAverageFloor?: (number) | null;
     /**
      * Meta promoted object for this ad set (conversion event details)
      */
@@ -488,9 +534,17 @@ export type AdTreeCampaign = {
      */
     optimizationGoal?: (string) | null;
     /**
-     * Campaign-level bid strategy (e.g. LOWEST_COST_WITHOUT_CAP, COST_CAP, LOWEST_COST_WITH_MIN_ROAS)
+     * Campaign-level bid strategy. Ad sets inherit this unless they override.
      */
-    bidStrategy?: (string) | null;
+    bidStrategy?: ((BidStrategy) | null);
+    /**
+     * Representative bid cap for the campaign — bubbled up from the top-spending ad set's `bid_amount` (whole currency units). Populated when the ad-set bidStrategy is LOWEST_COST_WITH_BID_CAP or COST_CAP.
+     */
+    bidAmount?: (number) | null;
+    /**
+     * Representative ROAS floor for the campaign — bubbled up from the top-spending ad set. Decimal multiplier (2.0 = 2.0x).
+     */
+    roasAverageFloor?: (number) | null;
     /**
      * Meta promoted object at campaign level (conversion event details)
      */
@@ -658,6 +712,18 @@ export type scope = 'full' | 'profiles';
  * 'read-write' allows all operations, 'read' restricts to GET requests only
  */
 export type permission = 'read-write' | 'read';
+
+/**
+ * Meta bid strategy. Same enum applies at campaign and ad-set level; ad-set value (when set)
+ * overrides campaign-level. Cross-field rules:
+ * - `LOWEST_COST_WITHOUT_CAP` (default): auto-bid, forbids `bidAmount` and `roasAverageFloor`.
+ * - `LOWEST_COST_WITH_BID_CAP` / `COST_CAP`: require `bidAmount` (whole currency units).
+ * - `LOWEST_COST_WITH_MIN_ROAS`: requires `roasAverageFloor` (decimal multiplier, 2.0 = 2.0x).
+ * Source: facebook-business-sdk-codegen api_specs/specs/enum_types.json (`AdSet_bid_strategy`,
+ * `Campaign_bid_strategy`).
+ *
+ */
+export type BidStrategy = 'LOWEST_COST_WITHOUT_CAP' | 'LOWEST_COST_WITH_BID_CAP' | 'COST_CAP' | 'LOWEST_COST_WITH_MIN_ROAS';
 
 /**
  * Bluesky post settings. Supports text posts with up to 4 images or a single video. threadItems creates a reply chain (Bluesky thread). Images exceeding 1MB are automatically compressed. Alt text supported via mediaItem properties.
@@ -6026,6 +6092,9 @@ export type GetGoogleBusinessLocationDetailsData = {
         locationId?: string;
         /**
          * Comma-separated fields to return. Available: name, title, phoneNumbers, categories, storefrontAddress, websiteUri, regularHours, specialHours, serviceArea, serviceItems, profile, openInfo, metadata, moreHours.
+         * `title` and `metadata` are always included in the response so the `location` summary block can be populated, even if you omit them here.
+         * Note: `location` is a derived response field, not a Google readMask value, passing it returns 400.
+         *
          */
         readMask?: string;
     };
@@ -6036,11 +6105,11 @@ export type GetGoogleBusinessLocationDetailsResponse = ({
     accountId?: string;
     locationId?: string;
     /**
-     * Compact public-facing summary derived from `metadata`. Useful for
-     * surfacing the "leave a review" URL (e.g. behind a QR code) without
-     * parsing Google's raw `metadata` block. Populated when the readMask
-     * includes `metadata` (the default). For unverified or new locations,
-     * Google omits placeId/reviewUrl/mapsUri, so those return as null.
+     * Compact public-facing summary derived from Google's `metadata`. Useful
+     * for surfacing the "leave a review" URL (e.g. behind a QR code) without
+     * parsing the raw block. Always populated regardless of readMask.
+     * For unverified or new locations Google omits placeId/reviewUrl/mapsUri,
+     * so those return as null and `isVerified` is false.
      *
      */
     location?: {
@@ -12591,13 +12660,17 @@ export type UpdateAdCampaignStatusError = (unknown | {
 export type UpdateAdCampaignData = {
     body: {
         platform: 'facebook' | 'instagram';
-        budget: {
+        budget?: {
             /**
              * Budget amount in the ad account's currency
              */
             amount: number;
             type: 'daily' | 'lifetime';
         };
+        /**
+         * Campaign-level default. Ad sets inherit this unless they override.
+         */
+        bidStrategy?: (BidStrategy);
     };
     path: {
         /**
@@ -12611,6 +12684,7 @@ export type UpdateAdCampaignResponse = ({
     updated?: number;
     budget?: AdBudget;
     budgetLevel?: 'campaign';
+    bidStrategy?: BidStrategy;
 });
 
 export type UpdateAdCampaignError = (unknown | {
@@ -12722,16 +12796,38 @@ export type UpdateAdSetData = {
     body: {
         platform: 'facebook' | 'instagram' | 'tiktok' | 'linkedin' | 'pinterest' | 'google' | 'twitter';
         /**
-         * Omit if only toggling status
+         * Omit if not updating budget
          */
         budget?: {
             amount?: number;
             type?: 'daily' | 'lifetime';
         };
         /**
-         * Omit if only updating budget
+         * Omit if not toggling delivery state
          */
         status?: 'active' | 'paused';
+        /**
+         * Ad-set-level bid strategy. Overrides the campaign-level default.
+         * Supported on Meta (facebook, instagram) and TikTok. On TikTok the
+         * Meta-style enum is mapped to bid_type / bid_price / deep_bid_type
+         * automatically. Other platforms (linkedin, pinterest, google, twitter)
+         * return 501 Not Implemented when bidStrategy is set.
+         *
+         */
+        bidStrategy?: (BidStrategy);
+        /**
+         * Bid cap in WHOLE currency units (USD: 5 = $5.00; JPY: 100 = ¥100). Required when
+         * bidStrategy is LOWEST_COST_WITH_BID_CAP or COST_CAP. Internally converted to Meta's
+         * smallest-denomination integer.
+         *
+         */
+        bidAmount?: number;
+        /**
+         * Minimum ROAS as a decimal multiplier (2.0 = 2.0x). Required when bidStrategy is
+         * LOWEST_COST_WITH_MIN_ROAS. Sent to Meta as `bid_constraints.roas_average_floor` × 10000.
+         *
+         */
+        roasAverageFloor?: number;
     };
     path: {
         /**
@@ -12747,6 +12843,9 @@ export type UpdateAdSetResponse = ({
     status?: 'active' | 'paused';
     statusUpdated?: number;
     statusSkipped?: number;
+    bidStrategy?: BidStrategy;
+    bidAmount?: (number) | null;
+    roasAverageFloor?: (number) | null;
 });
 
 export type UpdateAdSetError = (unknown | {
@@ -13082,9 +13181,25 @@ export type BoostPostData = {
             advantage_audience?: 0 | 1;
         };
         /**
-         * Max bid cap (Meta only)
+         * Meta bid strategy applied to the ad set. On TikTok, mapped to
+         * `bid_type` / `bid_price` / `deep_bid_type` automatically.
+         *
+         */
+        bidStrategy?: (BidStrategy);
+        /**
+         * Bid cap in WHOLE currency units (USD: 5 = $5.00; JPY: 100 = ¥100). Required when
+         * `bidStrategy` is `LOWEST_COST_WITH_BID_CAP` or `COST_CAP`. Backward-compat: providing
+         * `bidAmount` without `bidStrategy` is treated as `LOWEST_COST_WITH_BID_CAP`.
+         *
          */
         bidAmount?: number;
+        /**
+         * Minimum ROAS as a decimal multiplier (e.g. 2.0 = 2.0x ROAS). Required when
+         * `bidStrategy` is `LOWEST_COST_WITH_MIN_ROAS`. Sent to Meta as
+         * `bid_constraints.roas_average_floor` × 10000 (Meta uses fixed-point integers).
+         *
+         */
+        roasAverageFloor?: number;
         /**
          * Meta only. Tracking specs (pixel, URL tags).
          */
@@ -13096,6 +13211,24 @@ export type BoostPostData = {
          * Meta only. Required for housing, employment, credit, or political ads.
          */
         specialAdCategories?: Array<('HOUSING' | 'EMPLOYMENT' | 'CREDIT' | 'ISSUES_ELECTIONS_POLITICS')>;
+        /**
+         * TikTok-only. Custom destination URL for the Spark Ad. Without this, TikTok
+         * Spark Ads have no clickable destination — required for traffic / conversion
+         * objectives. Maps to `landing_page_url` on the creative entry of /v2/ad/create/
+         * (TikTok SDK `AdcreateCreatives.landing_page_url`). Ignored on Meta / LinkedIn /
+         * Pinterest / X / Google (those infer the destination from the boosted post).
+         *
+         */
+        linkUrl?: string;
+        /**
+         * TikTok-only. Call-to-action button label on the Spark Ad creative (e.g.
+         * `LEARN_MORE`, `SHOP_NOW`, `DOWNLOAD_NOW`, `SIGN_UP`, `WATCH_NOW`). Maps to
+         * `call_to_action` on the creative entry of /v2/ad/create/. Pass-through —
+         * the platform validates the value. See TikTok's "Enumeration - Call-to-Action"
+         * reference for the full list.
+         *
+         */
+        callToAction?: string;
         /**
          * Name of the legal entity benefiting from the ad.
          * Required by Meta when targeting EU users (DSA Article 26).
@@ -13217,8 +13350,11 @@ export type CreateStandaloneAdData = {
         /**
          * Meta-only. When present, switches to the attach shape: adds
          * one new ad to this existing ad set without creating a new
-         * campaign. Budget, targeting, goal, and schedule are inherited
-         * from the ad set on Meta. Mutually exclusive with `creatives[]`.
+         * campaign. Budget, targeting, goal, schedule, AND bid strategy
+         * are inherited from the ad set on Meta — passing `bidStrategy`
+         * in attach mode returns 400. To change an existing ad set's
+         * bid, use `PUT /v1/ads/ad-sets/{adSetId}`. Mutually exclusive
+         * with `creatives[]`.
          *
          */
         adSetId?: string;
@@ -13272,6 +13408,23 @@ export type CreateStandaloneAdData = {
          * Meta only. Restrict the audience by gender. 'male' targets men only, 'female' targets women only, 'all' (default) targets everyone. Ignored by non-Meta platforms.
          */
         gender?: 'all' | 'male' | 'female';
+        /**
+         * Meta bid strategy applied to the ad set.
+         */
+        bidStrategy?: (BidStrategy);
+        /**
+         * Bid cap in WHOLE currency units (USD: 5 = $5.00; JPY: 100 = ¥100). Required when
+         * `bidStrategy` is `LOWEST_COST_WITH_BID_CAP` or `COST_CAP`.
+         *
+         */
+        bidAmount?: number;
+        /**
+         * Minimum ROAS as a decimal multiplier (e.g. 2.0 = 2.0x ROAS). Required when
+         * `bidStrategy` is `LOWEST_COST_WITH_MIN_ROAS`. Sent to Meta as
+         * `bid_constraints.roas_average_floor` × 10000.
+         *
+         */
+        roasAverageFloor?: number;
         /**
          * Name of the legal entity benefiting from the ad.
          * Required by Meta when targeting EU users (DSA Article 26).
