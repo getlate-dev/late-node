@@ -364,6 +364,7 @@ try {
 |--------|-------------|
 | `ads.listAdAccounts()` | List ad accounts |
 | `ads.listAds()` | List ads |
+| `ads.listAdsBusinessCenters()` | List TikTok Business Centers |
 | `ads.listConversionDestinations()` | List destinations for the Conversions API |
 | `ads.createCtwaAd()` | Create Click-to-WhatsApp ad |
 | `ads.createStandaloneAd()` | Create standalone ad |
@@ -375,6 +376,7 @@ try {
 | `ads.boostPost()` | Boost post as ad |
 | `ads.searchAdInterests()` | Search targeting interests |
 | `ads.sendConversions()` | Send conversion events to an ad platform |
+| `ads.triggerAdsInitialSync()` | Re-sync an ads account |
 
 ### Broadcasts
 | Method | Description |

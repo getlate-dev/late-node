@@ -117,6 +117,23 @@ export type Ad = {
      */
     optimizationGoal?: (string) | null;
     /**
+     * Human-readable advertiser/account name (Meta `AdAccount.name`, TikTok
+     * `advertiser_name`, LinkedIn / X / Pinterest equivalents). Refreshed every
+     * sync so platform-side renames propagate within one cycle. `null` when the
+     * platform doesn't return a name or the sync hasn't run yet.
+     *
+     */
+    platformAdAccountName?: (string) | null;
+    /**
+     * Platform-reported creation timestamp (Meta `created_time`, TikTok `create_time`).
+     * Distinct from `createdAt` which reflects when Zernio first synced the doc — for
+     * sort/filter by "when the ad was actually created on the platform", read this field.
+     * `null` for legacy ads synced before this field was added; aggregations fall back
+     * to `createdAt` in that case.
+     *
+     */
+    platformCreatedAt?: (string) | null;
+    /**
      * Ad-set bid strategy (overrides campaign level on Meta). Populated for Meta and
      * TikTok. TikTok's native `bid_type` is normalized to the cross-platform Meta enum:
      * `BID_TYPE_NO_BID` -> `LOWEST_COST_WITHOUT_CAP`, `BID_TYPE_CUSTOM` ->
@@ -305,6 +322,10 @@ export type AdCampaign = {
     currency?: (string) | null;
     metrics?: AdMetrics;
     platformAdAccountId?: string;
+    /**
+     * Human-readable advertiser/account name from the platform. Refreshed on every sync.
+     */
+    platformAdAccountName?: (string) | null;
     accountId?: string;
     profileId?: string;
     /**
@@ -523,6 +544,10 @@ export type AdTreeCampaign = {
     currency?: (string) | null;
     metrics?: AdMetrics;
     platformAdAccountId?: string;
+    /**
+     * Human-readable advertiser/account name from the platform. Refreshed on every sync.
+     */
+    platformAdAccountName?: (string) | null;
     accountId?: string;
     profileId?: string;
     /**
@@ -738,6 +763,27 @@ export type BlueskyPlatformData = {
         content?: string;
         mediaItems?: Array<MediaItem>;
     }>;
+};
+
+/**
+ * TikTok Business Center entity. Returned by `GET /v1/ads/business-centers`. BCs are
+ * TikTok's agency container — one BC owns N advertisers (ad accounts). Most solo
+ * advertisers don't have one; the agency token uses BCs to roll up multi-client access.
+ *
+ */
+export type BusinessCenter = {
+    /**
+     * Business Center ID
+     */
+    bcId?: string;
+    /**
+     * Display name set by the BC owner
+     */
+    name?: string;
+    /**
+     * Number of advertisers (ad accounts) reachable under this BC for the calling token
+     */
+    advertiserCount?: number;
 };
 
 /**
@@ -12747,7 +12793,7 @@ export type BulkUpdateAdCampaignStatusError = (unknown | {
 
 export type DuplicateAdCampaignData = {
     body: {
-        platform: 'facebook' | 'instagram';
+        platform: 'facebook' | 'instagram' | 'tiktok';
         /**
          * Copy child ad sets + ads + creatives + targeting
          */
@@ -12950,7 +12996,8 @@ export type UpdateAdData = {
             type?: 'daily' | 'lifetime';
         };
         /**
-         * Meta-only. Targeting updates for other platforms are not supported after creation.
+         * Meta + TikTok only. Pinterest / X / LinkedIn / Google return 501.
+         *
          */
         targeting?: {
             ageMin?: number;
@@ -12967,6 +13014,28 @@ export type UpdateAdData = {
              * Meta only. Omit to preserve the existing setting on update. 0 = disabled, 1 = enabled.
              */
             advantage_audience?: 0 | 1;
+        };
+        /**
+         * Replace the ad's creative. Meta + TikTok only.
+         *
+         * - **Meta**: requires `headline`, `body`, `callToAction`, `linkUrl`, `imageUrl`. The
+         * ad's existing creative is replaced via a new `/act_X/adcreatives` upload + ad
+         * update. The old creative is retained on the ad account for historical reporting.
+         * - **TikTok**: patch-style. Pass any subset; `headline` is ignored (TikTok creatives
+         * have no headline slot). `body` becomes the in-feed `ad_text`; `linkUrl` becomes
+         * `landing_page_url`; `videoUrl` triggers a fresh upload.
+         *
+         */
+        creative?: {
+            /**
+             * Meta only
+             */
+            headline?: string;
+            body?: string;
+            callToAction?: string;
+            linkUrl?: string;
+            imageUrl?: string;
+            videoUrl?: string;
         };
         name?: string;
     };
@@ -13093,12 +13162,62 @@ export type GetAdCommentsError = (unknown | {
     error?: string;
 });
 
+export type ListAdsBusinessCentersData = {
+    query: {
+        /**
+         * ID of the `tiktokads` (or parent `tiktok` posting) SocialAccount
+         */
+        accountId: string;
+    };
+};
+
+export type ListAdsBusinessCentersResponse = ({
+    businessCenters?: Array<BusinessCenter>;
+});
+
+export type ListAdsBusinessCentersError = ({
+    error?: string;
+} | unknown);
+
+export type TriggerAdsInitialSyncData = {
+    body: {
+        /**
+         * ID of the ads SocialAccount to re-sync (e.g. `metaads` / `tiktokads` doc).
+         * Posting accounts (`facebook` / `tiktok`) are rejected — pass the ads-side
+         * account ID that owns the platform tokens.
+         *
+         */
+        accountId: string;
+    };
+};
+
+export type TriggerAdsInitialSyncResponse = ({
+    status?: 'queued' | 'already_queued';
+    /**
+     * Trace ID for the enqueued job. Reused on `already_queued`.
+     */
+    traceId?: (string) | null;
+    message?: string;
+});
+
+export type TriggerAdsInitialSyncError = (unknown | {
+    error?: string;
+});
+
 export type ListAdAccountsData = {
     query: {
         /**
          * Social account ID
          */
         accountId: string;
+        /**
+         * Filter response to a single platform ad account ID (e.g. `act_123` for Meta, advertiser_id for TikTok). Returns at most one item.
+         */
+        adAccountId?: string;
+        /**
+         * Clamp the returned `accounts[]` length. Useful for typeahead pickers on agency tokens with hundreds of advertisers.
+         */
+        limit?: number;
     };
 };
 
@@ -13230,6 +13349,16 @@ export type BoostPostData = {
          */
         callToAction?: string;
         /**
+         * TikTok-only. Spark Code (creator's `auth_code`) authorizing cross-creator
+         * Spark Ads — the advertiser can boost a video owned by a DIFFERENT TikTok
+         * account. Without this, boosts are limited to videos owned by the same
+         * account running the ads (same-BC creators only). The creator generates the
+         * code in their TikTok app's Promote settings and shares it with the
+         * advertiser. Maps to `auth_code` on the creative entry of /v2/ad/create/.
+         *
+         */
+        sparkAuthCode?: string;
+        /**
          * Name of the legal entity benefiting from the ad.
          * Required by Meta when targeting EU users (DSA Article 26).
          * Not enforced at schema level; enforced server-side when targeting intersects EU member states.
@@ -13355,6 +13484,10 @@ export type CreateStandaloneAdData = {
          * in attach mode returns 400. To change an existing ad set's
          * bid, use `PUT /v1/ads/ad-sets/{adSetId}`. Mutually exclusive
          * with `creatives[]`.
+         *
+         * Supported on Meta (facebook, instagram) and TikTok. On TikTok
+         * the `adSetId` is the ad group ID; the new ad inherits the
+         * ad group's bid + budget + targeting.
          *
          */
         adSetId?: string;
