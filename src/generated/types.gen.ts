@@ -13384,7 +13384,7 @@ export type CreateStandaloneAdData = {
         adAccountId: string;
         name: string;
         /**
-         * Required on legacy + multi-creative shapes. Inherited from the ad set on the attach shape. Available goals vary by platform.
+         * Required on legacy + multi-creative shapes. Inherited from the ad set on the attach shape. Available goals vary by platform. Meta-specific: `conversions` requires `promotedObject.pixelId` + `promotedObject.customEventType`; `app_promotion` requires `promotedObject.applicationId` + `promotedObject.objectStoreUrl`; `lead_generation` accepts an optional `promotedObject.pageId` (auto-filled from the connected Page when omitted).
          */
         goal?: 'engagement' | 'traffic' | 'awareness' | 'video_views' | 'lead_generation' | 'conversions' | 'app_promotion';
         /**
@@ -13566,6 +13566,58 @@ export type CreateStandaloneAdData = {
          *
          */
         dsaPayor?: string;
+        /**
+         * Meta only. Forwarded to the ad set's `promoted_object` (snake-cased).
+         *
+         * Required for goals whose ad-set optimization_goal points at a specific
+         * event/page/app — without it Meta rejects the ad-set create with
+         * `error_subcode: 1815430` "Please select a promoted object for your ad set":
+         * - `goal: conversions` (OFFSITE_CONVERSIONS) — requires `pixelId` + `customEventType`
+         * - `goal: app_promotion` (APP_INSTALLS) — requires `applicationId` + `objectStoreUrl`
+         * - `goal: lead_generation` (LEAD_GENERATION) — `pageId` is auto-filled from the connected Page when omitted
+         *
+         * Other goals (engagement, traffic, awareness, video_views) ignore this field.
+         *
+         */
+        promotedObject?: {
+            /**
+             * Facebook Pixel ID. Required for `goal: conversions`.
+             */
+            pixelId?: string;
+            /**
+             * Standard event the campaign optimises against, e.g. `PURCHASE`, `LEAD`,
+             * `COMPLETE_REGISTRATION`, `ADD_TO_CART`. Uppercased internally so callers
+             * can pass any case. Required for `goal: conversions`.
+             *
+             */
+            customEventType?: string;
+            /**
+             * Facebook Page ID. Used by `goal: lead_generation`. Auto-filled from the
+             * connected Page when omitted.
+             *
+             */
+            pageId?: string;
+            /**
+             * App ID. Required for `goal: app_promotion`.
+             */
+            applicationId?: string;
+            /**
+             * App Store / Play Store listing URL. Required for `goal: app_promotion`.
+             */
+            objectStoreUrl?: string;
+            /**
+             * Custom Conversion ID, when optimising against one instead of a standard event.
+             */
+            customConversionId?: string;
+            /**
+             * Catalog ID for catalog/Advantage+ Shopping campaigns.
+             */
+            productCatalogId?: string;
+            /**
+             * Product Set ID inside the catalog.
+             */
+            productSetId?: string;
+        };
     };
 };
 
