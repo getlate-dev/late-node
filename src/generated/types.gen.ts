@@ -781,9 +781,13 @@ export type BusinessCenter = {
      */
     name?: string;
     /**
-     * Number of advertisers (ad accounts) reachable under this BC for the calling token
+     * Number of advertisers reachable under this BC for the calling token.
+     * `null` when the BC asset walk returned empty or failed (typical for
+     * agency apps without full BC asset read scope) — distinct from `0`,
+     * which would imply the BC genuinely has no advertisers.
+     *
      */
-    advertiserCount?: number;
+    advertiserCount?: (number) | null;
 };
 
 /**
@@ -13273,6 +13277,9 @@ export type BoostPostData = {
         targeting?: {
             ageMin?: number;
             ageMax?: number;
+            /**
+             * ISO country codes. Required for TikTok boosts (TikTok's ad group requires location_ids); optional on other platforms.
+             */
             countries?: Array<(string)>;
             /**
              * Interest objects from /v1/ads/interests. Each must include id and name.
