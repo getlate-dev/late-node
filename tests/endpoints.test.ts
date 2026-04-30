@@ -224,6 +224,11 @@ describe('Endpoint Methods', () => {
       expect(client.connect.connectAds).toBeTypeOf('function');
     });
 
+    it('should have configureTikTokAdsBrandIdentity method', () => {
+      expect(client.connect.configureTikTokAdsBrandIdentity).toBeDefined();
+      expect(client.connect.configureTikTokAdsBrandIdentity).toBeTypeOf('function');
+    });
+
     it('should have getPendingOAuthData method', () => {
       expect(client.connect.getPendingOAuthData).toBeDefined();
       expect(client.connect.getPendingOAuthData).toBeTypeOf('function');

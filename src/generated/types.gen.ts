@@ -5765,7 +5765,11 @@ export type ConnectAdsData = {
     };
     query: {
         /**
-         * Existing SocialAccount ID. Required for separate-token platforms (tiktok, twitter). Ignored for same-token and standalone platforms.
+         * Existing SocialAccount ID. Required for `twitter` (X Ads). Optional for `tiktok` —
+         * omit to enter ads-only mode (no TikTok posting account linked; ad creation uses
+         * a Brand Identity instead of a TT_USER). Ignored for same-token (`facebook`,
+         * `instagram`, `linkedin`, `pinterest`) and standalone (`googleads`) platforms.
+         *
          */
         accountId?: string;
         /**
@@ -5795,6 +5799,36 @@ export type ConnectAdsResponse = (({
 }));
 
 export type ConnectAdsError = (unknown | {
+    error?: string;
+});
+
+export type ConfigureTikTokAdsBrandIdentityData = {
+    body: {
+        /**
+         * SocialAccount ID of the `tiktokads` account.
+         */
+        accountId: string;
+        /**
+         * Brand name shown above the ad on TikTok.
+         */
+        displayName: string;
+        /**
+         * Public URL of a square brand image (≥98×98 px, JPG/PNG, max 5 MB). Used as the brand avatar on the ad.
+         */
+        imageUrl: string;
+    };
+};
+
+export type ConfigureTikTokAdsBrandIdentityResponse = ({
+    success?: boolean;
+    /**
+     * The TikTok-assigned identity_id
+     */
+    identityId?: string;
+    displayName?: string;
+});
+
+export type ConfigureTikTokAdsBrandIdentityError = (unknown | {
     error?: string;
 });
 
@@ -13599,6 +13633,48 @@ export type CreateStandaloneAdData = {
          *
          */
         dsaPayor?: string;
+        /**
+         * TikTok only. Synthetic Brand Identity used when the ad
+         * attributes to a CUSTOMIZED_USER (instead of a real TT_USER
+         * @username). Required on the FIRST CUSTOMIZED_USER ad on a
+         * `tiktokads` SocialAccount with no cached identity; omit on
+         * subsequent ads (the identity is cached on the account after
+         * first creation). Non-TikTok platforms ignore this field.
+         *
+         * Alternative: configure once via `PATCH /v1/connect/tiktok-ads`,
+         * then create ads without this field.
+         *
+         */
+        brandIdentity?: {
+            /**
+             * Brand name shown above the ad on TikTok.
+             */
+            displayName: string;
+            /**
+             * Public URL of a square brand image (≥98×98 px, JPG/PNG). Used as the brand avatar on the ad.
+             */
+            imageUrl: string;
+        };
+        /**
+         * TikTok only. Forces the identity attribution on the ad:
+         *
+         * - `TT_USER`: the posting account's open_id (real @username
+         * branding). Requires a connected TikTok posting account
+         * on the same profile.
+         * - `CUSTOMIZED_USER`: synthetic Brand Identity (display
+         * name + avatar). Requires a configured Brand Identity
+         * (cached on the `tiktokads` SocialAccount via
+         * `PATCH /v1/connect/tiktok-ads`) or an inline
+         * `brandIdentity` to create one on the fly.
+         *
+         * When omitted, defaults to `TT_USER` if a posting account is
+         * connected on this profile, else `CUSTOMIZED_USER`. Spark
+         * Ads (`POST /v1/ads/boost`) always use `TT_USER` regardless
+         * of this field — TikTok requires the original organic
+         * post's author identity for Spark.
+         *
+         */
+        identityType?: 'TT_USER' | 'CUSTOMIZED_USER';
         /**
          * Meta only. Forwarded to the ad set's `promoted_object` (snake-cased).
          *
