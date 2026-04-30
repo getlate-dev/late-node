@@ -13493,7 +13493,40 @@ export type CreateStandaloneAdData = {
          * Pinterest only. Board ID (auto-creates if not provided).
          */
         boardId?: string;
+        /**
+         * ISO 3166-1 alpha-2 country codes (e.g. ['NL']). Defaults to ['US'] when no `cities` or `regions` are provided.
+         */
         countries?: Array<(string)>;
+        /**
+         * Meta-only. City-level geo targeting. Each city is targeted by Meta's opaque `key` (the city ID) which can be looked up via `GET /v1/ads/targeting/search?type=city&q=<name>&country_code=<ISO>`. Optional `radius` + `distance_unit` extend the targeting beyond the city limits (e.g. radius 25 km around the city center). Both must be set together, or both omitted (Meta defaults to ~16 km when omitted).
+         *
+         * Cannot overlap with the same country in `countries` (Meta returns a "locations overlap" error). Either drop the country or scope it to a different country.
+         *
+         */
+        cities?: Array<{
+            /**
+             * Meta city ID, from /v1/ads/targeting/search results.
+             */
+            key: string;
+            /**
+             * Optional radius around the city. Must be set together with distance_unit.
+             */
+            radius?: number;
+            /**
+             * Unit for radius. Required if radius is set.
+             */
+            distance_unit?: 'mile' | 'kilometer';
+        }>;
+        /**
+         * Meta-only. Region-level (state/province) geo targeting. Each region is targeted by Meta's opaque `key` (the region ID) which can be looked up via `GET /v1/ads/targeting/search?type=region&q=<name>&country_code=<ISO>`.
+         *
+         */
+        regions?: Array<{
+            /**
+             * Meta region ID, from /v1/ads/targeting/search results.
+             */
+            key: string;
+        }>;
         ageMin?: number;
         ageMax?: number;
         /**
@@ -13659,6 +13692,61 @@ export type SearchAdInterestsResponse = ({
 export type SearchAdInterestsError = ({
     error?: string;
 } | unknown);
+
+export type SearchAdTargetingLocationsData = {
+    query: {
+        /**
+         * Social account ID (must be a connected Facebook or Instagram account).
+         */
+        accountId: string;
+        /**
+         * ISO 3166-1 alpha-2 country code (e.g. NL) to scope the search.
+         */
+        countryCode?: string;
+        /**
+         * Maximum results to return.
+         */
+        limit?: number;
+        /**
+         * Location name. Locality only — no region/country suffix.
+         */
+        q: string;
+        /**
+         * Type of location to search. Defaults to city.
+         */
+        type?: 'country' | 'region' | 'city' | 'subcity' | 'neighborhood' | 'zip' | 'metro_area' | 'geo_market';
+    };
+};
+
+export type SearchAdTargetingLocationsResponse = ({
+    results?: Array<{
+        /**
+         * Meta's opaque location ID. Use this in targeting.cities[].key / regions[].key.
+         */
+        key: string;
+        name: string;
+        /**
+         * Location type as returned by Meta (city, region, country, etc.).
+         */
+        type: string;
+        countryCode?: string;
+        countryName?: string;
+        /**
+         * Parent region/state name (cities only).
+         */
+        region?: string;
+        /**
+         * Parent region ID (cities only).
+         */
+        regionId?: (string | number);
+        supportsRegion?: boolean;
+        supportsCity?: boolean;
+    }>;
+});
+
+export type SearchAdTargetingLocationsError = (unknown | {
+    error?: string;
+});
 
 export type ListAdAudiencesData = {
     query: {

@@ -375,6 +375,7 @@ try {
 | `ads.deleteAd()` | Cancel an ad |
 | `ads.boostPost()` | Boost post as ad |
 | `ads.searchAdInterests()` | Search targeting interests |
+| `ads.searchAdTargetingLocations()` | Search geo targeting locations (Meta) |
 | `ads.sendConversions()` | Send conversion events to an ad platform |
 
 ### Broadcasts
