@@ -4343,6 +4343,10 @@ export type GetDailyMetricsError = ({
 export type GetBestTimeToPostData = {
     query?: {
         /**
+         * Filter by social account ID. Omit for all accounts.
+         */
+        accountId?: string;
+        /**
          * Filter by platform (e.g. "instagram", "tiktok"). Omit for all platforms.
          */
         platform?: string;
@@ -4388,6 +4392,10 @@ export type GetBestTimeToPostError = ({
 export type GetContentDecayData = {
     query?: {
         /**
+         * Filter by social account ID. Omit for all accounts.
+         */
+        accountId?: string;
+        /**
          * Filter by platform (e.g. "instagram", "tiktok"). Omit for all platforms.
          */
         platform?: string;
@@ -4432,6 +4440,10 @@ export type GetContentDecayError = ({
 
 export type GetPostingFrequencyData = {
     query?: {
+        /**
+         * Filter by social account ID. Omit for all accounts.
+         */
+        accountId?: string;
         /**
          * Filter by platform (e.g. "instagram", "tiktok"). Omit for all platforms.
          */
