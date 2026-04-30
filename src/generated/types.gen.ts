@@ -13409,7 +13409,7 @@ export type CreateStandaloneAdData = {
          */
         body?: string;
         /**
-         * Required on legacy + attach shapes. Meta only.
+         * Required on legacy + attach shapes for Meta. Honoured on TikTok too — passes through to the Spark Ad creative's `call_to_action`. Ignored by other platforms.
          */
         callToAction?: 'LEARN_MORE' | 'SHOP_NOW' | 'SIGN_UP' | 'BOOK_TRAVEL' | 'CONTACT_US' | 'DOWNLOAD' | 'GET_OFFER' | 'GET_QUOTE' | 'SUBSCRIBE' | 'WATCH_MORE';
         /**
