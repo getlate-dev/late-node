@@ -12420,11 +12420,11 @@ export type CreateCommentAutomationData = {
          */
         accountId: string;
         /**
-         * Platform media/post ID
+         * Platform media/post ID. Omit for an account-wide (any-post) automation.
          */
-        platformPostId: string;
+        platformPostId?: string;
         /**
-         * Zernio post ID (optional)
+         * Zernio post ID. Required only when also targeting a specific post via platformPostId.
          */
         postId?: string;
         /**
