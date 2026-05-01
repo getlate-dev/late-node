@@ -371,7 +371,11 @@ export const getGoogleBusinessSearchKeywords = <ThrowOnError extends boolean = f
 
 /**
  * List groups
- * Returns all account groups for the authenticated user, including group names and associated account IDs.
+ * Returns all account groups visible to the authenticated user. Groups can
+ * contain accounts from multiple profiles. For API keys scoped to specific
+ * profiles, only groups whose accounts all live in allowed profiles are
+ * returned.
+ *
  */
 export const listAccountGroups = <ThrowOnError extends boolean = false>(options?: OptionsLegacyParser<unknown, ThrowOnError>) => {
     return (options?.client ?? client).get<ListAccountGroupsResponse, ListAccountGroupsError, ThrowOnError>({
@@ -383,6 +387,9 @@ export const listAccountGroups = <ThrowOnError extends boolean = false>(options?
 /**
  * Create group
  * Creates a new account group with a name and a list of social account IDs.
+ * Accounts can belong to different profiles; the caller must have access to
+ * every account's profile. Group names must be unique per user.
+ *
  */
 export const createAccountGroup = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<CreateAccountGroupData, ThrowOnError>) => {
     return (options?.client ?? client).post<CreateAccountGroupResponse, CreateAccountGroupError, ThrowOnError>({

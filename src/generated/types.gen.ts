@@ -2768,6 +2768,20 @@ export type WebhookPayloadAccountAdsInitialSyncCompleted = {
          * URL of the account's profile picture, when available.
          */
         profilePicture?: string;
+        /**
+         * When the consumer scoped the connect call to a single ad account, this echoes
+         * that ID back so the webhook can be correlated to the originating connect
+         * request without consulting the consumer's DB. Meta uses the `act_*` shape.
+         *
+         */
+        platformAdAccountId?: string;
+        /**
+         * Every ad-account ID that the connected token could see at discovery time.
+         * Useful for "we synced ads from these accounts" UX without a follow-up API call.
+         * Empty array when the token had no ad-account visibility.
+         *
+         */
+        platformAdAccountIds?: Array<(string)>;
     };
     /**
      * Summary of the initial ads sync backfill results.
@@ -2789,6 +2803,37 @@ export type WebhookPayloadAccountAdsInitialSyncCompleted = {
          * Number of ads that failed to sync.
          */
         failed: number;
+        /**
+         * Free-form error message from the platform (typically Meta's Marketing API).
+         * Truncated to ~2KB. Present when `status` is `failure` (and sometimes on `success`
+         * when discovery saw zero ad accounts). For UX branching prefer `errorCategory`;
+         * this field is for human display and debugging.
+         *
+         */
+        error?: string;
+        /**
+         * Platform-native error code if parsed (e.g. Meta `190`, `10`, `200`).
+         */
+        errorCode?: string;
+        /**
+         * Platform-native error subcode if parsed.
+         */
+        errorSubcode?: string;
+        /**
+         * Stable category for UX branching. New values may be added; existing ones are
+         * stable. Mapping:
+         * - `token_invalid`: access token is expired or revoked. Reconnect.
+         * - `permission_denied`: token lacks required scope, or the user has no role
+         * on the Business Manager that owns the ad account. Reconnect with full
+         * permissions, or have an admin grant access.
+         * - `no_ad_accounts`: token is valid but sees zero ad accounts. The user
+         * needs to connect a Business Manager that owns ad accounts.
+         * - `rate_limited`: platform throttled us. Sync will retry automatically.
+         * - `discovery_failed`: any other platform-side failure. Inspect `error`.
+         * - `unknown`: classifier could not categorize the failure.
+         *
+         */
+        errorCategory?: 'token_invalid' | 'permission_denied' | 'no_ad_accounts' | 'rate_limited' | 'discovery_failed' | 'unknown';
     };
     timestamp: string;
 };
@@ -2799,6 +2844,22 @@ export type event = 'account.ads.initial_sync_completed';
  * Overall outcome of the initial sync.
  */
 export type status6 = 'success' | 'failure';
+
+/**
+ * Stable category for UX branching. New values may be added; existing ones are
+ * stable. Mapping:
+ * - `token_invalid`: access token is expired or revoked. Reconnect.
+ * - `permission_denied`: token lacks required scope, or the user has no role
+ * on the Business Manager that owns the ad account. Reconnect with full
+ * permissions, or have an admin grant access.
+ * - `no_ad_accounts`: token is valid but sees zero ad accounts. The user
+ * needs to connect a Business Manager that owns ad accounts.
+ * - `rate_limited`: platform throttled us. Sync will retry automatically.
+ * - `discovery_failed`: any other platform-side failure. Inspect `error`.
+ * - `unknown`: classifier could not categorize the failure.
+ *
+ */
+export type errorCategory2 = 'token_invalid' | 'permission_denied' | 'no_ad_accounts' | 'rate_limited' | 'discovery_failed' | 'unknown';
 
 /**
  * Webhook payload for account connected events
@@ -4676,6 +4737,13 @@ export type ListAccountGroupsResponse = ({
         _id?: string;
         name?: string;
         accountIds?: Array<(string)>;
+        createdBy?: string;
+        /**
+         * Legacy field. Present only on groups created before
+         * cross-profile groups were supported. New groups omit it.
+         *
+         */
+        profileId?: string;
     }>;
 });
 
@@ -4687,6 +4755,13 @@ export type CreateAccountGroupData = {
     body: {
         name: string;
         accountIds: Array<(string)>;
+        /**
+         * Deprecated. Accepted for backward compatibility but ignored.
+         * Groups are no longer scoped to a single profile.
+         *
+         * @deprecated
+         */
+        profileId?: string;
     };
 };
 
@@ -5773,6 +5848,25 @@ export type ConnectAdsData = {
          */
         accountId?: string;
         /**
+         * (metaads only) Scope ad sync to a single Meta ad account. Without this
+         * param, sync covers every `act_*` the connected token can see. Pass this
+         * to limit `sync.totalAds` / `synced` and the resulting ads to one ad
+         * account. Format: `act_<digits>` (matches what `/me/adaccounts` returns).
+         * Validated against the connected token; unreachable IDs return 400.
+         * For multiple accounts use `adAccountIds` instead.
+         *
+         */
+        adAccountId?: string;
+        /**
+         * (metaads only) Scope ad sync to multiple Meta ad accounts. Repeat the
+         * param (`?adAccountIds=act_1&adAccountIds=act_2`) or comma-separate
+         * (`?adAccountIds=act_1,act_2`). Validated against the connected token.
+         * Persisted server-side; latest call wins. Omitting both `adAccountId`
+         * and `adAccountIds` keeps any previously persisted scope unchanged.
+         *
+         */
+        adAccountIds?: Array<(string)>;
+        /**
          * Enable headless mode (same-token platforms only)
          */
         headless?: boolean;
@@ -5793,6 +5887,12 @@ export type ConnectAdsResponse = (({
     platform?: string;
     username?: string;
     displayName?: string;
+    /**
+     * Echo of the persisted ad-account scope when the caller passed
+     * `adAccountId` / `adAccountIds`. Omitted when no scope is set.
+     *
+     */
+    scopedAdAccountIds?: Array<(string)>;
 } | {
     authUrl?: string;
     state?: string;
