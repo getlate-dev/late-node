@@ -4686,6 +4686,10 @@ export type ListAccountGroupsError = ({
 export type CreateAccountGroupData = {
     body: {
         name: string;
+        /**
+         * ID of the profile this group belongs to. All accountIds must belong to this profile.
+         */
+        profileId: string;
         accountIds: Array<(string)>;
     };
 };
