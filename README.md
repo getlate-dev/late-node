@@ -483,18 +483,6 @@ try {
 | `gmbServices.getGoogleBusinessServices()` | Get services |
 | `gmbServices.updateGoogleBusinessServices()` | Replace services |
 
-### Lead Forms
-| Method | Description |
-|--------|-------------|
-| `leadForms.listLeadFormLeads()` | List submitted leads for a form |
-| `leadForms.listLeadForms()` | List Meta Lead Gen Forms |
-| `leadForms.createLeadForm()` | Create a Meta Lead Gen Form |
-| `leadForms.createLeadFormTestLead()` | Create a synthetic test lead |
-| `leadForms.getLeadForm()` | Get a Lead Gen Form |
-| `leadForms.updateLeadForm()` | Update a Lead Gen Form (status only) |
-| `leadForms.deleteLeadForm()` | Delete a Lead Gen Form |
-| `leadForms.deleteLeadFormTestLead()` | Delete a (test) lead |
-
 ### Messages (Inbox)
 | Method | Description |
 |--------|-------------|

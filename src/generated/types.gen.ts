@@ -918,54 +918,6 @@ export type ConversionEvent = {
  */
 export type actionSource = 'web' | 'app' | 'offline' | 'crm' | 'phone_call' | 'system_generated';
 
-export type CreateLeadFormBody = {
-    /**
-     * Facebook social account ID (Late SocialAccount _id).
-     */
-    accountId: string;
-    name: string;
-    questions: Array<LeadGenFormQuestion>;
-    /**
-     * Required by Meta. Must be reachable from Meta's crawler.
-     */
-    privacyPolicyUrl: string;
-    privacyPolicyLinkText?: string;
-    followUpActionUrl?: string;
-    locale?: string;
-    thankYouTitle?: string;
-    thankYouBody?: string;
-    thankYouButtonText?: string;
-    /**
-     * Meta enum (e.g. VIEW_WEBSITE, CALL_BUSINESS, DOWNLOAD)
-     */
-    thankYouButtonType?: string;
-    thankYouWebsiteUrl?: string;
-    isOptimizedForQuality?: boolean;
-    contextCard?: {
-        title?: string;
-        style?: 'LIST_STYLE' | 'PARAGRAPH_STYLE';
-        content?: Array<(string)>;
-        buttonText?: string;
-    };
-    legalContent?: {
-        customDisclaimer?: {
-            title?: string;
-            body?: string;
-        };
-    };
-    /**
-     * Up to 20 key/value pairs surfaced on every lead for attribution.
-     */
-    trackingParameters?: {
-        [key: string]: (string);
-    };
-    questionPageCustomHeadline?: string;
-    allowOrganicLead?: boolean;
-    blockDisplayForNonTargetedViewer?: boolean;
-};
-
-export type style = 'LIST_STYLE' | 'PARAGRAPH_STYLE';
-
 /**
  * Discord message settings. Supports plain text (2,000 chars), rich embeds (up to 10), native polls, forum posts, threads, and announcement crossposts. Media attachments support images (JPEG, PNG, GIF, WebP), videos (MP4), and documents (up to 10 files, 25 MB each). Webhook identity (username + avatar) can be customized per-account via PATCH /v1/connect/discord or per-post via webhookUsername/webhookAvatarUrl.
  *
@@ -1666,111 +1618,6 @@ export type contentType2 = 'story';
 export type graduationStrategy = 'MANUAL' | 'SS_PERFORMANCE';
 
 /**
- * A single lead submission returned by the leads endpoint and the lead.received webhook.
- */
-export type Lead = {
-    /**
-     * Meta `leadgen_id`.
-     */
-    id?: string;
-    createdTime?: string;
-    /**
-     * Meta ad ID that surfaced the form. Organic leads omit this.
-     */
-    adId?: (string) | null;
-    formId?: string;
-    /**
-     * Flattened key→value map of answers (multi-value fields joined with ", ").
-     */
-    fields?: {
-        [key: string]: (string);
-    };
-    /**
-     * Raw `field_data` from Meta (one entry per question).
-     */
-    fieldData?: Array<{
-        name?: string;
-        values?: Array<(string)>;
-    }>;
-};
-
-/**
- * Common meta-block returned alongside lead-form responses for traceability.
- */
-export type LeadFormResponseMeta = {
-    platform?: string;
-    accountId?: string;
-    formId?: (string) | null;
-    leadId?: (string) | null;
-    pageId?: (string) | null;
-    lastUpdated?: string;
-};
-
-/**
- * A Meta Lead Gen (Instant) Form definition.
- */
-export type LeadGenForm = {
-    id?: string;
-    name?: string;
-    status?: 'ACTIVE' | 'ARCHIVED' | 'DELETED' | 'DRAFT';
-    locale?: string;
-    created_time?: string;
-    /**
-     * Total leads (real + organic).
-     */
-    leads_count?: number;
-    organic_leads_count?: (number) | null;
-    expired_leads_count?: (number) | null;
-    questions?: Array<LeadGenFormQuestion>;
-    privacy_policy_url?: (string) | null;
-    follow_up_action_url?: (string) | null;
-    thank_you_page?: {
-        [key: string]: unknown;
-    } | null;
-    context_card?: {
-        [key: string]: unknown;
-    } | null;
-    question_page_custom_headline?: (string) | null;
-    is_optimized_for_quality?: (boolean) | null;
-    page_id?: (string) | null;
-};
-
-export type status3 = 'ACTIVE' | 'ARCHIVED' | 'DELETED' | 'DRAFT';
-
-/**
- * A single question on a Meta Instant Form. The `type` enum spans Meta's
- * prefill set (FULL_NAME, EMAIL, PHONE, STREET_ADDRESS, CITY, STATE,
- * COUNTRY, POST_CODE, DOB, GENDER, JOB_TITLE, COMPANY_NAME, etc.) plus
- * custom types (CUSTOM, MULTIPLE_CHOICE, CONDITIONAL, STORE_LOOKUP,
- * APPOINTMENT_REQUEST). See Meta's Lead Ads docs for the full list —
- * we forward whatever string the caller sends so new types work without
- * a Zernio release.
- *
- */
-export type LeadGenFormQuestion = {
-    /**
-     * Stable key returned in `field_data` on each lead. If omitted, Meta auto-derives one from `label`.
-     */
-    key?: string;
-    /**
-     * Display text shown above the input.
-     */
-    label?: string;
-    type: string;
-    /**
-     * Required for MULTIPLE_CHOICE / CONDITIONAL questions.
-     */
-    options?: Array<{
-        key?: string;
-        value?: string;
-    }>;
-    /**
-     * Help text rendered below the field.
-     */
-    inline_context?: string;
-};
-
-/**
  * Response for DAILY aggregation (time series breakdown)
  */
 export type LinkedInAggregateAnalyticsDailyResponse = {
@@ -2020,7 +1867,7 @@ export type PlatformAnalytics = {
     errorMessage?: (string) | null;
 };
 
-export type status4 = 'published' | 'failed';
+export type status3 = 'published' | 'failed';
 
 /**
  * Sync state of analytics for this platform
@@ -2130,7 +1977,7 @@ export type Post = {
     updatedAt?: string;
 };
 
-export type status5 = 'draft' | 'scheduled' | 'publishing' | 'published' | 'failed' | 'partial';
+export type status4 = 'draft' | 'scheduled' | 'publishing' | 'published' | 'failed' | 'partial';
 
 export type visibility = 'public' | 'private' | 'unlisted';
 
@@ -2797,7 +2644,7 @@ export type UploadTokenResponse = {
     status?: 'pending' | 'completed' | 'expired';
 };
 
-export type status6 = 'pending' | 'completed' | 'expired';
+export type status5 = 'pending' | 'completed' | 'expired';
 
 export type UploadTokenStatusResponse = {
     token?: string;
@@ -2868,7 +2715,7 @@ export type Webhook = {
     /**
      * Events subscribed to
      */
-    events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'account.ads.initial_sync_completed' | 'message.received' | 'message.sent' | 'message.edited' | 'message.deleted' | 'message.delivered' | 'message.read' | 'message.failed' | 'comment.received' | 'review.new' | 'review.updated' | 'lead.received')>;
+    events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'account.ads.initial_sync_completed' | 'message.received' | 'message.sent' | 'message.edited' | 'message.deleted' | 'message.delivered' | 'message.read' | 'message.failed' | 'comment.received' | 'review.new' | 'review.updated')>;
     /**
      * Whether webhook delivery is enabled
      */
@@ -2996,7 +2843,7 @@ export type event = 'account.ads.initial_sync_completed';
 /**
  * Overall outcome of the initial sync.
  */
-export type status7 = 'success' | 'failure';
+export type status6 = 'success' | 'failure';
 
 /**
  * Stable category for UX branching. New values may be added; existing ones are
@@ -3175,34 +3022,6 @@ export type WebhookPayloadComment = {
 export type event4 = 'comment.received';
 
 export type platform6 = 'instagram' | 'facebook' | 'twitter' | 'youtube' | 'linkedin' | 'bluesky' | 'reddit';
-
-/**
- * Webhook payload for the lead.received event. Fired when a Meta Lead Gen
- * Form receives a new submission. Real-time delivery requires the page to
- * be subscribed to the `leadgen` webhook field — Zernio subscribes
- * on connect; existing accounts get backfilled by
- * `scripts/backfill-fb-webhook-subscriptions.ts`.
- *
- * Requires the Ads add-on. Subscribers without the add-on are filtered at
- * delivery time.
- *
- */
-export type WebhookPayloadLeadReceived = {
-    /**
-     * Stable webhook event ID
-     */
-    id: string;
-    event: 'lead.received';
-    lead: Lead;
-    account: {
-        id: string;
-        platform: string;
-        username: string;
-    };
-    timestamp: string;
-};
-
-export type event5 = 'lead.received';
 
 /**
  * Webhook payload for message received events
@@ -3419,7 +3238,7 @@ export type WebhookPayloadMessage = {
     timestamp: string;
 };
 
-export type event6 = 'message.received';
+export type event5 = 'message.received';
 
 /**
  * WhatsApp only. Which kind of interactive reply the user sent:
@@ -3451,7 +3270,7 @@ export type WebhookPayloadMessageDeleted = {
     timestamp: string;
 };
 
-export type event7 = 'message.deleted';
+export type event6 = 'message.deleted';
 
 /**
  * Shared payload for message.delivered, message.read, and
@@ -3486,7 +3305,7 @@ export type WebhookPayloadMessageDeliveryStatus = {
     timestamp: string;
 };
 
-export type event8 = 'message.delivered' | 'message.read' | 'message.failed';
+export type event7 = 'message.delivered' | 'message.read' | 'message.failed';
 
 /**
  * Webhook payload for message.edited events. Fires when the sender
@@ -3528,7 +3347,7 @@ export type WebhookPayloadMessageEdited = {
     timestamp: string;
 };
 
-export type event9 = 'message.edited';
+export type event8 = 'message.edited';
 
 /**
  * Webhook payload for message sent events (fired when a message is sent via the API)
@@ -3604,7 +3423,7 @@ export type WebhookPayloadMessageSent = {
     timestamp: string;
 };
 
-export type event10 = 'message.sent';
+export type event9 = 'message.sent';
 
 /**
  * Webhook payload for post events
@@ -3632,7 +3451,7 @@ export type WebhookPayloadPost = {
     timestamp: string;
 };
 
-export type event11 = 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled';
+export type event10 = 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled';
 
 /**
  * Webhook payload for the review.new event (new review posted on a connected account).
@@ -3652,7 +3471,7 @@ export type WebhookPayloadReviewNew = {
     timestamp: string;
 };
 
-export type event12 = 'review.new';
+export type event11 = 'review.new';
 
 /**
  * Webhook payload for the review.updated event. Fired when the reviewer edits
@@ -3676,7 +3495,7 @@ export type WebhookPayloadReviewUpdated = {
     timestamp: string;
 };
 
-export type event13 = 'review.updated';
+export type event12 = 'review.updated';
 
 /**
  * Webhook payload for test deliveries
@@ -3694,7 +3513,7 @@ export type WebhookPayloadTest = {
     timestamp: string;
 };
 
-export type event14 = 'webhook.test';
+export type event13 = 'webhook.test';
 
 export type WhatsAppBodyComponent = {
     type: 'body';
@@ -13724,13 +13543,9 @@ export type CreateStandaloneAdData = {
          */
         body?: string;
         /**
-         * Required on legacy + attach shapes for Meta. Honoured on TikTok too — passes through to the Spark Ad creative's `call_to_action`. Ignored by other platforms. Ignored on Meta when `leadGenFormId` is set — lead ads force CTA type to SIGN_UP.
+         * Required on legacy + attach shapes for Meta. Honoured on TikTok too — passes through to the Spark Ad creative's `call_to_action`. Ignored by other platforms.
          */
         callToAction?: 'LEARN_MORE' | 'SHOP_NOW' | 'SIGN_UP' | 'BOOK_TRAVEL' | 'CONTACT_US' | 'DOWNLOAD' | 'GET_OFFER' | 'GET_QUOTE' | 'SUBSCRIBE' | 'WATCH_MORE';
-        /**
-         * Meta-only. Attaches a Lead Gen (Instant) Form to the creative. Required when `goal="lead_generation"`. Force-overrides the CTA to SIGN_UP. Create a form first via POST /v1/ads/lead-forms. On the multi-creative shape this can also be set per `creatives[i]` to A/B different forms inside one ad set.
-         */
-        leadGenFormId?: string;
         /**
          * Required on legacy + attach shapes. Skip for multi-creative.
          */
@@ -13788,10 +13603,6 @@ export type CreateStandaloneAdData = {
             };
             linkUrl: string;
             callToAction: 'LEARN_MORE' | 'SHOP_NOW' | 'SIGN_UP' | 'BOOK_TRAVEL' | 'CONTACT_US' | 'DOWNLOAD' | 'GET_OFFER' | 'GET_QUOTE' | 'SUBSCRIBE' | 'WATCH_MORE';
-            /**
-             * Per-creative Lead Gen Form ID. Wins over the top-level `leadGenFormId` so each ad in a campaign can A/B a different form. Forces CTA to SIGN_UP.
-             */
-            leadGenFormId?: string;
         }>;
         /**
          * Meta-only. When present, switches to the attach shape: adds
@@ -14255,189 +14066,6 @@ export type AddUsersToAdAudienceResponse = ({
 export type AddUsersToAdAudienceError = (unknown | {
     error?: string;
 });
-
-export type ListLeadFormsData = {
-    query: {
-        /**
-         * Facebook social account ID (Late SocialAccount _id)
-         */
-        accountId: string;
-        /**
-         * Meta `paging.cursors.after` from a prior page
-         */
-        cursor?: string;
-        limit?: number;
-    };
-};
-
-export type ListLeadFormsResponse = ({
-    status?: string;
-    forms?: Array<LeadGenForm>;
-    pagination?: {
-        hasMore?: boolean;
-        cursor?: (string) | null;
-    };
-    meta?: LeadFormResponseMeta;
-});
-
-export type ListLeadFormsError = ({
-    error?: string;
-} | unknown);
-
-export type CreateLeadFormData = {
-    body: CreateLeadFormBody;
-};
-
-export type CreateLeadFormResponse = ({
-    status?: string;
-    form?: {
-        id?: string;
-        name?: string;
-    };
-    meta?: LeadFormResponseMeta;
-});
-
-export type CreateLeadFormError = (unknown | {
-    error?: string;
-});
-
-export type GetLeadFormData = {
-    path: {
-        /**
-         * Meta lead form ID (numeric string)
-         */
-        formId: string;
-    };
-    query: {
-        accountId: string;
-    };
-};
-
-export type GetLeadFormResponse = ({
-    status?: string;
-    form?: LeadGenForm;
-    meta?: LeadFormResponseMeta;
-});
-
-export type GetLeadFormError = ({
-    error?: string;
-} | unknown);
-
-export type UpdateLeadFormData = {
-    body: {
-        accountId: string;
-        status: 'ACTIVE' | 'ARCHIVED' | 'DRAFT';
-    };
-    path: {
-        formId: string;
-    };
-};
-
-export type UpdateLeadFormResponse = ({
-    status?: string;
-    success?: boolean;
-    meta?: LeadFormResponseMeta;
-});
-
-export type UpdateLeadFormError = (unknown | {
-    error?: string;
-});
-
-export type DeleteLeadFormData = {
-    path: {
-        formId: string;
-    };
-    query: {
-        accountId: string;
-    };
-};
-
-export type DeleteLeadFormResponse = ({
-    status?: string;
-    success?: boolean;
-    meta?: LeadFormResponseMeta;
-});
-
-export type DeleteLeadFormError = ({
-    error?: string;
-} | unknown);
-
-export type ListLeadFormLeadsData = {
-    path: {
-        formId: string;
-    };
-    query: {
-        accountId: string;
-        cursor?: string;
-        limit?: number;
-        /**
-         * Unix timestamp; only return leads created strictly after this.
-         */
-        since?: number;
-    };
-};
-
-export type ListLeadFormLeadsResponse = ({
-    status?: string;
-    leads?: Array<Lead>;
-    pagination?: {
-        hasMore?: boolean;
-        cursor?: (string) | null;
-    };
-    meta?: LeadFormResponseMeta;
-});
-
-export type ListLeadFormLeadsError = ({
-    error?: string;
-} | unknown);
-
-export type CreateLeadFormTestLeadData = {
-    body: {
-        accountId: string;
-        fieldData: Array<{
-            /**
-             * Question key (matches `key` from form definition)
-             */
-            name: string;
-            values: Array<(string)>;
-        }>;
-    };
-    path: {
-        formId: string;
-    };
-};
-
-export type CreateLeadFormTestLeadResponse = ({
-    status?: string;
-    testLead?: {
-        id?: string;
-    };
-    meta?: LeadFormResponseMeta;
-});
-
-export type CreateLeadFormTestLeadError = ({
-    error?: string;
-} | unknown);
-
-export type DeleteLeadFormTestLeadData = {
-    path: {
-        formId: string;
-        leadId: string;
-    };
-    query: {
-        accountId: string;
-    };
-};
-
-export type DeleteLeadFormTestLeadResponse = ({
-    status?: string;
-    success?: boolean;
-    meta?: LeadFormResponseMeta;
-});
-
-export type DeleteLeadFormTestLeadError = ({
-    error?: string;
-} | unknown);
 
 export type SendConversionsData = {
     body: {

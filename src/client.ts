@@ -31,8 +31,6 @@ import {
   createGoogleBusinessPlaceAction,
   createInboxConversation,
   createInviteToken,
-  createLeadForm,
-  createLeadFormTestLead,
   createPost,
   createProfile,
   createQueueSlot,
@@ -59,8 +57,6 @@ import {
   deleteInboxMessage,
   deleteInboxReviewReply,
   deleteInstagramIceBreakers,
-  deleteLeadForm,
-  deleteLeadFormTestLead,
   deleteMessengerMenu,
   deletePost,
   deleteProfile,
@@ -113,7 +109,6 @@ import {
   getInstagramDemographics,
   getInstagramFollowerHistory,
   getInstagramIceBreakers,
-  getLeadForm,
   getLinkedInAggregateAnalytics,
   getLinkedInMentions,
   getLinkedInOrgAggregateAnalytics,
@@ -179,8 +174,6 @@ import {
   listInboxComments,
   listInboxConversations,
   listInboxReviews,
-  listLeadFormLeads,
-  listLeadForms,
   listLinkedInOrganizations,
   listLogs,
   listPinterestBoardsForSelection,
@@ -254,7 +247,6 @@ import {
   updateGoogleBusinessPlaceAction,
   updateGoogleBusinessServices,
   updateInboxConversation,
-  updateLeadForm,
   updateLinkedInOrganization,
   updatePinterestBoards,
   updatePost,
@@ -856,20 +848,6 @@ export class Zernio {
     getAdAudience: getAdAudience,
     deleteAdAudience: deleteAdAudience,
     addUsersToAdAudience: addUsersToAdAudience,
-  };
-
-  /**
-   * leadforms API
-   */
-  leadforms = {
-    listLeadForms: listLeadForms,
-    createLeadForm: createLeadForm,
-    getLeadForm: getLeadForm,
-    updateLeadForm: updateLeadForm,
-    deleteLeadForm: deleteLeadForm,
-    listLeadFormLeads: listLeadFormLeads,
-    createLeadFormTestLead: createLeadFormTestLead,
-    deleteLeadFormTestLead: deleteLeadFormTestLead,
   };
 
   /**
