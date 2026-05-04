@@ -549,6 +549,11 @@ describe('Endpoint Methods', () => {
   });
 
   describe('usage', () => {
+    it('should have getXApiPricing method', () => {
+      expect(client.usage.getXApiPricing).toBeDefined();
+      expect(client.usage.getXApiPricing).toBeTypeOf('function');
+    });
+
     it('should have getUsageStats method', () => {
       expect(client.usage.getUsageStats).toBeDefined();
       expect(client.usage.getUsageStats).toBeTypeOf('function');

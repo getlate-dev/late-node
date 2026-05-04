@@ -2655,7 +2655,20 @@ export type UploadTokenStatusResponse = {
     completedAt?: string;
 };
 
+/**
+ * Plan and usage stats. The response shape depends on `billingSystem`:
+ * * Stripe users (default): per-period counters like `usage.uploads` and
+ * `usage.profiles` are returned, scoped by the plan's `limits`.
+ * * Metronome users (usage-based): `limits` are unlimited (-1). The
+ * `usage` block carries connected-account and per-X-operation counts,
+ * and the `spend` block carries current-period costs plus the X cap.
+ *
+ */
 export type UsageStats = {
+    /**
+     * Which billing system the account is on. Shape of `usage`/`spend` differs.
+     */
+    billingSystem?: 'stripe' | 'metronome';
     planName?: string;
     billingPeriod?: 'monthly' | 'yearly';
     signupDate?: string;
@@ -2663,16 +2676,114 @@ export type UsageStats = {
      * Day of month (1-31) when the billing cycle resets
      */
     billingAnchorDay?: number;
+    /**
+     * True if the account is in good standing. False for past-due/unpaid/paused subscriptions.
+     */
+    hasAccess?: boolean;
+    /**
+     * Stripe customer ID, when present.
+     */
+    customerId?: (string) | null;
+    /**
+     * True if this is a team member; limits/usage reflect the account owner.
+     */
+    isInvitedUser?: boolean;
+    /**
+     * Stripe-only. Always false for Metronome users.
+     */
+    autoUpgradeEnabled?: boolean;
+    /**
+     * Plan limits. For Metronome users both fields are `-1` (unlimited).
+     */
     limits?: {
         uploads?: number;
         profiles?: number;
     };
+    /**
+     * Per-period usage counts. Fields present depend on `billingSystem`:
+     * Stripe returns `uploads` / `profiles` / `lastReset`;
+     * Metronome returns `connectedAccounts` / `xApiCalls` / `xApiCallsByOperation`.
+     *
+     */
     usage?: {
+        /**
+         * Stripe users only. Uploads consumed in the current period.
+         */
         uploads?: number;
+        /**
+         * Stripe users only. Profiles currently owned.
+         */
         profiles?: number;
+        /**
+         * Stripe users only.
+         */
         lastReset?: string;
+        /**
+         * Metronome users only. Accounts currently connected across the team.
+         */
+        connectedAccounts?: number;
+        /**
+         * Metronome users only. Aggregated X API call counts bucketed by
+         * price tier (backward-compat). For per-operation breakdown use
+         * `xApiCallsByOperation`.
+         *
+         */
+        xApiCalls?: {
+            /**
+             * Calls at $0.005 per call (reads, list mgmt, bookmarks, etc.)
+             */
+            x_api_005?: number;
+            /**
+             * Calls at $0.010 per call (publish/delete, DM reads, follows)
+             */
+            x_api_010?: number;
+            /**
+             * Calls at $0.015 per call (sending DMs, follow actions)
+             */
+            x_api_015?: number;
+        };
+        /**
+         * Metronome users only. Per-operation X API call counts keyed by
+         * operation (e.g. `posts_read`, `content_create`). Resolve each key
+         * to price and metadata via `GET /v1/billing/x-pricing`.
+         *
+         */
+        xApiCallsByOperation?: {
+            [key: string]: (number);
+        };
+    };
+    /**
+     * Metronome users only. Current-period spend summary.
+     */
+    spend?: {
+        /**
+         * Total current-period spend in cents (all products combined).
+         */
+        currentPeriodCents?: number;
+        /**
+         * Free-tier credit remaining in cents. Applied before any charge.
+         */
+        creditsRemainingCents?: number;
+        /**
+         * Current-period X/Twitter API spend in cents, derived from the per-tier
+         * call counts. Rounded up for conservative enforcement against `xSpendLimitCents`.
+         *
+         */
+        xSpendCents?: number;
+        /**
+         * Monthly X spend cap set by the account owner, or null if no cap.
+         * When current X spend hits this cap, analytics and inbox sync are
+         * auto-paused for X accounts. Publishing is never blocked by this cap.
+         *
+         */
+        xSpendLimitCents?: (number) | null;
     };
 };
+
+/**
+ * Which billing system the account is on. Shape of `usage`/`spend` differs.
+ */
+export type billingSystem = 'stripe' | 'metronome';
 
 export type billingPeriod = 'monthly' | 'yearly';
 
@@ -3610,6 +3721,92 @@ export type type5 = 'quick_reply' | 'url' | 'phone_number' | 'otp' | 'flow' | 'm
 export type otp_type = 'copy_code' | 'one_tap' | 'zero_tap';
 
 export type WhatsAppTemplateComponent = WhatsAppHeaderComponent | WhatsAppBodyComponent | WhatsAppFooterComponent | WhatsAppButtonsComponent;
+
+/**
+ * A single X API operation with its per-call price and the Zernio platform methods that trigger it.
+ */
+export type XApiOperation = {
+    /**
+     * Internal operation key. Matches keys in `xApiCallsByOperation`.
+     */
+    operation?: string;
+    /**
+     * Metronome `event_type` emitted when this operation runs.
+     */
+    eventType?: string;
+    /**
+     * Human-readable label shown on Metronome invoices.
+     */
+    displayName?: string;
+    pricePerCallUsd?: number;
+    /**
+     * Per-call price in cents. Fractional values are intentional.
+     */
+    pricePerCallCents?: number;
+    /**
+     * Which aggregate price tier this operation falls into.
+     */
+    tier?: 'x_api_005' | 'x_api_010' | 'x_api_015';
+    /**
+     * Zernio platform methods that emit this operation, with their metering rule.
+     */
+    triggeredBy?: Array<{
+        /**
+         * Zernio platform method name.
+         */
+        method?: string;
+        /**
+         * When the method actually bills the user:
+         * * `always` — every call is metered
+         * * `analytics_optin` — only when the X account has analytics enabled
+         * * `inbox_optin` — only when the X account has inbox sync enabled
+         * * `absorbed` — Zernio eats the cost, never billed
+         *
+         */
+        metering?: 'always' | 'analytics_optin' | 'inbox_optin' | 'absorbed';
+    }>;
+};
+
+/**
+ * Which aggregate price tier this operation falls into.
+ */
+export type tier = 'x_api_005' | 'x_api_010' | 'x_api_015';
+
+/**
+ * Canonical X/Twitter API pricing table. Zernio passes X API costs through
+ * at exact rates with zero markup, so every call you make has a known per-unit
+ * price. Use this payload alongside `/v1/usage-stats` (which returns
+ * per-operation call counts via `xApiCallsByOperation`) to compute exact
+ * cost attribution by X action.
+ *
+ */
+export type XApiPricing = {
+    currency?: string;
+    /**
+     * Always 0% — Zernio does not mark up X API rates.
+     */
+    markup?: string;
+    source?: string;
+    /**
+     * Date the prices were last verified against X's published rates.
+     */
+    lastVerified?: string;
+    /**
+     * Rollup of operations grouped by their per-call price.
+     */
+    tiers?: Array<{
+        /**
+         * Historical bucket key used in `xApiCalls` aggregation.
+         */
+        tier?: 'x_api_005' | 'x_api_010' | 'x_api_015';
+        pricePerCallUsd?: number;
+        operationCount?: number;
+    }>;
+    /**
+     * Flat list of every X operation Zernio can perform, with its rate.
+     */
+    operations?: Array<XApiOperation>;
+};
 
 export type YouTubeDailyViewsResponse = {
     success?: boolean;
@@ -4896,6 +5093,12 @@ export type GetRedditFeedError = (unknown | {
     error?: string;
 });
 
+export type GetXApiPricingResponse = (XApiPricing);
+
+export type GetXApiPricingError = ({
+    error?: string;
+});
+
 export type GetUsageStatsResponse = (UsageStats);
 
 export type GetUsageStatsError = ({
@@ -5324,6 +5527,61 @@ export type CreateProfileResponse = (ProfileCreateResponse);
 
 export type CreateProfileError = (unknown | {
     error?: string;
+} | {
+    /**
+     * Human-readable error message suitable for end-user display.
+     */
+    error: string;
+    /**
+     * Machine-readable error code. Stable across versions.
+     */
+    code: 'PAYMENT_REQUIRED';
+    /**
+     * Discriminator for which gate fired.
+     */
+    reason: 'free_tier_exceeded' | 'twitter_passthrough' | 'enterprise_required';
+    /**
+     * Link to the relevant documentation page.
+     */
+    documentation_url?: string;
+    /**
+     * Deep-link to send the end-user to. For
+     * `free_tier_exceeded` and `twitter_passthrough` this is
+     * the Zernio billing tab. For `enterprise_required` this
+     * is the Zernio enterprise contact page.
+     *
+     */
+    dashboard_url?: string;
+    /**
+     * Structured context for SDK clients that want to render their own UX. Keys vary by `reason`.
+     */
+    details?: {
+        /**
+         * How many accounts the free tier allows. Only set when reason=free_tier_exceeded.
+         */
+        free_tier_account_limit?: number;
+        /**
+         * How many accounts the team currently has connected. Set when reason=free_tier_exceeded or reason=enterprise_required.
+         */
+        current_account_count?: number;
+        /**
+         * Whether the team currently has a card on file in Stripe. Set when reason=free_tier_exceeded or reason=twitter_passthrough.
+         */
+        has_payment_method?: boolean;
+        /**
+         * Public pricing ceiling (the published cap beyond which an enterprise contract is required). Only set when reason=enterprise_required.
+         */
+        public_account_limit?: number;
+        /**
+         * The cap actually applied to this team. Equals
+         * `public_account_limit` for organic teams; for teams
+         * with a per-customer override (grandfathered legacy
+         * customers, signed enterprise contracts) this can
+         * be higher. Only set when reason=enterprise_required.
+         *
+         */
+        effective_account_limit?: number;
+    };
 });
 
 export type GetProfileData = {
@@ -5468,6 +5726,32 @@ export type UpdateAccountData = {
     body: {
         username?: string;
         displayName?: string;
+        /**
+         * X/Twitter only. Per-account opt-in toggles for background API
+         * operations that incur X API pass-through costs. Each call is
+         * billed via Metronome at the X tier rate. Either field can be
+         * sent independently; omitted fields are unchanged.
+         *
+         */
+        xCapabilities?: {
+            /**
+             * Enable periodic analytics reads (impressions, likes, etc.)
+             * for this X account. Each X API call is metered as
+             * `posts_read` and billed pass-through (~$0.005/call at the
+             * time of writing — actual rate depends on X's pricing tier).
+             *
+             */
+            analytics?: boolean;
+            /**
+             * Enable DM polling and inbox sync for this X account. DM
+             * reads are metered as `dm_event_read` (~$0.010/call) and
+             * DM sends as `dm_interaction_create` (~$0.015/call), both
+             * billed pass-through. DM sends fire only on user-initiated
+             * actions; reads/polling fire only when this flag is true.
+             *
+             */
+            inbox?: boolean;
+        };
     };
     path: {
         accountId: string;
@@ -5478,6 +5762,15 @@ export type UpdateAccountResponse = ({
     message?: string;
     username?: string;
     displayName?: string;
+    /**
+     * Echo of the resulting `xCapabilities` state, returned only
+     * when the request body included an `xCapabilities` object.
+     *
+     */
+    xCapabilities?: {
+        analytics?: boolean;
+        inbox?: boolean;
+    };
 });
 
 export type UpdateAccountError = (unknown | {
@@ -5812,6 +6105,61 @@ export type GetConnectUrlResponse = ({
 
 export type GetConnectUrlError = (unknown | {
     error?: string;
+} | {
+    /**
+     * Human-readable error message suitable for end-user display.
+     */
+    error: string;
+    /**
+     * Machine-readable error code. Stable across versions.
+     */
+    code: 'PAYMENT_REQUIRED';
+    /**
+     * Discriminator for which gate fired.
+     */
+    reason: 'free_tier_exceeded' | 'twitter_passthrough' | 'enterprise_required';
+    /**
+     * Link to the relevant documentation page.
+     */
+    documentation_url?: string;
+    /**
+     * Deep-link to send the end-user to. For
+     * `free_tier_exceeded` and `twitter_passthrough` this is
+     * the Zernio billing tab. For `enterprise_required` this
+     * is the Zernio enterprise contact page.
+     *
+     */
+    dashboard_url?: string;
+    /**
+     * Structured context for SDK clients that want to render their own UX. Keys vary by `reason`.
+     */
+    details?: {
+        /**
+         * How many accounts the free tier allows. Only set when reason=free_tier_exceeded.
+         */
+        free_tier_account_limit?: number;
+        /**
+         * How many accounts the team currently has connected. Set when reason=free_tier_exceeded or reason=enterprise_required.
+         */
+        current_account_count?: number;
+        /**
+         * Whether the team currently has a card on file in Stripe. Set when reason=free_tier_exceeded or reason=twitter_passthrough.
+         */
+        has_payment_method?: boolean;
+        /**
+         * Public pricing ceiling (the published cap beyond which an enterprise contract is required). Only set when reason=enterprise_required.
+         */
+        public_account_limit?: number;
+        /**
+         * The cap actually applied to this team. Equals
+         * `public_account_limit` for organic teams; for teams
+         * with a per-customer override (grandfathered legacy
+         * customers, signed enterprise contracts) this can
+         * be higher. Only set when reason=enterprise_required.
+         *
+         */
+        effective_account_limit?: number;
+    };
 });
 
 export type HandleOAuthCallbackData = {

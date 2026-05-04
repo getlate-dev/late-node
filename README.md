@@ -276,6 +276,7 @@ try {
 | Method | Description |
 |--------|-------------|
 | `usage.getUsageStats()` | Get plan and usage stats |
+| `usage.getXApiPricing()` | Get X/Twitter API pricing table |
 
 ### Logs
 | Method | Description |

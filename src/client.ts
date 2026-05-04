@@ -144,6 +144,7 @@ import {
   getWhatsAppPhoneNumbers,
   getWhatsAppTemplate,
   getWhatsAppTemplates,
+  getXApiPricing,
   getYouTubeChannelInsights,
   getYouTubeDailyViews,
   getYouTubeDemographics,
@@ -398,6 +399,7 @@ export class Zernio {
    * Usage API - Get usage statistics
    */
   usage = {
+    getXApiPricing: getXApiPricing,
     getUsageStats: getUsageStats,
   };
 
