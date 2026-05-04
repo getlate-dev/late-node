@@ -10034,6 +10034,25 @@ export type SendPrivateReplyToCommentData = {
          * The message text to send as a private DM
          */
         message: string;
+        /**
+         * Optional quick-reply chips appended to the message. Visible only in the
+         * Instagram and Messenger apps (not on web). Maximum 13 entries.
+         *
+         */
+        quickReplies?: Array<{
+            /**
+             * Label shown on the chip. Truncated by Meta beyond 20 characters.
+             */
+            title: string;
+            /**
+             * Opaque value returned in the inbound webhook when the user taps the chip.
+             */
+            payload: string;
+            /**
+             * Optional thumbnail shown next to the chip title.
+             */
+            imageUrl?: string;
+        }>;
     };
     path: {
         /**
