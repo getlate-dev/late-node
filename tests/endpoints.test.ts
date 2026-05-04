@@ -239,6 +239,16 @@ describe('Endpoint Methods', () => {
       expect(client.connect.connectWhatsAppCredentials).toBeTypeOf('function');
     });
 
+    it('should have listWhatsAppPhoneNumbers method', () => {
+      expect(client.connect.listWhatsAppPhoneNumbers).toBeDefined();
+      expect(client.connect.listWhatsAppPhoneNumbers).toBeTypeOf('function');
+    });
+
+    it('should have completeWhatsAppPhoneSelection method', () => {
+      expect(client.connect.completeWhatsAppPhoneSelection).toBeDefined();
+      expect(client.connect.completeWhatsAppPhoneSelection).toBeTypeOf('function');
+    });
+
     it('should have getFacebookPages method', () => {
       expect(client.connect.getFacebookPages).toBeDefined();
       expect(client.connect.getFacebookPages).toBeTypeOf('function');

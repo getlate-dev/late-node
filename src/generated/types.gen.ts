@@ -7783,6 +7783,129 @@ export type ConnectWhatsAppCredentialsResponse = ({
 
 export type ConnectWhatsAppCredentialsError = (unknown);
 
+export type ListWhatsAppPhoneNumbersData = {
+    headers?: {
+        /**
+         * Alternative auth for API users' end customers (used when the bearer token is scoped to a different user)
+         */
+        'X-Connect-Token'?: string;
+    };
+    query: {
+        /**
+         * The Zernio profile ID from the headless redirect
+         */
+        profileId: string;
+        /**
+         * The temporary access token from the headless redirect
+         */
+        tempToken: string;
+    };
+};
+
+export type ListWhatsAppPhoneNumbersResponse = ({
+    phoneNumbers?: Array<{
+        /**
+         * Phone Number ID (Meta)
+         */
+        id?: string;
+        /**
+         * E.164-formatted display number
+         */
+        display_phone_number?: string;
+        /**
+         * Meta-verified business name
+         */
+        verified_name?: string;
+        /**
+         * GREEN, YELLOW, RED, or UNKNOWN
+         */
+        quality_rating?: string;
+        /**
+         * APPROVED, PENDING_REVIEW, DECLINED, or NONE
+         */
+        name_status?: string;
+        /**
+         * TIER_250, TIER_1K, TIER_10K, TIER_100K, or TIER_UNLIMITED
+         */
+        messaging_limit_tier?: string;
+        /**
+         * WhatsApp Business Account ID (Zernio enrichment)
+         */
+        wabaId?: string;
+        /**
+         * WABA display name (Zernio enrichment)
+         */
+        wabaName?: string;
+    }>;
+});
+
+export type ListWhatsAppPhoneNumbersError = (ErrorResponse | {
+    error?: string;
+});
+
+export type CompleteWhatsAppPhoneSelectionData = {
+    body: {
+        /**
+         * The Zernio profile ID
+         */
+        profileId: string;
+        /**
+         * The selected phone number ID (from listWhatsAppPhoneNumbers)
+         */
+        phoneNumberId: string;
+        /**
+         * The WABA ID containing the selected phone
+         */
+        wabaId: string;
+        /**
+         * The temporary access token from the headless redirect
+         */
+        tempToken: string;
+        /**
+         * Optional user profile data (passthrough)
+         */
+        userProfile?: {
+            [key: string]: unknown;
+        };
+        /**
+         * Optional URL to receive the post-connection redirect target
+         */
+        redirect_url?: string;
+    };
+    headers?: {
+        /**
+         * Alternative auth for API users' end customers
+         */
+        'X-Connect-Token'?: string;
+    };
+};
+
+export type CompleteWhatsAppPhoneSelectionResponse = ({
+    message?: string;
+    /**
+     * Present only if redirect_url was provided in the request
+     */
+    redirect_url?: string;
+    account?: {
+        accountId?: string;
+        platform?: 'whatsapp';
+        /**
+         * Display phone number
+         */
+        username?: string;
+        /**
+         * Meta-verified business name
+         */
+        displayName?: string;
+        isActive?: boolean;
+        selectedPhoneNumber?: string;
+    };
+});
+
+export type CompleteWhatsAppPhoneSelectionError = (ErrorResponse | {
+    error?: string;
+} | unknown);
+
 export type GetTelegramConnectStatusData = {
     query: {
         /**

@@ -291,6 +291,7 @@ try {
 | `connect.listLinkedInOrganizations()` | List LinkedIn orgs |
 | `connect.listPinterestBoardsForSelection()` | List Pinterest boards |
 | `connect.listSnapchatProfiles()` | List Snapchat profiles |
+| `connect.listWhatsAppPhoneNumbers()` | List WhatsApp phone numbers for selection |
 | `connect.getConnectUrl()` | Get OAuth connect URL |
 | `connect.getFacebookPages()` | List Facebook pages |
 | `connect.getGmbLocations()` | List GBP locations |
@@ -308,6 +309,7 @@ try {
 | `connect.updateRedditSubreddits()` | Set default subreddit |
 | `connect.updateYoutubeDefaultPlaylist()` | Set default YouTube playlist |
 | `connect.completeTelegramConnect()` | Check Telegram status |
+| `connect.completeWhatsAppPhoneSelection()` | Complete WhatsApp phone number selection |
 | `connect.configureTikTokAdsBrandIdentity()` | Configure TikTok Ads Brand Identity |
 | `connect.connectAds()` | Connect ads for a platform |
 | `connect.connectBlueskyCredentials()` | Connect Bluesky account |
