@@ -2174,9 +2174,11 @@ export const unlikeInboxComment = <ThrowOnError extends boolean = false>(options
 /**
  * Send private reply
  * Send a private message to the author of a comment. Supported on Instagram and Facebook only.
- * One reply per comment, must be sent within 7 days. Optionally include up to 13 quick-reply
- * chips (`quickReplies`) on the same first message — useful for comment-to-DM automations
- * that want to capture intent in a single round-trip.
+ * One reply per comment, must be sent within 7 days. Optionally attach interactive elements:
+ * `quickReplies` (chips above the keyboard, max 13) or `buttons` (1-3 inline postback/url
+ * buttons rendered in the same bubble via Meta's button_template). Buttons are recommended
+ * for cold reach since chips do not render in the Instagram Message Requests folder.
+ * `quickReplies` and `buttons` are mutually exclusive.
  *
  */
 export const sendPrivateReplyToComment = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<SendPrivateReplyToCommentData, ThrowOnError>) => {

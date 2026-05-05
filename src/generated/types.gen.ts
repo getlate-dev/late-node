@@ -10507,7 +10507,10 @@ export type SendPrivateReplyToCommentData = {
         message: string;
         /**
          * Optional quick-reply chips appended to the message. Visible only in the
-         * Instagram and Messenger apps (not on web). Maximum 13 entries.
+         * Instagram and Messenger apps (not on web). Maximum 13 entries. Mutually
+         * exclusive with `buttons`. Note: chips do NOT render in the Instagram
+         * Message Requests folder where DMs from non-followers land — use `buttons`
+         * instead for cold reach.
          *
          */
         quickReplies?: Array<{
@@ -10524,6 +10527,43 @@ export type SendPrivateReplyToCommentData = {
              */
             imageUrl?: string;
         }>;
+        /**
+         * Optional 1-3 inline buttons rendered as part of the same message bubble
+         * via Meta's button_template. Visible in the Instagram Message Requests
+         * folder (unlike quick replies). Mutually exclusive with `quickReplies`.
+         *
+         */
+        buttons?: Array<({
+    type: 'url';
+    /**
+     * Label shown on the button.
+     */
+    title: string;
+    /**
+     * URL opened when the button is tapped.
+     */
+    url: string;
+} | {
+    type: 'postback';
+    /**
+     * Label shown on the button.
+     */
+    title: string;
+    /**
+     * Opaque value returned in the inbound webhook when the user taps the button.
+     */
+    payload: string;
+} | {
+    type: 'phone';
+    /**
+     * Label shown on the button. Facebook only.
+     */
+    title: string;
+    /**
+     * E.164 phone number dialed when tapped. Facebook only.
+     */
+    phone: string;
+})>;
     };
     path: {
         /**
