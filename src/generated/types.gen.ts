@@ -13276,7 +13276,7 @@ export type ListAdsData = {
          */
         campaignId?: string;
         /**
-         * Start of metrics date range (YYYY-MM-DD). Defaults to 90 days ago. Ranges older than 90 days trigger an on-demand platform fetch when scoped to a specific accountId.
+         * Start of metrics date range (YYYY-MM-DD). Defaults to 90 days ago.
          */
         fromDate?: string;
         limit?: number;
@@ -13611,7 +13611,7 @@ export type GetAdTreeData = {
          */
         adAccountId?: string;
         /**
-         * Start of metrics date range (YYYY-MM-DD). Defaults to 90 days ago. Ranges older than 90 days trigger an on-demand platform fetch when scoped to a specific accountId.
+         * Start of metrics date range (YYYY-MM-DD). Defaults to 90 days ago.
          */
         fromDate?: string;
         /**
@@ -13757,7 +13757,7 @@ export type GetAdAnalyticsData = {
          */
         breakdowns?: string;
         /**
-         * Start of date range (YYYY-MM-DD). Defaults to 90 days ago. Ranges older than 90 days trigger an on-demand platform fetch.
+         * Start of date range (YYYY-MM-DD). Defaults to 90 days ago.
          */
         fromDate?: string;
         /**

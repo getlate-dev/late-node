@@ -3229,7 +3229,6 @@ export const listCommentAutomationLogs = <ThrowOnError extends boolean = false>(
  * Returns a paginated list of ads with metrics computed over an optional date range.
  * Use source=all to include externally-synced ads from platform ad managers.
  * If no date range is provided, defaults to the last 90 days. Date range is capped at 730 days max.
- * Ranges older than 90 days trigger a one-time on-demand fetch from the platform when scoped to a specific accountId, then serve from cache on subsequent requests.
  *
  */
 export const listAds = <ThrowOnError extends boolean = false>(options?: OptionsLegacyParser<ListAdsData, ThrowOnError>) => {
@@ -3392,7 +3391,6 @@ export const updateAdSetStatus = <ThrowOnError extends boolean = false>(options:
  * and campaign levels. Pagination is at the campaign level. Ads without a campaign or ad set
  * ID are grouped into synthetic "Ungrouped" buckets.
  * If no date range is provided, defaults to the last 90 days. Date range is capped at 730 days max.
- * Ranges older than 90 days trigger a one-time on-demand fetch from the platform when scoped to a specific accountId, then serve from cache on subsequent requests.
  *
  */
 export const getAdTree = <ThrowOnError extends boolean = false>(options?: OptionsLegacyParser<GetAdTreeData, ThrowOnError>) => {
@@ -3449,7 +3447,6 @@ export const deleteAd = <ThrowOnError extends boolean = false>(options: OptionsL
  * Returns detailed performance analytics for an ad. Includes summary metrics, a daily timeline
  * over the requested date range, and optional demographic breakdowns (Meta and TikTok only).
  * If no date range is provided, defaults to the last 90 days. Date range is capped at 730 days max.
- * Ranges older than 90 days trigger a one-time on-demand fetch from the platform, then serve from cache on subsequent requests.
  *
  */
 export const getAdAnalytics = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetAdAnalyticsData, ThrowOnError>) => {
