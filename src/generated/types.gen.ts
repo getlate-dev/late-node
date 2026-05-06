@@ -13276,7 +13276,7 @@ export type ListAdsData = {
          */
         campaignId?: string;
         /**
-         * Start of metrics date range (YYYY-MM-DD). Defaults to 90 days ago.
+         * Start of metrics date range (YYYY-MM-DD). Defaults to 90 days ago. Ranges older than 90 days trigger an on-demand platform fetch when scoped to a specific accountId.
          */
         fromDate?: string;
         limit?: number;
@@ -13295,7 +13295,7 @@ export type ListAdsData = {
         source?: 'zernio' | 'all';
         status?: AdStatus;
         /**
-         * End of metrics date range (YYYY-MM-DD). Defaults to today. Max 90-day range.
+         * End of metrics date range (YYYY-MM-DD). Defaults to today. Max 730-day range.
          */
         toDate?: string;
     };
@@ -13611,7 +13611,7 @@ export type GetAdTreeData = {
          */
         adAccountId?: string;
         /**
-         * Start of metrics date range (YYYY-MM-DD). Defaults to 90 days ago.
+         * Start of metrics date range (YYYY-MM-DD). Defaults to 90 days ago. Ranges older than 90 days trigger an on-demand platform fetch when scoped to a specific accountId.
          */
         fromDate?: string;
         /**
@@ -13636,7 +13636,7 @@ export type GetAdTreeData = {
          */
         status?: AdStatus;
         /**
-         * End of metrics date range (YYYY-MM-DD). Defaults to today. Max 90-day range.
+         * End of metrics date range (YYYY-MM-DD). Defaults to today. Max 730-day range.
          */
         toDate?: string;
     };
@@ -13757,11 +13757,11 @@ export type GetAdAnalyticsData = {
          */
         breakdowns?: string;
         /**
-         * Start of date range (YYYY-MM-DD). Defaults to 90 days ago.
+         * Start of date range (YYYY-MM-DD). Defaults to 90 days ago. Ranges older than 90 days trigger an on-demand platform fetch.
          */
         fromDate?: string;
         /**
-         * End of date range (YYYY-MM-DD). Defaults to today. Max 90-day range.
+         * End of date range (YYYY-MM-DD). Defaults to today. Max 730-day range.
          */
         toDate?: string;
     };
