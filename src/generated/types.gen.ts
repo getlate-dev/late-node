@@ -2378,9 +2378,9 @@ export type SnapchatPlatformData = {
 export type contentType3 = 'story' | 'saved_story' | 'spotlight';
 
 export type SocialAccount = {
-    _id?: string;
-    platform?: 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat' | 'discord' | 'whatsapp' | 'linkedinads' | 'metaads' | 'pinterestads' | 'tiktokads' | 'xads' | 'googleads';
-    profileId?: (string | Profile);
+    _id: string;
+    platform: 'tiktok' | 'instagram' | 'facebook' | 'youtube' | 'linkedin' | 'twitter' | 'threads' | 'pinterest' | 'reddit' | 'bluesky' | 'googlebusiness' | 'telegram' | 'snapchat' | 'discord' | 'whatsapp' | 'linkedinads' | 'metaads' | 'pinterestads' | 'tiktokads' | 'xads' | 'googleads';
+    profileId: (string | Profile);
     username?: string;
     displayName?: string;
     /**
@@ -2391,7 +2391,7 @@ export type SocialAccount = {
      * Full profile URL for the connected account on its platform.
      */
     profileUrl?: string;
-    isActive?: boolean;
+    isActive: boolean;
     /**
      * Follower count (only included if user has analytics add-on)
      */
@@ -5659,11 +5659,11 @@ export type ListAccountsData = {
 };
 
 export type ListAccountsResponse = ({
-    accounts?: Array<SocialAccount>;
+    accounts: Array<SocialAccount>;
     /**
      * Whether user has analytics add-on access
      */
-    hasAnalyticsAccess?: boolean;
+    hasAnalyticsAccess: boolean;
     /**
      * Only present when page/limit params are provided
      */
