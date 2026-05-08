@@ -15028,20 +15028,16 @@ export type AddConversionAssociationsError = (unknown | {
 });
 
 export type RemoveConversionAssociationsData = {
-    body?: {
-        adAccountId?: string;
-        campaignIds?: Array<(string)>;
-    };
     path: {
         accountId: string;
         destinationId: string;
     };
-    query?: {
-        adAccountId?: string;
+    query: {
+        adAccountId: string;
         /**
-         * Comma-separated list.
+         * Comma-separated list of campaign IDs.
          */
-        campaignIds?: string;
+        campaignIds: string;
     };
 };
 

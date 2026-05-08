@@ -3811,9 +3811,12 @@ export const addConversionAssociations = <ThrowOnError extends boolean = false>(
 /**
  * Remove campaign↔conversion associations
  * Remove one or more campaign associations from this conversion rule.
- * Accepts `adAccountId` and `campaignIds` either as query parameters
- * (campaignIds comma-separated) or as a JSON body, for clients that
- * can't send DELETE bodies.
+ * Pass `adAccountId` and `campaignIds` as query parameters
+ * (`campaignIds` is comma-separated). The route also accepts a JSON
+ * body with the same fields for clients that prefer DELETE-with-body,
+ * but the documented surface is query-only because some SDK code
+ * generators (e.g. Python) collapse query + body parameters with the
+ * same name into a single kwarg.
  *
  */
 export const removeConversionAssociations = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<RemoveConversionAssociationsData, ThrowOnError>) => {
