@@ -3412,11 +3412,17 @@ export type WebhookPayloadMessage = {
          */
         isStoryMention?: boolean;
         /**
-         * WhatsApp only. Click-to-WhatsApp (CTWA) ad attribution. Present
-         * only on the FIRST inbound message after a user reaches the
-         * business via a CTWA ad. Forwarded verbatim from Meta's referral
-         * envelope so it can be replayed to the Conversions API for
-         * Business Messaging. Attribution window is 7 days from click.
+         * Ad-click attribution forwarded verbatim from Meta. Populated only on
+         * the FIRST inbound message after the click; absent on subsequent
+         * messages of the same conversation.
+         *
+         * The populated subset identifies the source platform:
+         * - `ctwa_clid` and `source_*` fields: WhatsApp CTWA
+         * (Click-to-WhatsApp). Attribution window is 7 days from click.
+         * Forward to Meta Conversions API for Business Messaging replay.
+         * - `ad_id` and `ads_context_data`: Facebook Messenger CTM
+         * (Click-to-Message) or Instagram CTD (Click-to-Direct). Use
+         * `ad_id` to attribute the conversation to a specific ad.
          *
          */
         referral?: {
@@ -3433,7 +3439,44 @@ export type WebhookPayloadMessage = {
             image_url?: string;
             video_url?: string;
             thumbnail_url?: string;
-        };
+            /**
+             * Facebook Messenger CTM / Instagram CTD only. The Meta ad ID the
+             * user clicked to start the conversation.
+             *
+             */
+            ad_id?: string;
+            /**
+             * Optional `ref` parameter passed through from the Meta ad
+             * creative. Facebook Messenger CTM / Instagram CTD only.
+             *
+             */
+            ref?: string;
+            /**
+             * Meta-supplied source identifier (e.g. `ADS`). Facebook Messenger
+             * CTM / Instagram CTD only.
+             *
+             */
+            source?: string;
+            /**
+             * Meta-supplied referral type (e.g. `OPEN_THREAD`). Facebook
+             * Messenger CTM / Instagram CTD only.
+             *
+             */
+            type?: string;
+            /**
+             * Snapshot of the ad's public context at click time. Facebook
+             * Messenger CTM / Instagram CTD only.
+             *
+             */
+            ads_context_data?: {
+                ad_title?: string;
+                photo_url?: string;
+                video_url?: string;
+                post_id?: string;
+                product_id?: string;
+                flow_id?: string;
+            };
+        } | null;
     } | null;
     timestamp: string;
 };
