@@ -369,15 +369,23 @@ try {
 | `ads.listAdAccounts()` | List ad accounts |
 | `ads.listAds()` | List ads |
 | `ads.listAdsBusinessCenters()` | List TikTok Business Centers |
+| `ads.listConversionAssociations()` | List campaigns associated with a conversion destination |
 | `ads.listConversionDestinations()` | List destinations for the Conversions API |
+| `ads.createConversionDestination()` | Create a conversion destination (LinkedIn) |
 | `ads.createCtwaAd()` | Create Click-to-WhatsApp ad |
 | `ads.createStandaloneAd()` | Create standalone ad |
 | `ads.getAd()` | Get ad details |
 | `ads.getAdAnalytics()` | Get ad analytics |
 | `ads.getAdComments()` | List comments on an ad |
+| `ads.getConversionDestination()` | Fetch a single conversion destination |
+| `ads.getConversionMetrics()` | Fetch attribution metrics for a conversion destination |
 | `ads.updateAd()` | Update ad |
+| `ads.updateConversionDestination()` | Update a conversion destination |
 | `ads.deleteAd()` | Cancel an ad |
+| `ads.deleteConversionDestination()` | Soft-delete a conversion destination |
+| `ads.addConversionAssociations()` | Associate campaigns with a conversion destination |
 | `ads.boostPost()` | Boost post as ad |
+| `ads.removeConversionAssociations()` | Remove campaign↔conversion associations |
 | `ads.searchAdInterests()` | Search targeting interests |
 | `ads.searchAdTargetingLocations()` | Search geo targeting locations (Meta) |
 | `ads.sendConversions()` | Send conversion events to an ad platform |

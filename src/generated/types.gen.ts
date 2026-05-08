@@ -791,6 +791,48 @@ export type BusinessCenter = {
 };
 
 /**
+ * A discoverable conversion destination on an ad platform — a Meta pixel,
+ * Google conversion action, or LinkedIn conversion rule. Returned by
+ * `listConversionDestinations`, `getConversionDestination`,
+ * `createConversionDestination`, and `updateConversionDestination`.
+ *
+ */
+export type ConversionDestination = {
+    /**
+     * Platform-native identifier. Pass back as `destinationId` on event
+     * send and as the path segment on CRUD endpoints.
+     *
+     */
+    id: string;
+    name: string;
+    /**
+     * Present when the platform locks the event type/category to the
+     * destination (Google conversion actions, LinkedIn conversion rules).
+     * Absent for Meta pixels (which accept any event name per request).
+     *
+     */
+    type?: string;
+    /**
+     * For LinkedIn, `inactive` means the rule is soft-deleted (`enabled: false`).
+     *
+     */
+    status?: 'active' | 'inactive';
+    /**
+     * Set by adapters whose destinations are scoped to a specific ad
+     * account (LinkedIn). Pass back on subsequent CRUD calls to
+     * identify the parent ad account.
+     *
+     */
+    adAccountId?: string;
+};
+
+/**
+ * For LinkedIn, `inactive` means the rule is soft-deleted (`enabled: false`).
+ *
+ */
+export type status2 = 'active' | 'inactive';
+
+/**
  * A single conversion event to relay to the ad platform. All PII fields
  * (email, phone, names) are hashed with SHA-256 server-side using each
  * platform's normalization rules before they leave Zernio. Callers send
@@ -802,7 +844,12 @@ export type ConversionEvent = {
      * Standard event name (Purchase, Lead, CompleteRegistration, AddToCart,
      * InitiateCheckout, AddPaymentInfo, Subscribe, StartTrial, ViewContent,
      * Search, Contact, SubmitApplication, Schedule) or a custom string
-     * (only supported on platforms that accept custom events).
+     * (only supported on platforms that accept custom events — Meta).
+     *
+     * Per-platform behavior:
+     * - Meta: free-form; standard names match Meta's built-ins.
+     * - Google: ignored — the conversion action's category determines the type.
+     * - LinkedIn: ignored — the conversion rule's `type` is locked to the destination.
      *
      */
     eventName: string;
@@ -812,8 +859,10 @@ export type ConversionEvent = {
     eventTime: number;
     /**
      * Unique dedup key. The same eventId must be used on pixel + CAPI
-     * to prevent double-counting. Mapped to event_id on Meta and
-     * transactionId on Google.
+     * to prevent double-counting. Mapped to event_id on Meta,
+     * transactionId on Google, eventId on LinkedIn (LinkedIn deduplicates
+     * against Insight Tag events with the same eventId; the Insight Tag
+     * event wins when both arrive).
      *
      */
     eventId: string;
@@ -846,7 +895,11 @@ export type ConversionEvent = {
          */
         lastName?: string;
         /**
-         * Stable customer identifier (e.g. CRM user ID). Hashed server-side.
+         * Stable customer identifier (e.g. CRM user ID). Hashed
+         * server-side for Meta and Google. Sent as plaintext to LinkedIn
+         * (LinkedIn's Conversions API spec requires the raw value).
+         * Maximum effective list size on LinkedIn is 1.
+         *
          */
         externalId?: string;
         /**
@@ -885,6 +938,16 @@ export type ConversionEvent = {
              * Google iOS 14.5+ web-to-app attribution ID.
              */
             wbraid?: string;
+            /**
+             * LinkedIn first-party ad tracking click ID. Captured by
+             * parsing `li_fat_id` from landing-page URLs after the
+             * advertiser enables enhanced conversion tracking on the
+             * LinkedIn Insight Tag. Sent to LinkedIn as the
+             * LINKEDIN_FIRST_PARTY_ADS_TRACKING_UUID userId. Opaque
+             * token, not hashed.
+             *
+             */
+            li_fat_id?: string;
         };
     };
     /**
@@ -1337,7 +1400,7 @@ export type InboxWebhookConversation = {
     status: 'active' | 'archived';
 };
 
-export type status2 = 'active' | 'archived';
+export type status3 = 'active' | 'archived';
 
 /**
  * The message object included in inbox webhook payloads.
@@ -1867,7 +1930,7 @@ export type PlatformAnalytics = {
     errorMessage?: (string) | null;
 };
 
-export type status3 = 'published' | 'failed';
+export type status4 = 'published' | 'failed';
 
 /**
  * Sync state of analytics for this platform
@@ -1977,7 +2040,7 @@ export type Post = {
     updatedAt?: string;
 };
 
-export type status4 = 'draft' | 'scheduled' | 'publishing' | 'published' | 'failed' | 'partial';
+export type status5 = 'draft' | 'scheduled' | 'publishing' | 'published' | 'failed' | 'partial';
 
 export type visibility = 'public' | 'private' | 'unlisted';
 
@@ -2644,7 +2707,7 @@ export type UploadTokenResponse = {
     status?: 'pending' | 'completed' | 'expired';
 };
 
-export type status5 = 'pending' | 'completed' | 'expired';
+export type status6 = 'pending' | 'completed' | 'expired';
 
 export type UploadTokenStatusResponse = {
     token?: string;
@@ -2954,7 +3017,7 @@ export type event = 'account.ads.initial_sync_completed';
 /**
  * Overall outcome of the initial sync.
  */
-export type status6 = 'success' | 'failure';
+export type status7 = 'success' | 'failure';
 
 /**
  * Stable category for UX branching. New values may be added; existing ones are
@@ -14626,23 +14689,26 @@ export type AddUsersToAdAudienceError = (unknown | {
 export type SendConversionsData = {
     body: {
         /**
-         * SocialAccount ID (metaads or googleads).
+         * SocialAccount ID (metaads, googleads, or linkedinads).
          */
         accountId: string;
         /**
          * Platform destination identifier. For Meta, the pixel/dataset
-         * ID. For Google, the conversion action resource name.
+         * ID. For Google, the conversion action resource name. For
+         * LinkedIn, the conversion rule ID or full
+         * `urn:lla:llaPartnerConversion:{id}` URN.
          *
          */
         destinationId: string;
         events: Array<ConversionEvent>;
         /**
-         * Meta `test_event_code` passthrough. Ignored by Google.
+         * Meta `test_event_code` passthrough. Ignored by Google and LinkedIn.
          */
         testCode?: string;
         /**
          * Batch-level user consent. Required by Google for EEA/UK
-         * events under the Feb 2026 restrictions. Ignored by Meta.
+         * events under the Feb 2026 restrictions. Ignored by Meta
+         * and LinkedIn.
          *
          */
         consent?: {
@@ -14653,7 +14719,7 @@ export type SendConversionsData = {
 };
 
 export type SendConversionsResponse = ({
-    platform?: 'metaads' | 'googleads';
+    platform?: 'metaads' | 'googleads' | 'linkedinads';
     /**
      * Events accepted by the platform.
      */
@@ -14675,7 +14741,10 @@ export type SendConversionsResponse = ({
         code?: (string | number);
     }>;
     /**
-     * Platform trace ID (fbtrace_id for Meta, requestId for Google) for debugging.
+     * Platform trace ID for debugging. fbtrace_id for Meta,
+     * requestId for Google. Absent for LinkedIn (LinkedIn's
+     * conversionEvents endpoint does not surface a trace ID).
+     *
      */
     traceId?: string;
 });
@@ -14687,33 +14756,343 @@ export type SendConversionsError = (unknown | {
 export type ListConversionDestinationsData = {
     path: {
         /**
-         * SocialAccount ID (metaads or googleads).
+         * SocialAccount ID (metaads, googleads, or linkedinads).
          */
         accountId: string;
     };
 };
 
 export type ListConversionDestinationsResponse = ({
-    platform?: 'metaads' | 'googleads';
+    platform?: 'metaads' | 'googleads' | 'linkedinads';
     destinations?: Array<{
         /**
          * Destination identifier. Meta: pixel ID. Google:
-         * conversion action resource name.
+         * conversion action resource name. LinkedIn:
+         * numeric conversion rule ID.
          *
          */
         id?: string;
         name?: string;
         /**
          * Present when the platform locks event type to the
-         * destination (Google conversion actions).
+         * destination (Google conversion actions, LinkedIn
+         * conversion rules).
          *
          */
         type?: string;
         status?: 'active' | 'inactive';
+        /**
+         * Set by adapters whose destinations are scoped to a
+         * specific ad account (LinkedIn). Pass back on
+         * subsequent CRUD calls.
+         *
+         */
+        adAccountId?: string;
     }>;
 });
 
 export type ListConversionDestinationsError = (unknown | {
+    error?: string;
+});
+
+export type CreateConversionDestinationData = {
+    body: {
+        /**
+         * Sponsored ad account ID. Numeric (e.g. "5123456") or
+         * full `urn:li:sponsoredAccount:{id}` URN.
+         *
+         */
+        adAccountId: string;
+        name: string;
+        /**
+         * Either a unified standard event name (e.g. "Purchase",
+         * "Lead", "AddToCart") or a LinkedIn rule type enum value
+         * (e.g. "PURCHASE", "QUALIFIED_LEAD"). The API maps
+         * standard names to LinkedIn enum values automatically.
+         *
+         */
+        type: string;
+        attributionType?: 'LAST_TOUCH_BY_CAMPAIGN' | 'LAST_TOUCH_BY_CONVERSION';
+        /**
+         * Default 30. 365 only allowed for LEAD, PURCHASE,
+         * ADD_TO_CART, QUALIFIED_LEAD, SUBMIT_APPLICATION rule
+         * types — the API rejects other combinations locally.
+         *
+         */
+        postClickAttributionWindowSize?: 1 | 7 | 30 | 90 | 365;
+        /**
+         * Default 7. Same 365-day-window type restriction applies
+         * as `postClickAttributionWindowSize`.
+         *
+         */
+        viewThroughAttributionWindowSize?: 1 | 7 | 30 | 90 | 365;
+        /**
+         * DYNAMIC (default) uses the per-event `value` from
+         * `sendConversions`. FIXED uses the rule's `value` field.
+         * NO_VALUE drops monetary value entirely.
+         *
+         */
+        valueType?: 'DYNAMIC' | 'FIXED' | 'NO_VALUE';
+        /**
+         * Static conversion value. Used when `valueType=FIXED`.
+         * The currency should match the ad account's currency.
+         *
+         */
+        value?: {
+            /**
+             * ISO 4217 (e.g. "USD").
+             */
+            currencyCode: string;
+            /**
+             * Decimal string (e.g. "49.99").
+             */
+            amount: string;
+        };
+        /**
+         * Controls campaign association at rule-creation time:
+         * - ALL_CAMPAIGNS: associate the rule with every active,
+         * paused, and draft campaign in the ad account
+         * - OBJECTIVE_BASED: associate only campaigns whose
+         * objective matches the rule's type
+         * - NONE: don't auto-associate. Manage associations via
+         * the `/associations` endpoints below.
+         * Note: auto-association runs once at create time; new
+         * campaigns added after the rule still need explicit
+         * association.
+         *
+         */
+        autoAssociationType?: 'ALL_CAMPAIGNS' | 'OBJECTIVE_BASED' | 'NONE';
+    };
+    path: {
+        /**
+         * SocialAccount ID (linkedinads).
+         */
+        accountId: string;
+    };
+};
+
+export type CreateConversionDestinationResponse = ({
+    platform?: 'linkedinads';
+    destination?: ConversionDestination;
+});
+
+export type CreateConversionDestinationError = (unknown | {
+    error?: string;
+});
+
+export type GetConversionDestinationData = {
+    path: {
+        accountId: string;
+        destinationId: string;
+    };
+    query: {
+        /**
+         * Numeric ID or full `urn:li:sponsoredAccount:{id}` URN.
+         */
+        adAccountId: string;
+    };
+};
+
+export type GetConversionDestinationResponse = ({
+    platform?: 'linkedinads';
+    destination?: ConversionDestination;
+});
+
+export type GetConversionDestinationError = (unknown | {
+    error?: string;
+});
+
+export type UpdateConversionDestinationData = {
+    body: {
+        adAccountId: string;
+        name?: string;
+        /**
+         * Setting `false` is equivalent to calling DELETE — the
+         * rule will appear as `inactive` afterwards.
+         *
+         */
+        enabled?: boolean;
+        attributionType?: 'LAST_TOUCH_BY_CAMPAIGN' | 'LAST_TOUCH_BY_CONVERSION';
+        /**
+         * 365 only allowed for LEAD, PURCHASE, ADD_TO_CART,
+         * QUALIFIED_LEAD, SUBMIT_APPLICATION rule types.
+         *
+         */
+        postClickAttributionWindowSize?: 1 | 7 | 30 | 90 | 365;
+        /**
+         * 365 only allowed for LEAD, PURCHASE, ADD_TO_CART,
+         * QUALIFIED_LEAD, SUBMIT_APPLICATION rule types.
+         *
+         */
+        viewThroughAttributionWindowSize?: 1 | 7 | 30 | 90 | 365;
+        valueType?: 'DYNAMIC' | 'FIXED' | 'NO_VALUE';
+        /**
+         * Used when `valueType=FIXED`.
+         */
+        value?: {
+            /**
+             * ISO 4217.
+             */
+            currencyCode?: string;
+            /**
+             * Decimal string (e.g. "49.99").
+             */
+            amount?: string;
+        };
+    };
+    path: {
+        accountId: string;
+        destinationId: string;
+    };
+};
+
+export type UpdateConversionDestinationResponse = ({
+    platform?: 'linkedinads';
+    destination?: ConversionDestination;
+});
+
+export type UpdateConversionDestinationError = (unknown | {
+    error?: string;
+});
+
+export type DeleteConversionDestinationData = {
+    path: {
+        accountId: string;
+        destinationId: string;
+    };
+    query?: {
+        /**
+         * Required as query OR in JSON body.
+         */
+        adAccountId?: string;
+    };
+};
+
+export type DeleteConversionDestinationResponse = (void);
+
+export type DeleteConversionDestinationError = (unknown | {
+    error?: string;
+});
+
+export type ListConversionAssociationsData = {
+    path: {
+        accountId: string;
+        destinationId: string;
+    };
+    query: {
+        adAccountId: string;
+    };
+};
+
+export type ListConversionAssociationsResponse = ({
+    platform?: 'linkedinads';
+    associations?: Array<{
+        campaignId?: string;
+        conversionId?: string;
+        /**
+         * Epoch ms.
+         */
+        associatedAt?: number;
+    }>;
+});
+
+export type ListConversionAssociationsError = (unknown | {
+    error?: string;
+});
+
+export type AddConversionAssociationsData = {
+    body: {
+        adAccountId: string;
+        campaignIds: Array<(string)>;
+    };
+    path: {
+        accountId: string;
+        destinationId: string;
+    };
+};
+
+export type AddConversionAssociationsResponse = ({
+    platform?: 'linkedinads';
+    /**
+     * Numeric campaign IDs that were successfully associated.
+     */
+    succeeded?: Array<(string)>;
+    failed?: Array<{
+        campaignId?: string;
+        reason?: string;
+    }>;
+});
+
+export type AddConversionAssociationsError = (unknown | {
+    error?: string;
+});
+
+export type RemoveConversionAssociationsData = {
+    body?: {
+        adAccountId?: string;
+        campaignIds?: Array<(string)>;
+    };
+    path: {
+        accountId: string;
+        destinationId: string;
+    };
+    query?: {
+        adAccountId?: string;
+        /**
+         * Comma-separated list.
+         */
+        campaignIds?: string;
+    };
+};
+
+export type RemoveConversionAssociationsResponse = ({
+    platform?: 'linkedinads';
+    /**
+     * Numeric campaign IDs that were successfully removed.
+     */
+    succeeded?: Array<(string)>;
+    failed?: Array<{
+        campaignId?: string;
+        reason?: string;
+    }>;
+});
+
+export type RemoveConversionAssociationsError = (unknown | {
+    error?: string;
+});
+
+export type GetConversionMetricsData = {
+    path: {
+        accountId: string;
+        destinationId: string;
+    };
+    query: {
+        adAccountId: string;
+        endDate?: string;
+        granularity?: 'ALL' | 'DAILY' | 'MONTHLY' | 'YEARLY';
+        startDate: string;
+    };
+};
+
+export type GetConversionMetricsResponse = ({
+    platform?: 'linkedinads';
+    granularity?: 'ALL' | 'DAILY' | 'MONTHLY' | 'YEARLY';
+    rows?: Array<{
+        /**
+         * YYYY-MM-DD
+         */
+        start?: string;
+        /**
+         * YYYY-MM-DD (inclusive)
+         */
+        end?: string;
+        metrics?: {
+            [key: string]: (number | string);
+        };
+    }>;
+});
+
+export type GetConversionMetricsError = (unknown | {
     error?: string;
 });
 
