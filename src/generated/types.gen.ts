@@ -2786,29 +2786,36 @@ export type UsageStats = {
          */
         connectedAccounts?: number;
         /**
-         * Metronome users only. Aggregated X API call counts bucketed by
-         * price tier (backward-compat). For per-operation breakdown use
-         * `xApiCallsByOperation`.
+         * **Deprecated.** Legacy 3-tier aggregate. Operations outside the
+         * three historical prices ($0.005/$0.010/$0.015) — notably the
+         * $0.200 "Posts with URL" tier added April 2026 — are silently
+         * excluded from this shape. Use `xApiCallsByOperation` instead;
+         * it captures every tier and is the source of truth for
+         * per-operation call counts.
          *
+         * @deprecated
          */
         xApiCalls?: {
             /**
-             * Calls at $0.005 per call (reads, list mgmt, bookmarks, etc.)
+             * Calls at $0.005 per call (reads, lists, bookmarks, content manage, etc.)
              */
             x_api_005?: number;
             /**
-             * Calls at $0.010 per call (publish/delete, DM reads, follows)
+             * Calls at $0.010 per call (user reads, DM reads, follow reads, trends, list create, privacy update)
              */
             x_api_010?: number;
             /**
-             * Calls at $0.015 per call (sending DMs, follow actions)
+             * Calls at $0.015 per call (posts/replies, DM sends, user interactions)
              */
             x_api_015?: number;
         };
         /**
          * Metronome users only. Per-operation X API call counts keyed by
-         * operation (e.g. `posts_read`, `content_create`). Resolve each key
-         * to price and metadata via `GET /v1/billing/x-pricing`.
+         * operation (e.g. `posts_read`, `content_create`,
+         * `content_create_with_url`). Resolve each key to price and metadata
+         * via `GET /v1/billing/x-pricing`. This is the canonical source —
+         * covers every price tier including the $0.200 URL tier that
+         * `xApiCalls` excludes.
          *
          */
         xApiCallsByOperation?: {
@@ -2828,8 +2835,10 @@ export type UsageStats = {
          */
         creditsRemainingCents?: number;
         /**
-         * Current-period X/Twitter API spend in cents, derived from the per-tier
-         * call counts. Rounded up for conservative enforcement against `xSpendLimitCents`.
+         * Current-period X/Twitter API spend in cents, summed from
+         * `xApiCallsByOperation` × per-operation prices. Tier-agnostic
+         * (covers every price including the $0.200 URL tier). Rounded
+         * up for conservative enforcement against `xSpendLimitCents`.
          *
          */
         xSpendCents?: number;
@@ -3876,9 +3885,12 @@ export type XApiOperation = {
      */
     pricePerCallCents?: number;
     /**
-     * Which aggregate price tier this operation falls into.
+     * Tier key derived from `pricePerCallUsd` (e.g. `x_api_005` for
+     * $0.005, `x_api_200` for $0.200). Useful for grouping operations
+     * by price in dashboards.
+     *
      */
-    tier?: 'x_api_005' | 'x_api_010' | 'x_api_015';
+    tier?: string;
     /**
      * Zernio platform methods that emit this operation, with their metering rule.
      */
@@ -3898,11 +3910,6 @@ export type XApiOperation = {
         metering?: 'always' | 'analytics_optin' | 'inbox_optin' | 'absorbed';
     }>;
 };
-
-/**
- * Which aggregate price tier this operation falls into.
- */
-export type tier = 'x_api_005' | 'x_api_010' | 'x_api_015';
 
 /**
  * Canonical X/Twitter API pricing table. Zernio passes X API costs through
@@ -3928,9 +3935,14 @@ export type XApiPricing = {
      */
     tiers?: Array<{
         /**
-         * Historical bucket key used in `xApiCalls` aggregation.
+         * Tier key derived from price (e.g. `x_api_005` for $0.005,
+         * `x_api_200` for $0.200). The first three keys map to the
+         * legacy `xApiCalls` aggregate; new tiers (e.g. `x_api_200`
+         * for the URL tier added April 2026) are surfaced here but
+         * not in the legacy shape.
+         *
          */
-        tier?: 'x_api_005' | 'x_api_010' | 'x_api_015';
+        tier?: string;
         pricePerCallUsd?: number;
         operationCount?: number;
     }>;
