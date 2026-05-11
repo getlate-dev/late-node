@@ -2455,6 +2455,21 @@ export type ReviewWebhookReview = {
 export type platform4 = 'googlebusiness';
 
 /**
+ * An ad account a tracking tag is shared with (Meta `shared_accounts` edge).
+ */
+export type SharedAdAccount = {
+    /**
+     * Ad account id, in `act_<digits>` form.
+     */
+    id: string;
+    name?: string;
+    /**
+     * Business Manager id that owns the ad account
+     */
+    businessId?: string;
+};
+
+/**
  * Requires a Public Profile. Single media item only. Content types: story (ephemeral 24h), saved_story (permanent, title max 45 chars), spotlight (video, max 160 chars).
  */
 export type SnapchatPlatformData = {
@@ -2672,6 +2687,75 @@ export type commercialContentType = 'none' | 'brand_organic' | 'brand_content';
  * Optional override. Defaults based on provided media items.
  */
 export type mediaType2 = 'video' | 'photo';
+
+/**
+ * A platform measurement tag — the thing you create, install on a
+ * website, send events to, and target ads against. On Meta this is a
+ * Pixel (`kind: pixel`). The shape is platform-neutral so other platforms
+ * (Pinterest Tag, LinkedIn Insight Tag, etc.) can be added without
+ * changing the contract; platform-specific fields are simply absent where
+ * a platform has no equivalent. Returned by `listTrackingTags`,
+ * `createTrackingTag`, `getTrackingTag`, and `updateTrackingTag`.
+ *
+ */
+export type TrackingTag = {
+    /**
+     * Platform-native tag id. Meta: numeric pixel id, as a string.
+     */
+    id: string;
+    name: string;
+    platform: 'metaads';
+    /**
+     * Platform-native flavor of the tag (Meta: `pixel`).
+     */
+    kind: 'pixel' | 'tag' | 'insight_tag';
+    /**
+     * `inactive` when the platform reports the tag as broken/unavailable.
+     */
+    status: 'active' | 'inactive';
+    /**
+     * The base-code `<script>` snippet to install on the site. Meta only;
+     * populated by `getTrackingTag`, omitted from the list view.
+     *
+     */
+    code?: string;
+    /**
+     * Unix seconds of the last event the tag received, or `null` if it
+     * never fired. The practical "is it installed and working" signal.
+     *
+     */
+    lastFiredTime?: (number) | null;
+    /**
+     * Whether the tag is in a broken/unavailable state (Meta `is_unavailable`).
+     */
+    isUnavailable?: boolean;
+    /**
+     * Convenience flag derived from `lastFiredTime` — has the tag ever fired.
+     */
+    installed?: boolean;
+    /**
+     * Unix seconds the tag was created.
+     */
+    creationTime?: number;
+    /**
+     * Business Manager id that owns the tag, or `null` when the tag lives
+     * on a personal (non-BM) ad account — such tags can't be shared with
+     * other ad accounts.
+     *
+     */
+    ownerBusinessId?: (string) | null;
+    /**
+     * Ad account id (`act_...`) that owns the tag, when reported.
+     */
+    ownerAdAccountId?: string;
+};
+
+export type platform6 = 'metaads';
+
+/**
+ * Platform-native flavor of the tag (Meta: `pixel`).
+ */
+export type kind = 'pixel' | 'tag' | 'insight_tag';
 
 /**
  * X (Twitter) geo-restriction applies at the media level. Media in geo-restricted tweets will be hidden for users outside the specified countries; the tweet text itself remains visible globally. Requires media to be attached (ignored for text-only tweets).
@@ -3233,7 +3317,7 @@ export type WebhookPayloadComment = {
 
 export type event4 = 'comment.received';
 
-export type platform6 = 'instagram' | 'facebook' | 'twitter' | 'youtube' | 'linkedin' | 'bluesky' | 'reddit';
+export type platform7 = 'instagram' | 'facebook' | 'twitter' | 'youtube' | 'linkedin' | 'bluesky' | 'reddit';
 
 /**
  * Webhook payload for message received events
@@ -15437,5 +15521,215 @@ export type CreateCtwaAdResponse = ({
 });
 
 export type CreateCtwaAdError = (unknown | {
+    error?: string;
+});
+
+export type ListTrackingTagsData = {
+    path: {
+        /**
+         * Meta ads SocialAccount id (platform `metaads`).
+         */
+        accountId: string;
+    };
+    query?: {
+        /**
+         * Optional. Scope to one ad account, e.g. `act_123456789`.
+         */
+        adAccountId?: string;
+    };
+};
+
+export type ListTrackingTagsResponse = ({
+    platform?: 'metaads';
+    tags?: Array<TrackingTag>;
+});
+
+export type ListTrackingTagsError = (unknown | {
+    error?: string;
+});
+
+export type CreateTrackingTagData = {
+    body: {
+        /**
+         * Meta ad account id, e.g. `act_123456789`.
+         */
+        adAccountId: string;
+        name: string;
+    };
+    path: {
+        /**
+         * Meta ads SocialAccount id (platform `metaads`).
+         */
+        accountId: string;
+    };
+};
+
+export type CreateTrackingTagResponse = ({
+    platform?: 'metaads';
+    tag?: TrackingTag;
+});
+
+export type CreateTrackingTagError = (unknown | {
+    error?: string;
+});
+
+export type GetTrackingTagData = {
+    path: {
+        accountId: string;
+        /**
+         * Pixel id.
+         */
+        tagId: string;
+    };
+};
+
+export type GetTrackingTagResponse = ({
+    platform?: 'metaads';
+    tag?: TrackingTag;
+});
+
+export type GetTrackingTagError = ({
+    error?: string;
+} | unknown);
+
+export type UpdateTrackingTagData = {
+    body: {
+        name?: string;
+        /**
+         * Meta Advanced Matching toggle (`enable_automatic_matching`).
+         */
+        enableAutomaticMatching?: boolean;
+        /**
+         * Which user fields Advanced Matching may collect. Meta's
+         * terse codes: em=email, ph=phone, fn=first name, ln=last
+         * name, ge=gender, db=date of birth, ct=city, st=state,
+         * zp=zip.
+         *
+         */
+        automaticMatchingFields?: Array<('em' | 'ph' | 'fn' | 'ln' | 'ge' | 'db' | 'ct' | 'st' | 'zp' | 'country' | 'external_id')>;
+        firstPartyCookieStatus?: 'empty' | 'first_party_cookie_disabled' | 'first_party_cookie_enabled';
+        dataUseSetting?: 'advertising_and_analytics' | 'analytics_only' | 'empty';
+    };
+    path: {
+        accountId: string;
+        /**
+         * Pixel id.
+         */
+        tagId: string;
+    };
+};
+
+export type UpdateTrackingTagResponse = ({
+    platform?: 'metaads';
+    tag?: TrackingTag;
+});
+
+export type UpdateTrackingTagError = (unknown | {
+    error?: string;
+});
+
+export type ListTrackingTagSharedAccountsData = {
+    path: {
+        accountId: string;
+        /**
+         * Pixel id.
+         */
+        tagId: string;
+    };
+};
+
+export type ListTrackingTagSharedAccountsResponse = ({
+    platform?: 'metaads';
+    sharedAccounts?: Array<SharedAdAccount>;
+});
+
+export type ListTrackingTagSharedAccountsError = ({
+    error?: string;
+} | unknown);
+
+export type AddTrackingTagSharedAccountData = {
+    body: {
+        /**
+         * Ad account to share with, e.g. `act_123456789`.
+         */
+        adAccountId: string;
+    };
+    path: {
+        accountId: string;
+        /**
+         * Pixel id.
+         */
+        tagId: string;
+    };
+};
+
+export type AddTrackingTagSharedAccountResponse = ({
+    platform?: 'metaads';
+    ok?: boolean;
+});
+
+export type AddTrackingTagSharedAccountError = (unknown | {
+    error?: string;
+});
+
+export type RemoveTrackingTagSharedAccountData = {
+    path: {
+        accountId: string;
+        /**
+         * Pixel id.
+         */
+        tagId: string;
+    };
+    query?: {
+        /**
+         * Ad account to unshare, e.g. `act_123456789`. May also be sent in the JSON body.
+         */
+        adAccountId?: string;
+    };
+};
+
+export type RemoveTrackingTagSharedAccountResponse = (void);
+
+export type RemoveTrackingTagSharedAccountError = (unknown | {
+    error?: string;
+});
+
+export type GetTrackingTagStatsData = {
+    path: {
+        accountId: string;
+        /**
+         * Pixel id.
+         */
+        tagId: string;
+    };
+    query?: {
+        /**
+         * Aggregation dimension. Defaults to `event`.
+         */
+        aggregation?: 'event' | 'host' | 'url' | 'url_by_rule' | 'pixel_fire' | 'device_type' | 'device_os' | 'browser_type' | 'had_pii' | 'custom_data_field' | 'match_keys' | 'event_source' | 'event_detection_method' | 'event_processing_results' | 'event_total_counts' | 'event_value_count';
+        /**
+         * Unix seconds upper bound.
+         */
+        endTime?: number;
+        /**
+         * Unix seconds lower bound.
+         */
+        startTime?: number;
+    };
+};
+
+export type GetTrackingTagStatsResponse = ({
+    platform?: 'metaads';
+    stats?: {
+        aggregation?: string;
+        startTime?: number;
+        endTime?: number;
+        rows?: Array<{
+            [key: string]: unknown;
+        }>;
+    };
+});
+
+export type GetTrackingTagStatsError = (unknown | {
     error?: string;
 });

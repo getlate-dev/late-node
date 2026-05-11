@@ -371,21 +371,29 @@ try {
 | `ads.listAdsBusinessCenters()` | List TikTok Business Centers |
 | `ads.listConversionAssociations()` | List campaigns associated with a conversion destination |
 | `ads.listConversionDestinations()` | List destinations for the Conversions API |
+| `ads.listTrackingTags()` | List tracking tags (Meta Pixels) |
+| `ads.listTrackingTagSharedAccounts()` | List ad accounts a tracking tag is shared with |
 | `ads.createConversionDestination()` | Create a conversion destination (LinkedIn) |
 | `ads.createCtwaAd()` | Create Click-to-WhatsApp ad |
 | `ads.createStandaloneAd()` | Create standalone ad |
+| `ads.createTrackingTag()` | Create a tracking tag (Meta Pixel) |
 | `ads.getAd()` | Get ad details |
 | `ads.getAdAnalytics()` | Get ad analytics |
 | `ads.getAdComments()` | List comments on an ad |
 | `ads.getConversionDestination()` | Fetch a single conversion destination |
 | `ads.getConversionMetrics()` | Fetch attribution metrics for a conversion destination |
+| `ads.getTrackingTag()` | Fetch a single tracking tag (Meta Pixel) |
+| `ads.getTrackingTagStats()` | Aggregated event stats for a tracking tag (Meta Pixel) |
 | `ads.updateAd()` | Update ad |
 | `ads.updateConversionDestination()` | Update a conversion destination |
+| `ads.updateTrackingTag()` | Update a tracking tag (Meta Pixel) |
 | `ads.deleteAd()` | Cancel an ad |
 | `ads.deleteConversionDestination()` | Soft-delete a conversion destination |
 | `ads.addConversionAssociations()` | Associate campaigns with a conversion destination |
+| `ads.addTrackingTagSharedAccount()` | Share a tracking tag with an ad account |
 | `ads.boostPost()` | Boost post as ad |
 | `ads.removeConversionAssociations()` | Remove campaign↔conversion associations |
+| `ads.removeTrackingTagSharedAccount()` | Stop sharing a tracking tag with an ad account |
 | `ads.searchAdInterests()` | Search targeting interests |
 | `ads.searchAdTargetingLocations()` | Search geo targeting locations (Meta) |
 | `ads.sendConversions()` | Send conversion events to an ad platform |
