@@ -852,14 +852,6 @@ export class Zernio {
     removeConversionAssociations: removeConversionAssociations,
     getConversionMetrics: getConversionMetrics,
     createCtwaAd: createCtwaAd,
-    listTrackingTags: listTrackingTags,
-    createTrackingTag: createTrackingTag,
-    getTrackingTag: getTrackingTag,
-    updateTrackingTag: updateTrackingTag,
-    listTrackingTagSharedAccounts: listTrackingTagSharedAccounts,
-    addTrackingTagSharedAccount: addTrackingTagSharedAccount,
-    removeTrackingTagSharedAccount: removeTrackingTagSharedAccount,
-    getTrackingTagStats: getTrackingTagStats,
   };
 
   /**
@@ -886,6 +878,20 @@ export class Zernio {
     getAdAudience: getAdAudience,
     deleteAdAudience: deleteAdAudience,
     addUsersToAdAudience: addUsersToAdAudience,
+  };
+
+  /**
+   * trackingtags API
+   */
+  trackingtags = {
+    listTrackingTags: listTrackingTags,
+    createTrackingTag: createTrackingTag,
+    getTrackingTag: getTrackingTag,
+    updateTrackingTag: updateTrackingTag,
+    listTrackingTagSharedAccounts: listTrackingTagSharedAccounts,
+    addTrackingTagSharedAccount: addTrackingTagSharedAccount,
+    removeTrackingTagSharedAccount: removeTrackingTagSharedAccount,
+    getTrackingTagStats: getTrackingTagStats,
   };
 
   /**
