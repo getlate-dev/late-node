@@ -1127,6 +1127,35 @@ export type DiscordPlatformData = {
  */
 export type autoArchiveDuration = 60 | 1440 | 4320 | 10080;
 
+/**
+ * A single inline button rendered inside an auto-DM via Meta's button_template.
+ * Up to 3 buttons per automation. `url` and `postback` work on Instagram and
+ * Facebook; `phone` is Facebook-only. When buttons are set, `dmMessage` becomes
+ * the button_template text and must be 640 characters or less.
+ *
+ */
+export type DmButton = {
+    type: 'url' | 'postback' | 'phone';
+    /**
+     * Button label (20 chars max)
+     */
+    title: string;
+    /**
+     * Target URL (required when type is url)
+     */
+    url?: string;
+    /**
+     * Postback payload delivered via the messaging_postbacks webhook (required when type is postback)
+     */
+    payload?: string;
+    /**
+     * Phone number, e.g. +14155551234 (required when type is phone; Facebook only)
+     */
+    phone?: string;
+};
+
+export type type2 = 'url' | 'postback' | 'phone';
+
 export type ErrorResponse = {
     error?: string;
     details?: {
@@ -1367,7 +1396,7 @@ export type topicType = 'STANDARD' | 'EVENT' | 'OFFER';
 /**
  * Button action type: LEARN_MORE, BOOK, ORDER, SHOP, SIGN_UP, CALL
  */
-export type type2 = 'LEARN_MORE' | 'BOOK' | 'ORDER' | 'SHOP' | 'SIGN_UP' | 'CALL';
+export type type3 = 'LEARN_MORE' | 'BOOK' | 'ORDER' | 'SHOP' | 'SIGN_UP' | 'CALL';
 
 /**
  * Type of offer
@@ -1848,7 +1877,7 @@ export type MediaItem = {
     tiktokProcessed?: boolean;
 };
 
-export type type3 = 'image' | 'video' | 'gif' | 'document';
+export type type4 = 'image' | 'video' | 'gif' | 'document';
 
 export type MediaUploadResponse = {
     files?: Array<UploadedFile>;
@@ -2698,7 +2727,7 @@ export type UploadedFile = {
     mimeType?: string;
 };
 
-export type type4 = 'image' | 'video' | 'document';
+export type type5 = 'image' | 'video' | 'document';
 
 export type UploadTokenResponse = {
     token?: string;
@@ -3854,7 +3883,7 @@ export type WhatsAppTemplateButton = {
     navigate_screen?: string;
 };
 
-export type type5 = 'quick_reply' | 'url' | 'phone_number' | 'otp' | 'flow' | 'mpm' | 'catalog';
+export type type6 = 'quick_reply' | 'url' | 'phone_number' | 'otp' | 'flow' | 'mpm' | 'catalog';
 
 /**
  * Required when type is otp
@@ -13170,6 +13199,10 @@ export type ListCommentAutomationsResponse = ({
         keywords?: Array<(string)>;
         matchMode?: 'exact' | 'contains';
         dmMessage?: string;
+        /**
+         * Inline DM buttons (up to 3). Omitted when none are set.
+         */
+        buttons?: Array<DmButton>;
         commentReply?: string;
         isActive?: boolean;
         stats?: {
@@ -13215,9 +13248,13 @@ export type CreateCommentAutomationData = {
         keywords?: Array<(string)>;
         matchMode?: 'exact' | 'contains';
         /**
-         * DM text to send to commenter
+         * DM text to send to commenter. Max 640 chars when buttons are set, otherwise ~1000.
          */
         dmMessage: string;
+        /**
+         * Optional inline DM buttons (1-3). Phone buttons are Facebook-only. Omit or pass [] for a plain-text DM.
+         */
+        buttons?: Array<DmButton>;
         /**
          * Optional public reply to the comment
          */
@@ -13235,6 +13272,10 @@ export type CreateCommentAutomationResponse = ({
         keywords?: Array<(string)>;
         matchMode?: 'exact' | 'contains';
         dmMessage?: string;
+        /**
+         * Inline DM buttons (up to 3). Omitted when none are set.
+         */
+        buttons?: Array<DmButton>;
         commentReply?: string;
         isActive?: boolean;
         stats?: {
@@ -13269,6 +13310,10 @@ export type GetCommentAutomationResponse = ({
         keywords?: Array<(string)>;
         matchMode?: 'exact' | 'contains';
         dmMessage?: string;
+        /**
+         * Inline DM buttons (up to 3). Omitted when none are set.
+         */
+        buttons?: Array<DmButton>;
         commentReply?: string;
         isActive?: boolean;
         stats?: {
@@ -13315,6 +13360,10 @@ export type UpdateCommentAutomationData = {
         keywords?: Array<(string)>;
         matchMode?: 'exact' | 'contains';
         dmMessage?: string;
+        /**
+         * Inline DM buttons (1-3). Pass [] to clear all buttons.
+         */
+        buttons?: Array<DmButton>;
         commentReply?: string;
         isActive?: boolean;
     };
@@ -13331,6 +13380,10 @@ export type UpdateCommentAutomationResponse = ({
         keywords?: Array<(string)>;
         matchMode?: 'exact' | 'contains';
         dmMessage?: string;
+        /**
+         * Inline DM buttons (up to 3). Omitted when none are set.
+         */
+        buttons?: Array<DmButton>;
         commentReply?: string;
         isActive?: boolean;
         updatedAt?: string;
