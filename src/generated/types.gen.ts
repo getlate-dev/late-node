@@ -14180,6 +14180,10 @@ export type GetAdCommentsResponse = ({
          */
         effectiveStoryId: string;
         /**
+         * Facebook-only. The connected Facebook Page SocialAccount these comments were read through — pass it as `accountId` (with `effectiveStoryId` as the postId) to /v1/inbox/comments to reply/hide/delete. Null when no connected Page was used (then moderation isn't possible).
+         */
+        facebookAccountId?: (string) | null;
+        /**
          * Instagram-only. The Instagram-scoped business ID that owns the boosted media (creative.instagram_user_id).
          */
         instagramUserId?: string;
@@ -14188,7 +14192,7 @@ export type GetAdCommentsResponse = ({
          */
         instagramPermalink?: string;
         /**
-         * Instagram-only. The connected Instagram SocialAccount these comments were read through — use it for reply/hide actions via /v1/inbox/comments.
+         * Instagram-only. The connected Instagram SocialAccount these comments were read through — pass it as `accountId` (with `effectiveStoryId` as the postId) to /v1/inbox/comments to reply/hide/delete.
          */
         instagramAccountId?: string;
         /**
