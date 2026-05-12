@@ -2080,6 +2080,15 @@ export const deleteTelegramCommands = <ThrowOnError extends boolean = false>(opt
 /**
  * List commented posts
  * Returns posts with comment counts from all connected accounts. Aggregates data across multiple accounts.
+ *
+ * For users with the Ads add-on (Metronome plans always qualify), the user's Meta ads
+ * (boosted/dark posts) are included too, flagged with `isAd: true` and an `adId`. Use
+ * `?platform=metaads` to return *only* ad rows; passing `facebook`/`instagram` returns
+ * *organic* posts only (no ads); omitting `platform` returns both. Fetch an ad row's
+ * thread from GET /v1/ads/{adId}/comments. Ad comment counts are read with the Marketing
+ * API token (Facebook) or the connected Instagram account's token (Instagram); an ad
+ * whose count can't be read is omitted.
+ *
  */
 export const listInboxComments = <ThrowOnError extends boolean = false>(options?: OptionsLegacyParser<ListInboxCommentsData, ThrowOnError>) => {
     return (options?.client ?? client).get<ListInboxCommentsResponse, ListInboxCommentsError, ThrowOnError>({
@@ -3236,6 +3245,12 @@ export const listCommentAutomationLogs = <ThrowOnError extends boolean = false>(
  * Returns a paginated list of ads with metrics computed over an optional date range.
  * Use source=all to include externally-synced ads from platform ad managers.
  * If no date range is provided, defaults to the last 90 days. Date range is capped at 730 days max.
+ *
+ * To find the Zernio ad behind a comment you see in Meta Business Manager, filter by
+ * platformAdId (the Meta ad ID), effectiveObjectStoryId (Facebook), or
+ * effectiveInstagramMediaId (Instagram) — those are the post/media the ad's engagement
+ * lives on, and are also returned on each ad's `creative` object. Then call
+ * GET /v1/ads/{adId}/comments with the returned ad id.
  *
  */
 export const listAds = <ThrowOnError extends boolean = false>(options?: OptionsLegacyParser<ListAdsData, ThrowOnError>) => {

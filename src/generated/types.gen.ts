@@ -217,6 +217,26 @@ export type Ad = {
          */
         objectType?: string;
         /**
+         * Meta creative `object_story_id` (the SHARE reference). Frequently absent — Meta omits it for SHARE creatives. Use effectiveObjectStoryId instead.
+         */
+        objectStoryId?: (string) | null;
+        /**
+         * Meta `effective_object_story_id` — `{pageId}_{postId}` of the Facebook post the ad's engagement (comments) lives on. Pass to GET /v1/ads?effectiveObjectStoryId= to map a Business-Manager-visible post back to this ad; GET /v1/ads/{adId}/comments resolves comments against it.
+         */
+        effectiveObjectStoryId?: (string) | null;
+        /**
+         * Meta `effective_instagram_media_id` — the Instagram media ID of the boosted post the ad's engagement lives on. Pass to GET /v1/ads?effectiveInstagramMediaId= to map a Business-Manager-visible IG post back to this ad.
+         */
+        effectiveInstagramMediaId?: (string) | null;
+        /**
+         * Meta `instagram_user_id` — the Instagram-scoped business ID that owns the boosted media.
+         */
+        instagramUserId?: (string) | null;
+        /**
+         * Meta `instagram_permalink_url` — public Instagram post URL of the boosted media.
+         */
+        instagramPermalinkUrl?: (string) | null;
+        /**
          * All media URLs for this ad (carousel images, multiple assets). Populated for Meta (carousel child_attachments), Google Ads (responsive display marketing_images), and LinkedIn (multi-image posts).
          */
         mediaUrls?: Array<(string)>;
@@ -10392,9 +10412,9 @@ export type ListInboxCommentsData = {
          */
         minComments?: number;
         /**
-         * Filter by platform
+         * Filter by platform. `metaads` is a synthetic value meaning the user's ads (boosted/dark posts) only; `facebook`/`instagram` return organic posts only.
          */
-        platform?: 'facebook' | 'instagram' | 'twitter' | 'bluesky' | 'threads' | 'youtube' | 'linkedin' | 'reddit';
+        platform?: 'facebook' | 'instagram' | 'twitter' | 'bluesky' | 'threads' | 'youtube' | 'linkedin' | 'reddit' | 'metaads';
         /**
          * Filter by profile ID
          */
@@ -10434,6 +10454,14 @@ export type ListInboxCommentsResponse = ({
          * Reddit subreddit name
          */
         subreddit?: (string) | null;
+        /**
+         * True when this row is an ad (boosted/dark post). `platform` is then the comment platform (facebook or instagram), `id` equals `adId`, and the thread is at GET /v1/ads/{adId}/comments.
+         */
+        isAd?: boolean;
+        /**
+         * Internal Zernio ad id — only on ad rows (same value as `id`).
+         */
+        adId?: string;
     }>;
     pagination?: {
         hasMore?: boolean;
@@ -10574,12 +10602,25 @@ export type GetInboxPostCommentsResponse = ({
          */
         subreddit?: (string) | null;
         lastUpdated?: string;
+        /**
+         * (Facebook/Instagram only) Present when this post has no organic comments but is a boosted post — the engagement lives on the ad. Use the ad-comments endpoint instead.
+         */
+        adComments?: {
+            /**
+             * Internal Zernio ad ID
+             */
+            adId?: string;
+            /**
+             * Path to fetch the ad's comments (GET /v1/ads/{adId}/comments)
+             */
+            adCommentsUrl?: string;
+        } | null;
     };
 });
 
-export type GetInboxPostCommentsError = ({
+export type GetInboxPostCommentsError = (unknown | {
     error?: string;
-} | unknown);
+});
 
 export type ReplyToInboxPostData = {
     body: {
@@ -13557,6 +13598,14 @@ export type ListAdsData = {
          */
         campaignId?: string;
         /**
+         * Instagram media ID of the boosted post (Meta `effective_instagram_media_id`). Use to map a Business-Manager-visible IG post back to the Zernio ad.
+         */
+        effectiveInstagramMediaId?: string;
+        /**
+         * Facebook `{pageId}_{postId}` of the post the ad's engagement lives on (Meta `effective_object_story_id`). Use to map a Business-Manager-visible post back to the Zernio ad.
+         */
+        effectiveObjectStoryId?: string;
+        /**
          * Start of metrics date range (YYYY-MM-DD). Defaults to 90 days ago.
          */
         fromDate?: string;
@@ -13566,6 +13615,10 @@ export type ListAdsData = {
          */
         page?: number;
         platform?: 'facebook' | 'instagram' | 'tiktok' | 'linkedin' | 'pinterest' | 'google' | 'twitter';
+        /**
+         * Meta ad ID. Returns the ad with this platform-side ad ID.
+         */
+        platformAdId?: string;
         /**
          * Profile ID
          */
