@@ -14112,6 +14112,18 @@ export type GetAdCommentsResponse = ({
          */
         effectiveStoryId: string;
         /**
+         * Instagram-only. The Instagram-scoped business ID that owns the boosted media (creative.instagram_user_id).
+         */
+        instagramUserId?: string;
+        /**
+         * Instagram-only. Public permalink of the boosted IG post (creative.instagram_permalink_url).
+         */
+        instagramPermalink?: string;
+        /**
+         * Instagram-only. The connected Instagram SocialAccount these comments were read through — use it for reply/hide actions via /v1/inbox/comments.
+         */
+        instagramAccountId?: string;
+        /**
          * Social account ID (ads SocialAccount).
          */
         accountId: string;

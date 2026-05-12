@@ -3474,6 +3474,11 @@ export const getAdAnalytics = <ThrowOnError extends boolean = false>(options: Op
  * effective_instagram_media_id (Instagram) via the Marketing API on each call
  * (cached in-process by the platform client), then fetches comments from the Graph API.
  *
+ * For Instagram-placed ads, the Instagram account that runs the ad must be connected
+ * to Zernio — comments are read through that account's token. If none of the connected
+ * Instagram accounts on the profile can read the ad's media, the call returns
+ * ads_connection_required.
+ *
  * Meta-only. Other ad platforms (TikTok, LinkedIn, Pinterest, Google, X) do not
  * expose a public per-ad comments API and return feature_not_available.
  *
