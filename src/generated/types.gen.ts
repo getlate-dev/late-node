@@ -10455,13 +10455,17 @@ export type ListInboxCommentsResponse = ({
          */
         subreddit?: (string) | null;
         /**
-         * True when this row is an ad (boosted/dark post). `platform` is then the comment platform (facebook or instagram), `id` equals `adId`, and the thread is at GET /v1/ads/{adId}/comments.
+         * True when this row is an ad (boosted/dark post). `platform` is then the placement (facebook = the Page dark post / instagram = the IG media), `id` is `{adId}:{placement}`, and the thread is at GET /v1/ads/{adId}/comments?placement={placement}.
          */
         isAd?: boolean;
         /**
-         * Internal Zernio ad id — only on ad rows (same value as `id`).
+         * Internal Zernio ad id — only on ad rows.
          */
         adId?: string;
+        /**
+         * Which side of the ad this row's comments are on — only on ad rows.
+         */
+        placement?: 'facebook' | 'instagram';
     }>;
     pagination?: {
         hasMore?: boolean;
@@ -14138,6 +14142,10 @@ export type GetAdCommentsData = {
          */
         cursor?: string;
         limit?: number;
+        /**
+         * Which side of the ad to return comments for. Omit to default to the Instagram side when present, else Facebook. Returns ad_not_commentable if the ad has no such placement.
+         */
+        placement?: 'facebook' | 'instagram';
     };
 };
 
@@ -14151,7 +14159,14 @@ export type GetAdCommentsResponse = ({
         cursor?: string;
     };
     meta: {
+        /**
+         * Which side these comments are on (same as `placement`).
+         */
         platform: 'facebook' | 'instagram';
+        /**
+         * The placement these comments are for — useful when you didn't pass ?placement= and want to know which one you got.
+         */
+        placement: 'facebook' | 'instagram';
         /**
          * Internal Zernio ad ID.
          */
@@ -14161,7 +14176,7 @@ export type GetAdCommentsResponse = ({
          */
         platformAdId: string;
         /**
-         * Underlying post ID the comments belong to. effective_object_story_id for Facebook, effective_instagram_media_id for Instagram.
+         * Underlying post ID the comments belong to. effective_object_story_id for the Facebook side, effective_instagram_media_id for the Instagram side.
          */
         effectiveStoryId: string;
         /**

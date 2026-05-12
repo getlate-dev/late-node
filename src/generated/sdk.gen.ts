@@ -2082,12 +2082,15 @@ export const deleteTelegramCommands = <ThrowOnError extends boolean = false>(opt
  * Returns posts with comment counts from all connected accounts. Aggregates data across multiple accounts.
  *
  * For users with the Ads add-on (Metronome plans always qualify), the user's Meta ads
- * (boosted/dark posts) are included too, flagged with `isAd: true` and an `adId`. Use
+ * (boosted/dark posts) are included too. There's one row per (ad, placement-with-comments):
+ * an ad that runs on both Facebook feed and Instagram feed produces up to two rows (the
+ * Page dark post and the IG media have separate comment threads), each flagged
+ * `isAd: true` with `adId` and `placement` (`id` is `{adId}:{placement}`). Use
  * `?platform=metaads` to return *only* ad rows; passing `facebook`/`instagram` returns
- * *organic* posts only (no ads); omitting `platform` returns both. Fetch an ad row's
- * thread from GET /v1/ads/{adId}/comments. Ad comment counts are read with the Marketing
- * API token (Facebook) or the connected Instagram account's token (Instagram); an ad
- * whose count can't be read is omitted.
+ * *organic* posts only (no ads); omitting `platform` returns both. Fetch a row's thread
+ * from GET /v1/ads/{adId}/comments?placement={placement}. Ad comment counts are read with
+ * the Marketing API token (Facebook side) or the connected Instagram account's token
+ * (Instagram side); a row whose count can't be read is omitted.
  *
  */
 export const listInboxComments = <ThrowOnError extends boolean = false>(options?: OptionsLegacyParser<ListInboxCommentsData, ThrowOnError>) => {
@@ -3485,14 +3488,17 @@ export const getAdAnalytics = <ThrowOnError extends boolean = false>(options: Op
  * regular GET /v1/inbox/comments/{postId} endpoint cannot serve because dark posts are
  * not in Zernio's post database.
  *
- * Resolves the ad's creative effective_object_story_id (Facebook) or
- * effective_instagram_media_id (Instagram) via the Marketing API on each call
- * (cached in-process by the platform client), then fetches comments from the Graph API.
+ * An ad that runs on both Facebook feed and Instagram feed has two separate underlying
+ * posts with separate comment threads (the creative's effective_object_story_id and
+ * effective_instagram_media_id). Use the `placement` query param to pick one; with no
+ * param the Instagram side is returned when it exists, otherwise Facebook. The
+ * identifiers are read from the ad record (persisted during sync) with a Marketing-API
+ * fallback for ads that predate the field.
  *
- * For Instagram-placed ads, the Instagram account that runs the ad must be connected
- * to Zernio — comments are read through that account's token. If none of the connected
- * Instagram accounts on the profile can read the ad's media, the call returns
- * ads_connection_required.
+ * For Instagram-placed comments, the Instagram account that runs the ad must be connected
+ * to Zernio — those comments are read through that account's token. If no connected
+ * Instagram account on the profile can read the ad's media, the call returns
+ * ads_connection_required (the Facebook side, if any, is still readable via ?placement=facebook).
  *
  * Meta-only. Other ad platforms (TikTok, LinkedIn, Pinterest, Google, X) do not
  * expose a public per-ad comments API and return feature_not_available.
