@@ -14017,6 +14017,10 @@ export type GetAdsTimelineData = {
          */
         accountId: string;
         /**
+         * Optional platform-native ad account ID (e.g. Meta `act_…`, TikTok advertiser ID). Use when the connection wraps multiple platform ad accounts and the chart should show one only. Note: rows ingested before 2026-05-13 don't carry this column; the recurring 7-day re-sync repopulates them naturally.
+         */
+        adAccountId?: string;
+        /**
          * Inclusive start of metrics range (YYYY-MM-DD). Defaults to 90 days ago.
          */
         fromDate?: string;
