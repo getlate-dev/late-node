@@ -3025,7 +3025,7 @@ export type Webhook = {
      */
     url?: string;
     /**
-     * Secret key for HMAC-SHA256 signature (not returned in responses for security)
+     * Secret key for HMAC-SHA256 signature verification.
      */
     secret?: string;
     /**
