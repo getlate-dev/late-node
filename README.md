@@ -356,6 +356,7 @@ try {
 |--------|-------------|
 | `adCampaigns.listAdCampaigns()` | List campaigns |
 | `adCampaigns.bulkUpdateAdCampaignStatus()` | Pause or resume many campaigns |
+| `adCampaigns.getAdsTimeline()` | Get daily aggregate ad metrics for an account |
 | `adCampaigns.getAdTree()` | Get campaign tree |
 | `adCampaigns.updateAdCampaign()` | Update a campaign (budget and/or bid strategy) |
 | `adCampaigns.updateAdCampaignStatus()` | Pause or resume a campaign |

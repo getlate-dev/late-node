@@ -85,6 +85,7 @@ import {
   getAdAudience,
   getAdComments,
   getAdTree,
+  getAdsTimeline,
   getAllAccountsHealth,
   getAnalytics,
   getBestTimeToPost,
@@ -869,6 +870,7 @@ export class Zernio {
     updateAdSet: updateAdSet,
     updateAdSetStatus: updateAdSetStatus,
     getAdTree: getAdTree,
+    getAdsTimeline: getAdsTimeline,
   };
 
   /**

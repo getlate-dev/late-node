@@ -14010,6 +14010,82 @@ export type GetAdTreeError = ({
     error?: string;
 } | unknown);
 
+export type GetAdsTimelineData = {
+    query: {
+        /**
+         * Social account ID. Sibling-expanded to its linked posting↔ads pair.
+         */
+        accountId: string;
+        /**
+         * Inclusive start of metrics range (YYYY-MM-DD). Defaults to 90 days ago.
+         */
+        fromDate?: string;
+        /**
+         * Restrict to one platform.
+         */
+        platform?: 'facebook' | 'instagram' | 'tiktok' | 'linkedin' | 'pinterest' | 'google' | 'twitter';
+        /**
+         * Inclusive end of metrics range (YYYY-MM-DD). Defaults to today. Max 730-day range.
+         */
+        toDate?: string;
+    };
+};
+
+export type GetAdsTimelineResponse = ({
+    rows?: Array<{
+        date?: string;
+        /**
+         * Native currency units (matches /ads/tree convention).
+         */
+        spend?: number;
+        impressions?: number;
+        reach?: number;
+        clicks?: number;
+        engagement?: number;
+        /**
+         * Click-through rate as a percentage (0–100).
+         */
+        ctr?: number;
+        /**
+         * Cost per click in native currency.
+         */
+        cpc?: number;
+        /**
+         * Cost per 1000 impressions in native currency.
+         */
+        cpm?: number;
+        /**
+         * Sum of conversion events matching the campaign optimization goal. Meta-only at time of writing.
+         */
+        conversions?: number;
+        costPerConversion?: number;
+        /**
+         * Per-action-type counts merged across all ads on this day. Keys are platform-native action types.
+         */
+        actions?: {
+            [key: string]: (number);
+        };
+        /**
+         * Monetary mirror of `actions` in native currency.
+         */
+        actionValues?: {
+            [key: string]: (number);
+        };
+        /**
+         * Sum of purchase-type action values on this day, native currency.
+         */
+        purchaseValue?: number;
+        /**
+         * Derived purchaseValue / spend.
+         */
+        roas?: number;
+    }>;
+});
+
+export type GetAdsTimelineError = ({
+    error?: string;
+} | unknown);
+
 export type GetAdData = {
     path: {
         adId: string;
