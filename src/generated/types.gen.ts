@@ -6054,6 +6054,27 @@ export type UpdateAccountError = (unknown | {
     error?: string;
 });
 
+export type MoveAccountToProfileData = {
+    body: {
+        /**
+         * Target profile ID (must be a valid ObjectId and owned by the same user as the account).
+         */
+        profileId: string;
+    };
+    path: {
+        accountId: string;
+    };
+};
+
+export type MoveAccountToProfileResponse = ({
+    message?: string;
+    profileId?: string;
+});
+
+export type MoveAccountToProfileError = (unknown | {
+    error?: string;
+});
+
 export type DeleteAccountData = {
     path: {
         accountId: string;

@@ -50,6 +50,11 @@ describe('Endpoint Methods', () => {
       expect(client.accounts.updateAccount).toBeTypeOf('function');
     });
 
+    it('should have moveAccountToProfile method', () => {
+      expect(client.accounts.moveAccountToProfile).toBeDefined();
+      expect(client.accounts.moveAccountToProfile).toBeTypeOf('function');
+    });
+
     it('should have deleteAccount method', () => {
       expect(client.accounts.deleteAccount).toBeDefined();
       expect(client.accounts.deleteAccount).toBeTypeOf('function');

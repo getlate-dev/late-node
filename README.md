@@ -193,6 +193,7 @@ try {
 | `accounts.updateAccount()` | Update account |
 | `accounts.deleteAccount()` | Disconnect account |
 | `accounts.batchGetGoogleBusinessReviews()` | Batch get reviews |
+| `accounts.moveAccountToProfile()` | Move account to a different profile |
 
 ### Profiles
 | Method | Description |
