@@ -3031,7 +3031,7 @@ export type Webhook = {
     /**
      * Events subscribed to
      */
-    events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'account.ads.initial_sync_completed' | 'message.received' | 'message.sent' | 'message.edited' | 'message.deleted' | 'message.delivered' | 'message.read' | 'message.failed' | 'comment.received' | 'review.new' | 'review.updated')>;
+    events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'account.ads.initial_sync_completed' | 'message.received' | 'message.sent' | 'message.edited' | 'message.deleted' | 'message.delivered' | 'message.read' | 'message.failed' | 'comment.received' | 'review.new' | 'review.updated' | 'ad.status_changed')>;
     /**
      * Whether webhook delivery is enabled
      */
@@ -3245,6 +3245,127 @@ export type event3 = 'account.disconnected';
 export type disconnectionType = 'intentional' | 'unintentional';
 
 /**
+ * Webhook payload for the `ad.status_changed` event. Currently emitted
+ * only for Meta (`metaads`).
+ *
+ * Sourced from two Meta `ad_account` webhook fields:
+ * - `in_process_ad_objects` - the ad object finished processing and
+ * exited `IN_PROCESS`. `status.raw` carries Meta's `status_name`.
+ * - `with_issues_ad_objects` - the ad object entered `WITH_ISSUES`.
+ * `status.raw` is `WITH_ISSUES` and the `error` block is populated
+ * from Meta's `error_code` / `error_summary` / `error_message`.
+ *
+ */
+export type WebhookPayloadAdStatusChanged = {
+    /**
+     * Stable webhook event ID
+     */
+    id: string;
+    event: 'ad.status_changed';
+    /**
+     * The connected ad-platform account that owns the ad object.
+     */
+    account: {
+        /**
+         * Internal Zernio account ID (same as used in /v1/accounts/{accountId}).
+         */
+        accountId: string;
+        /**
+         * Internal Zernio profile ID this account belongs to.
+         */
+        profileId: string;
+        /**
+         * Ad platform identifier. Currently always `metaads`.
+         */
+        platform: string;
+        /**
+         * Display username of the connected ad-platform account.
+         */
+        username: string;
+        /**
+         * Human-readable display name of the account, when available.
+         */
+        displayName?: string;
+    };
+    /**
+     * The ad-platform object the status change applies to.
+     */
+    adObject: {
+        /**
+         * Hierarchy level the status applies to. Mirrors Meta's `level`. Creative-level events are not forwarded.
+         */
+        level: 'CAMPAIGN' | 'AD_SET' | 'AD';
+        /**
+         * Platform-native ID of the campaign / ad set / ad. For Meta this is
+         * the bare numeric ID (e.g. `120244894077860689`).
+         *
+         */
+        platformId: string;
+        /**
+         * Platform-native ad-account ID. For Meta this uses the `act_<id>`
+         * shape.
+         *
+         */
+        platformAdAccountId: string;
+    };
+    /**
+     * Status info. Branch on `status.raw` to handle each transition.
+     */
+    status: {
+        /**
+         * Platform-native status string, forwarded verbatim. For Meta
+         * this is `status_name` from `in_process_ad_objects` (e.g.
+         * `ACTIVE`, `PAUSED`, `PENDING_REVIEW`, `ARCHIVED`, `DELETED`,
+         * `DISAPPROVED`), or `WITH_ISSUES` when sourced from
+         * `with_issues_ad_objects`. Not constrained by an `enum` — Meta
+         * may add new values.
+         *
+         */
+        raw: string;
+    };
+    /**
+     * Optional. Present on most `WITH_ISSUES` events, carrying the
+     * platform's error diagnostics. May be absent on some `WITH_ISSUES`
+     * events (Meta does not always include diagnostics). Always absent
+     * for any other `status.raw` value. Always null-check before reading.
+     *
+     */
+    error?: {
+        /**
+         * Platform-native error code, forwarded verbatim. For Meta this
+         * is `error_code` as a string. Use as the stable discriminator —
+         * `summary` and `message` are localized.
+         *
+         */
+        code: string;
+        /**
+         * Short human-readable summary (Meta `error_summary`). Localized
+         * to the ad-account owner's Meta locale — display only, do not
+         * match on it.
+         *
+         */
+        summary?: string;
+        /**
+         * Full human-readable error message (Meta `error_message`).
+         * Localized — display only.
+         *
+         */
+        message?: string;
+    };
+    /**
+     * ISO-8601 timestamp the webhook was produced.
+     */
+    timestamp: string;
+};
+
+export type event4 = 'ad.status_changed';
+
+/**
+ * Hierarchy level the status applies to. Mirrors Meta's `level`. Creative-level events are not forwarded.
+ */
+export type level = 'CAMPAIGN' | 'AD_SET' | 'AD';
+
+/**
  * Webhook payload for comment received events (Instagram, Facebook, Twitter/X, YouTube, LinkedIn, Bluesky, Reddit)
  */
 export type WebhookPayloadComment = {
@@ -3335,7 +3456,7 @@ export type WebhookPayloadComment = {
     timestamp: string;
 };
 
-export type event4 = 'comment.received';
+export type event5 = 'comment.received';
 
 export type platform7 = 'instagram' | 'facebook' | 'twitter' | 'youtube' | 'linkedin' | 'bluesky' | 'reddit';
 
@@ -3623,7 +3744,7 @@ export type WebhookPayloadMessage = {
     timestamp: string;
 };
 
-export type event5 = 'message.received';
+export type event6 = 'message.received';
 
 /**
  * WhatsApp only. Which kind of interactive reply the user sent:
@@ -3655,7 +3776,7 @@ export type WebhookPayloadMessageDeleted = {
     timestamp: string;
 };
 
-export type event6 = 'message.deleted';
+export type event7 = 'message.deleted';
 
 /**
  * Shared payload for message.delivered, message.read, and
@@ -3690,7 +3811,7 @@ export type WebhookPayloadMessageDeliveryStatus = {
     timestamp: string;
 };
 
-export type event7 = 'message.delivered' | 'message.read' | 'message.failed';
+export type event8 = 'message.delivered' | 'message.read' | 'message.failed';
 
 /**
  * Webhook payload for message.edited events. Fires when the sender
@@ -3732,7 +3853,7 @@ export type WebhookPayloadMessageEdited = {
     timestamp: string;
 };
 
-export type event8 = 'message.edited';
+export type event9 = 'message.edited';
 
 /**
  * Webhook payload for message sent events (fired when a message is sent via the API)
@@ -3808,7 +3929,7 @@ export type WebhookPayloadMessageSent = {
     timestamp: string;
 };
 
-export type event9 = 'message.sent';
+export type event10 = 'message.sent';
 
 /**
  * Webhook payload for post events
@@ -3836,7 +3957,7 @@ export type WebhookPayloadPost = {
     timestamp: string;
 };
 
-export type event10 = 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled';
+export type event11 = 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled';
 
 /**
  * Webhook payload for the review.new event (new review posted on a connected account).
@@ -3856,7 +3977,7 @@ export type WebhookPayloadReviewNew = {
     timestamp: string;
 };
 
-export type event11 = 'review.new';
+export type event12 = 'review.new';
 
 /**
  * Webhook payload for the review.updated event. Fired when the reviewer edits
@@ -3880,7 +4001,7 @@ export type WebhookPayloadReviewUpdated = {
     timestamp: string;
 };
 
-export type event12 = 'review.updated';
+export type event13 = 'review.updated';
 
 /**
  * Webhook payload for test deliveries
@@ -3898,7 +4019,7 @@ export type WebhookPayloadTest = {
     timestamp: string;
 };
 
-export type event13 = 'webhook.test';
+export type event14 = 'webhook.test';
 
 export type WhatsAppBodyComponent = {
     type: 'body';
@@ -9176,7 +9297,7 @@ export type CreateWebhookSettingsData = {
         /**
          * Events to subscribe to (at least one required)
          */
-        events: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'account.ads.initial_sync_completed' | 'message.received' | 'message.sent' | 'message.edited' | 'message.deleted' | 'message.delivered' | 'message.read' | 'message.failed' | 'comment.received' | 'review.new' | 'review.updated')>;
+        events: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'account.ads.initial_sync_completed' | 'message.received' | 'message.sent' | 'message.edited' | 'message.deleted' | 'message.delivered' | 'message.read' | 'message.failed' | 'comment.received' | 'review.new' | 'review.updated' | 'ad.status_changed')>;
         /**
          * Enable or disable webhook delivery. Defaults to `true` when omitted.
          */
@@ -9220,7 +9341,7 @@ export type UpdateWebhookSettingsData = {
         /**
          * Events to subscribe to. Must contain at least one event if provided.
          */
-        events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'account.ads.initial_sync_completed' | 'message.received' | 'message.sent' | 'message.edited' | 'message.deleted' | 'message.delivered' | 'message.read' | 'message.failed' | 'comment.received' | 'review.new' | 'review.updated')>;
+        events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'account.ads.initial_sync_completed' | 'message.received' | 'message.sent' | 'message.edited' | 'message.deleted' | 'message.delivered' | 'message.read' | 'message.failed' | 'comment.received' | 'review.new' | 'review.updated' | 'ad.status_changed')>;
         /**
          * Enable or disable webhook delivery
          */
@@ -14212,6 +14333,10 @@ export type GetAdAnalyticsResponse = ({
         name?: string;
         platform?: string;
         status?: string;
+        /**
+         * ISO 4217 code of the ad account that owns this ad (e.g. USD, THB, INR). All money values in `summary` and `daily` are in this currency. Null only on legacy ads synced before currency was persisted.
+         */
+        currency?: (string) | null;
     };
     analytics?: {
         summary?: AdMetrics;
