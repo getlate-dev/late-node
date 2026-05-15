@@ -3074,7 +3074,7 @@ export type Webhook = {
     /**
      * Events subscribed to
      */
-    events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'account.ads.initial_sync_completed' | 'message.received' | 'message.sent' | 'message.edited' | 'message.deleted' | 'message.delivered' | 'message.read' | 'message.failed' | 'comment.received' | 'review.new' | 'review.updated' | 'ad.status_changed' | 'whatsapp.template.status_updated')>;
+    events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'post.platform.published' | 'post.platform.failed' | 'account.connected' | 'account.disconnected' | 'account.ads.initial_sync_completed' | 'message.received' | 'message.sent' | 'message.edited' | 'message.deleted' | 'message.delivered' | 'message.read' | 'message.failed' | 'comment.received' | 'review.new' | 'review.updated' | 'ad.status_changed' | 'whatsapp.template.status_updated')>;
     /**
      * Whether webhook delivery is enabled
      */
@@ -4003,6 +4003,82 @@ export type WebhookPayloadPost = {
 export type event11 = 'post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled';
 
 /**
+ * Webhook payload for the per-platform terminal events
+ * `post.platform.published` and `post.platform.failed`. Fires once
+ * per platform target inside a post as that platform reaches a
+ * terminal state (published or permanent failure). The `post`
+ * envelope mirrors the shape of `WebhookPayloadPost` so consumers
+ * can reuse rendering logic; the `platform` block identifies which
+ * specific platform transitioned; the `account` block identifies
+ * the connected social account behind that platform-write.
+ *
+ */
+export type WebhookPayloadPostPlatform = {
+    /**
+     * Stable webhook event ID.
+     */
+    id: string;
+    event: 'post.platform.published' | 'post.platform.failed';
+    post: {
+        id: string;
+        content: string;
+        /**
+         * Post-level status AT FIRE TIME. May still be `publishing`
+         * if other platforms haven't terminated; check this field
+         * rather than assuming.
+         *
+         */
+        status: string;
+        scheduledFor: string;
+        publishedAt?: string;
+        platforms: Array<{
+            platform: string;
+            status: string;
+            platformPostId?: string;
+            publishedUrl?: string;
+            error?: string;
+        }>;
+    };
+    /**
+     * The specific platform that just transitioned to a terminal state.
+     */
+    platform: {
+        /**
+         * Platform name (e.g. `twitter`, `tiktok`, `instagram`).
+         */
+        name: string;
+        /**
+         * Terminal status this event fires on. Matches the event suffix.
+         */
+        status: 'published' | 'failed';
+        /**
+         * Platform-native post id. Present on `published`, absent on `failed`.
+         */
+        platformPostId?: string;
+        /**
+         * Public URL to the platform-side post. Present on `published` (when the platform exposes one and it is not a draft).
+         */
+        publishedUrl?: string;
+        /**
+         * Error message from the platform. Present on `failed`, absent on `published`.
+         */
+        error?: string;
+    };
+    /**
+     * The connected social account the platform-write went through.
+     */
+    account: {
+        accountId: string;
+        platform: string;
+        username: string;
+        displayName?: string;
+    };
+    timestamp: string;
+};
+
+export type event12 = 'post.platform.published' | 'post.platform.failed';
+
+/**
  * Webhook payload for the review.new event (new review posted on a connected account).
  */
 export type WebhookPayloadReviewNew = {
@@ -4020,7 +4096,7 @@ export type WebhookPayloadReviewNew = {
     timestamp: string;
 };
 
-export type event12 = 'review.new';
+export type event13 = 'review.new';
 
 /**
  * Webhook payload for the review.updated event. Fired when the reviewer edits
@@ -4044,7 +4120,7 @@ export type WebhookPayloadReviewUpdated = {
     timestamp: string;
 };
 
-export type event13 = 'review.updated';
+export type event14 = 'review.updated';
 
 /**
  * Webhook payload for test deliveries
@@ -4062,7 +4138,7 @@ export type WebhookPayloadTest = {
     timestamp: string;
 };
 
-export type event14 = 'webhook.test';
+export type event15 = 'webhook.test';
 
 /**
  * Webhook payload for the `whatsapp.template.status_updated` event.
@@ -4117,7 +4193,7 @@ export type WebhookPayloadWhatsAppTemplateStatusUpdated = {
     timestamp: string;
 };
 
-export type event15 = 'whatsapp.template.status_updated';
+export type event16 = 'whatsapp.template.status_updated';
 
 export type platform8 = 'whatsapp';
 
@@ -9457,7 +9533,7 @@ export type CreateWebhookSettingsData = {
         /**
          * Events to subscribe to (at least one required)
          */
-        events: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'account.ads.initial_sync_completed' | 'message.received' | 'message.sent' | 'message.edited' | 'message.deleted' | 'message.delivered' | 'message.read' | 'message.failed' | 'comment.received' | 'review.new' | 'review.updated' | 'ad.status_changed')>;
+        events: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'post.platform.published' | 'post.platform.failed' | 'account.connected' | 'account.disconnected' | 'account.ads.initial_sync_completed' | 'message.received' | 'message.sent' | 'message.edited' | 'message.deleted' | 'message.delivered' | 'message.read' | 'message.failed' | 'comment.received' | 'review.new' | 'review.updated' | 'ad.status_changed' | 'whatsapp.template.status_updated')>;
         /**
          * Enable or disable webhook delivery. Defaults to `true` when omitted.
          */
@@ -9501,7 +9577,7 @@ export type UpdateWebhookSettingsData = {
         /**
          * Events to subscribe to. Must contain at least one event if provided.
          */
-        events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'account.ads.initial_sync_completed' | 'message.received' | 'message.sent' | 'message.edited' | 'message.deleted' | 'message.delivered' | 'message.read' | 'message.failed' | 'comment.received' | 'review.new' | 'review.updated' | 'ad.status_changed')>;
+        events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'post.platform.published' | 'post.platform.failed' | 'account.connected' | 'account.disconnected' | 'account.ads.initial_sync_completed' | 'message.received' | 'message.sent' | 'message.edited' | 'message.deleted' | 'message.delivered' | 'message.read' | 'message.failed' | 'comment.received' | 'review.new' | 'review.updated' | 'ad.status_changed' | 'whatsapp.template.status_updated')>;
         /**
          * Enable or disable webhook delivery
          */
