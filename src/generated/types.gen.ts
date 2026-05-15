@@ -3074,7 +3074,7 @@ export type Webhook = {
     /**
      * Events subscribed to
      */
-    events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'account.ads.initial_sync_completed' | 'message.received' | 'message.sent' | 'message.edited' | 'message.deleted' | 'message.delivered' | 'message.read' | 'message.failed' | 'comment.received' | 'review.new' | 'review.updated' | 'ad.status_changed')>;
+    events?: Array<('post.scheduled' | 'post.published' | 'post.failed' | 'post.partial' | 'post.cancelled' | 'post.recycled' | 'account.connected' | 'account.disconnected' | 'account.ads.initial_sync_completed' | 'message.received' | 'message.sent' | 'message.edited' | 'message.deleted' | 'message.delivered' | 'message.read' | 'message.failed' | 'comment.received' | 'review.new' | 'review.updated' | 'ad.status_changed' | 'whatsapp.template.status_updated')>;
     /**
      * Whether webhook delivery is enabled
      */
@@ -4063,6 +4063,71 @@ export type WebhookPayloadTest = {
 };
 
 export type event14 = 'webhook.test';
+
+/**
+ * Webhook payload for the `whatsapp.template.status_updated` event.
+ * Fired when Meta completes (re)review of a template attached to a
+ * connected WABA. Maps Meta's `message_template_status_update` field
+ * onto our event envelope.
+ *
+ */
+export type WebhookPayloadWhatsAppTemplateStatusUpdated = {
+    /**
+     * Stable webhook event ID
+     */
+    id: string;
+    event: 'whatsapp.template.status_updated';
+    account: {
+        accountId: string;
+        profileId: string;
+        platform: 'whatsapp';
+        username: string;
+        displayName?: string;
+    };
+    template: {
+        /**
+         * Meta's `message_template_id`, returned as a string.
+         */
+        templateId: string;
+        /**
+         * Meta's `message_template_name`.
+         */
+        name: string;
+        /**
+         * Meta's `message_template_language` (e.g. `en_US`).
+         */
+        language: string;
+        /**
+         * New status. Forwarded verbatim from Meta's `event` field.
+         * `PENDING_DELETION` is the 24h-grace state after a delete
+         * request before the template is actually removed.
+         *
+         */
+        status: 'APPROVED' | 'REJECTED' | 'PENDING' | 'PAUSED' | 'DISABLED' | 'IN_APPEAL' | 'PENDING_DELETION';
+        /**
+         * Meta's free-form reason for the transition. `"NONE"` on
+         * approval; an explanation string on rejection.
+         *
+         */
+        reason: string;
+    };
+    /**
+     * ISO-8601 timestamp the webhook was produced.
+     */
+    timestamp: string;
+};
+
+export type event15 = 'whatsapp.template.status_updated';
+
+export type platform8 = 'whatsapp';
+
+/**
+ * New status. Forwarded verbatim from Meta's `event` field.
+ * `PENDING_DELETION` is the 24h-grace state after a delete
+ * request before the template is actually removed.
+ *
+ */
+export type status8 = 'APPROVED' | 'REJECTED' | 'PENDING' | 'PAUSED' | 'DISABLED' | 'IN_APPEAL' | 'PENDING_DELETION';
 
 export type WhatsAppBodyComponent = {
     type: 'body';
