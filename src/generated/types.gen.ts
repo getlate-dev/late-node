@@ -1227,7 +1227,7 @@ export type ErrorResponse = {
 };
 
 /**
- * Feed posts support up to 10 images (no mixed video+image). Stories require single media (24h, no captions). Reels require single vertical video (9:16, 3-60s). Geo-restriction is a hard visibility restriction: users outside the specified countries cannot see the post. Not supported for stories.
+ * Feed posts support up to 10 images (no mixed video+image). Stories require single media (24h, no captions). Reels require single vertical video (9:16, 3-60s). Carousel posts (carouselCards) render a 2-5 card multi-link post, images only, mutually exclusive with story/reel. Geo-restriction is a hard visibility restriction: users outside the specified countries cannot see the post. Not supported for stories.
  *
  */
 export type FacebookPlatformData = {
@@ -1252,6 +1252,29 @@ export type FacebookPlatformData = {
      */
     pageId?: string;
     geoRestriction?: GeoRestriction;
+    /**
+     * Renders the post as a multi-link carousel (organic Page post). When set, mediaItems must be provided with the same length and all items must be images (no videos). Each cards[i] adds the click-through link and headline for the image at mediaItems[i]. Mutually exclusive with contentType=story|reel. Facebook display truncates name at ~35 chars and description at ~30 chars; longer strings are accepted but get truncated on render.
+     *
+     */
+    carouselCards?: Array<{
+        /**
+         * Per-card click destination (required).
+         */
+        link: string;
+        /**
+         * Per-card headline (optional, ~35-char display).
+         */
+        name?: string;
+        /**
+         * Per-card subhead (optional, ~30-char display).
+         */
+        description?: string;
+    }>;
+    /**
+     * Optional top-level "See more" destination shown on the carousel end card. Defaults to the first card's link when omitted. Only used together with carouselCards.
+     *
+     */
+    carouselLink?: string;
 };
 
 /**
