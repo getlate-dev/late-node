@@ -5797,6 +5797,13 @@ export type CreatePostData = {
          */
         queueId?: string;
     };
+    headers?: {
+        /**
+         * Optional client-generated request identifier for safe retry (idempotency). When two requests carry the same value, the second is treated as a retry of the first and returns the original post (HTTP 200) instead of creating a duplicate. Window is ~5 minutes from the first request. Generate a UUID per logical call. SDKs do this automatically; HTTP clients should set it themselves or omit it. See the operation description for the full idempotency contract.
+         *
+         */
+        'x-request-id'?: string;
+    };
 };
 
 export type CreatePostResponse = (PostCreateResponse);

@@ -510,8 +510,24 @@ export const listPosts = <ThrowOnError extends boolean = false>(options?: Option
 
 /**
  * Create post
- * Create and optionally publish a post. Immediate posts (publishNow: true) include platformPostUrl in the response.
- * Content is optional when media is attached or all platforms have customContent. See each platform's schema for media constraints.
+ * Create and optionally publish a post. Immediate posts (`publishNow: true`) include `platformPostUrl` in the response.
+ * Content is optional when media is attached or all platforms have `customContent`. See each platform's schema for media constraints.
+ *
+ * ## Idempotency
+ *
+ * Two layers of duplicate-protection apply, so safe-to-retry callers (network blips, n8n / Zapier retries, etc.) don't accidentally double-post.
+ *
+ * **1. Same-request idempotency (5-minute window).**
+ * Pass an `x-request-id` header to mark a logical request. If a second request arrives with the same `x-request-id` while the first is in-flight (or within ~5 minutes of completion), we return **HTTP 200** with the original post in the `existingPost` field — no new post is created. The official Zernio SDKs auto-generate a unique `x-request-id` per call. If you're using a generic HTTP client (curl, n8n's HTTP node, Zapier, custom code), either:
+ * - Set a unique `x-request-id` per logical call (recommended — UUIDv4 is fine)
+ * - Or simply omit the header — we'll treat each request as new
+ *
+ * **Common pitfall**: if your workflow tool uses a single execution-level request ID and reuses it across multiple HTTP nodes (e.g. one ID for the whole run, shared across 6 different platform calls), every call after the first will look like a retry of the first and return its post. Generate a fresh ID per node.
+ *
+ * **2. Content-hash dedup (24-hour window).**
+ * Independently, we hash `(platform, accountId, content + media URLs)` and reject duplicates within 24 hours with **HTTP 409**. This catches genuine "same content posted twice to the same account" cases regardless of `x-request-id`. Returns `error`, `accountId`, `platform`, and `existingPostId` so you can find the original. To intentionally re-post identical content within 24h, change something (the caption, the media, the account) — the dedup is keyed on the full content fingerprint.
+ *
+ * Order: same-`x-request-id` retries (200) are checked first; if no idempotency match, the content-hash dedup (409) runs.
  *
  */
 export const createPost = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<CreatePostData, ThrowOnError>) => {
