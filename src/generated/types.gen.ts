@@ -13960,6 +13960,10 @@ export type ListAdCampaignsData = {
          * Platform ad account ID (e.g. act_123 for Meta)
          */
         adAccountId?: string;
+        /**
+         * Start of metrics date range (YYYY-MM-DD, inclusive). Defaults to 90 days ago when both date params are omitted.
+         */
+        fromDate?: string;
         limit?: number;
         /**
          * Page number (1-based)
@@ -13978,6 +13982,10 @@ export type ListAdCampaignsData = {
          * Filter by derived campaign status (post-aggregation)
          */
         status?: AdStatus;
+        /**
+         * End of metrics date range (YYYY-MM-DD, inclusive). Defaults to today. Max 730-day range.
+         */
+        toDate?: string;
     };
 };
 
