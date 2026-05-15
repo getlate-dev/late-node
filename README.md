@@ -192,8 +192,10 @@ try {
 | `accounts.getTikTokCreatorInfo()` | Get TikTok creator info |
 | `accounts.updateAccount()` | Update account |
 | `accounts.deleteAccount()` | Disconnect account |
+| `accounts.deleteGoogleBusinessReviewReply()` | Delete a review reply |
 | `accounts.batchGetGoogleBusinessReviews()` | Batch get reviews |
 | `accounts.moveAccountToProfile()` | Move account to a different profile |
+| `accounts.replyToGoogleBusinessReview()` | Reply to a review |
 
 ### Profiles
 | Method | Description |
@@ -374,7 +376,7 @@ try {
 | `ads.listConversionAssociations()` | List campaigns associated with a conversion destination |
 | `ads.listConversionDestinations()` | List destinations for the Conversions API |
 | `ads.createConversionDestination()` | Create a conversion destination (LinkedIn) |
-| `ads.createCtwaAd()` | Create Click-to-WhatsApp ad |
+| `ads.createCtwaAd()` | Create Click-to-WhatsApp ad(s) |
 | `ads.createStandaloneAd()` | Create standalone ad |
 | `ads.getAd()` | Get ad details |
 | `ads.getAdAnalytics()` | Get ad analytics |

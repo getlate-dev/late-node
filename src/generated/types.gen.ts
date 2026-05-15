@@ -1002,6 +1002,49 @@ export type ConversionEvent = {
 export type actionSource = 'web' | 'app' | 'offline' | 'crm' | 'phone_call' | 'system_generated';
 
 /**
+ * Response returned by `POST /v1/ads/ctwa` when the request used the
+ * multi-creative shape (`creatives[]`). N persisted Ad documents share
+ * the returned `platformCampaignId` and `platformAdSetId`. `adType` is
+ * the union discriminator.
+ *
+ */
+export type CtwaMultiResponse = {
+    adType: 'multi';
+    /**
+     * The persisted Ad documents (one per creative), all sharing the same
+     * `platformCampaignId` and `platformAdSetId`.
+     *
+     */
+    ads: Array<{
+        [key: string]: unknown;
+    }>;
+    platformCampaignId: string;
+    platformAdSetId: string;
+    message: string;
+};
+
+export type adType2 = 'multi';
+
+/**
+ * Response returned by `POST /v1/ads/ctwa` when the request used the
+ * single-creative shape (top-level headline / body / imageUrl|video).
+ * `adType` is the union discriminator.
+ *
+ */
+export type CtwaSingleResponse = {
+    adType: 'single';
+    /**
+     * The persisted Ad document.
+     */
+    ad: {
+        [key: string]: unknown;
+    };
+    message: string;
+};
+
+export type adType3 = 'single';
+
+/**
  * Discord message settings. Supports plain text (2,000 chars), rich embeds (up to 10), native polls, forum posts, threads, and announcement crossposts. Media attachments support images (JPEG, PNG, GIF, WebP), videos (MP4), and documents (up to 10 files, 25 MB each). Webhook identity (username + avatar) can be customized per-account via PATCH /v1/connect/discord or per-post via webhookUsername/webhookAvatarUrl.
  *
  */
@@ -7744,6 +7787,58 @@ export type BatchGetGoogleBusinessReviewsResponse = ({
 });
 
 export type BatchGetGoogleBusinessReviewsError = (ErrorResponse);
+
+export type ReplyToGoogleBusinessReviewData = {
+    body: {
+        /**
+         * The reply text to post on the review. Must be non-empty.
+         */
+        comment: string;
+    };
+    path: {
+        /**
+         * The Zernio account ID (from /v1/accounts)
+         */
+        accountId: string;
+        /**
+         * The review ID portion (e.g. "AIe9_BGx1234567890"), not the full resource name
+         */
+        reviewId: string;
+    };
+};
+
+export type ReplyToGoogleBusinessReviewResponse = ({
+    success?: boolean;
+    reviewId?: string;
+    platform?: string;
+});
+
+export type ReplyToGoogleBusinessReviewError = (ErrorResponse | {
+    error?: string;
+});
+
+export type DeleteGoogleBusinessReviewReplyData = {
+    path: {
+        /**
+         * The Zernio account ID (from /v1/accounts)
+         */
+        accountId: string;
+        /**
+         * The review ID portion (e.g. "AIe9_BGx1234567890"), not the full resource name
+         */
+        reviewId: string;
+    };
+};
+
+export type DeleteGoogleBusinessReviewReplyResponse = ({
+    success?: boolean;
+    message?: string;
+    platform?: string;
+});
+
+export type DeleteGoogleBusinessReviewReplyError = (ErrorResponse | {
+    error?: string;
+});
 
 export type GetPendingOAuthDataData = {
     query: {
@@ -15769,22 +15864,35 @@ export type CreateCtwaAdData = {
         adAccountId: string;
         /**
          * Ad display name. Used to derive campaign / ad set names.
+         * On the multi-creative shape, each ad's Meta name gets a
+         * " #N" suffix (1-indexed) so Ads Manager shows them as a
+         * numbered batch.
+         *
          */
         name: string;
-        headline: string;
         /**
-         * Primary text shown above the image / video.
+         * Single-creative shape only. Mutually exclusive with
+         * `creatives[]`.
+         *
          */
-        body: string;
+        headline?: string;
         /**
-         * Image asset for image creatives. Mutually exclusive with
-         * `video`. Required if `video` is not supplied.
+         * Primary text shown above the image / video. Single-creative
+         * shape only. Mutually exclusive with `creatives[]`.
+         *
+         */
+        body?: string;
+        /**
+         * Image asset for single-creative shape. Mutually exclusive
+         * with `video` and with `creatives[]`. Required on the
+         * single-creative shape if `video` is not supplied.
          *
          */
         imageUrl?: string;
         /**
-         * Video creative. Mutually exclusive with `imageUrl`.
-         * Required if `imageUrl` is not supplied.
+         * Video creative for single-creative shape. Mutually
+         * exclusive with `imageUrl` and with `creatives[]`. Required
+         * on the single-creative shape if `imageUrl` is not supplied.
          *
          */
         video?: {
@@ -15796,6 +15904,42 @@ export type CreateCtwaAdData = {
              */
             thumbnailUrl: string;
         };
+        /**
+         * Multi-creative shape: N CTWA ads under one campaign + one
+         * ad set, sharing budget and targeting. Mutually exclusive
+         * with the top-level single-creative fields (`headline` /
+         * `body` / `imageUrl` / `video`). Each entry must supply its
+         * own headline, body, and exactly one of `imageUrl` /
+         * `video`.
+         *
+         */
+        creatives?: Array<{
+            headline: string;
+            /**
+             * Primary text shown above the image / video.
+             */
+            body: string;
+            /**
+             * Image asset. Mutually exclusive with this entry's
+             * `video`. Required if `video` is not supplied.
+             *
+             */
+            imageUrl?: string;
+            /**
+             * Video creative. Mutually exclusive with this entry's
+             * `imageUrl`. Required if `imageUrl` is not supplied.
+             *
+             */
+            video?: {
+                url: string;
+                /**
+                 * Required by Meta for every video creative. Used
+                 * as the ad thumbnail.
+                 *
+                 */
+                thumbnailUrl: string;
+            };
+        }>;
         /**
          * Budget amount in the ad account's currency major units
          * (e.g. dollars for USD, not cents). Must be > 0.
@@ -15846,6 +15990,31 @@ export type CreateCtwaAdData = {
          */
         objective?: 'OUTCOME_ENGAGEMENT' | 'OUTCOME_SALES' | 'OUTCOME_LEADS';
         /**
+         * Meta bid strategy applied to the shared ad set. Defaults to
+         * `LOWEST_COST_WITHOUT_CAP` (auto-bid) when omitted.
+         * `LOWEST_COST_WITH_BID_CAP` and `COST_CAP` require
+         * `bidAmount`. `LOWEST_COST_WITH_MIN_ROAS` requires
+         * `roasAverageFloor`. CTWA's `optimization_goal` is fixed to
+         * `CONVERSATIONS`, but the bid strategy is independent.
+         *
+         */
+        bidStrategy?: 'LOWEST_COST_WITHOUT_CAP' | 'LOWEST_COST_WITH_BID_CAP' | 'COST_CAP' | 'LOWEST_COST_WITH_MIN_ROAS';
+        /**
+         * Whole currency units (e.g. `5` = $5.00 on a USD account).
+         * Required when `bidStrategy` is `LOWEST_COST_WITH_BID_CAP`
+         * or `COST_CAP`; rejected otherwise.
+         *
+         */
+        bidAmount?: number;
+        /**
+         * Decimal ROAS multiplier (e.g. `2.0` = 2.0× ROAS floor).
+         * Required when `bidStrategy` is `LOWEST_COST_WITH_MIN_ROAS`;
+         * rejected otherwise. Meta enforces its own upper bound
+         * server-side.
+         *
+         */
+        roasAverageFloor?: number;
+        /**
          * Name of the legal entity benefiting from the ad.
          * Required by Meta when targeting EU users (DSA Article 26).
          * Not enforced at schema level; enforced server-side when targeting intersects EU member states.
@@ -15862,15 +16031,7 @@ export type CreateCtwaAdData = {
     };
 };
 
-export type CreateCtwaAdResponse = ({
-    /**
-     * The persisted Ad document.
-     */
-    ad?: {
-        [key: string]: unknown;
-    };
-    message?: string;
-});
+export type CreateCtwaAdResponse = ((CtwaSingleResponse | CtwaMultiResponse));
 
 export type CreateCtwaAdError = (unknown | {
     error?: string;

@@ -59,6 +59,7 @@ import {
   deleteCustomField,
   deleteGoogleBusinessMedia,
   deleteGoogleBusinessPlaceAction,
+  deleteGoogleBusinessReviewReply,
   deleteInboxComment,
   deleteInboxMessage,
   deleteInboxReviewReply,
@@ -215,6 +216,7 @@ import {
   removeMessageReaction,
   removeTrackingTagSharedAccount,
   removeWhatsAppGroupParticipants,
+  replyToGoogleBusinessReview,
   replyToInboxPost,
   replyToInboxReview,
   retryPost,
@@ -472,6 +474,8 @@ export class Zernio {
     getTikTokCreatorInfo: getTikTokCreatorInfo,
     getGoogleBusinessReviews: getGoogleBusinessReviews,
     batchGetGoogleBusinessReviews: batchGetGoogleBusinessReviews,
+    replyToGoogleBusinessReview: replyToGoogleBusinessReview,
+    deleteGoogleBusinessReviewReply: deleteGoogleBusinessReviewReply,
     getLinkedInMentions: getLinkedInMentions,
   };
 

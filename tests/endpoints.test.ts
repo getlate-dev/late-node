@@ -85,6 +85,16 @@ describe('Endpoint Methods', () => {
       expect(client.accounts.batchGetGoogleBusinessReviews).toBeTypeOf('function');
     });
 
+    it('should have replyToGoogleBusinessReview method', () => {
+      expect(client.accounts.replyToGoogleBusinessReview).toBeDefined();
+      expect(client.accounts.replyToGoogleBusinessReview).toBeTypeOf('function');
+    });
+
+    it('should have deleteGoogleBusinessReviewReply method', () => {
+      expect(client.accounts.deleteGoogleBusinessReviewReply).toBeDefined();
+      expect(client.accounts.deleteGoogleBusinessReviewReply).toBeTypeOf('function');
+    });
+
     it('should have getLinkedInMentions method', () => {
       expect(client.accounts.getLinkedInMentions).toBeDefined();
       expect(client.accounts.getLinkedInMentions).toBeTypeOf('function');
