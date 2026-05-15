@@ -14457,6 +14457,10 @@ export type GetAdsTimelineError = ({
 
 export type GetAdData = {
     path: {
+        /**
+         * Zernio `_id` (hex), Meta `platformAdId` (numeric), or one of the creative's effective story/media IDs. See description for details.
+         *
+         */
         adId: string;
     };
 };

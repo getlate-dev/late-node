@@ -3493,6 +3493,15 @@ export const getAdsTimeline = <ThrowOnError extends boolean = false>(options: Op
 /**
  * Get ad details
  * Returns an ad with its creative, targeting, status, and performance metrics.
+ *
+ * The `{adId}` path segment accepts any identifier dialect Zernio indexes for the ad:
+ * - the Zernio internal `_id` (24-char hex)
+ * - Meta's numeric `platformAdId` (the value shipped in `comment.received` webhooks as `comment.ad.id`)
+ * - the creative's `effective_object_story_id` (`{pageId}_{postId}` shape, Facebook side)
+ * - the creative's `effective_instagram_media_id` (Instagram side)
+ *
+ * Any of the four resolve to the same ad. Caller doesn't need a translation step.
+ *
  */
 export const getAd = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetAdData, ThrowOnError>) => {
     return (options?.client ?? client).get<GetAdResponse, GetAdError, ThrowOnError>({
@@ -3569,6 +3578,12 @@ export const getAdAnalytics = <ThrowOnError extends boolean = false>(options: Op
  * expose a public per-ad comments API and return feature_not_available.
  *
  * Requires the Ads add-on. Response shape matches GET /v1/inbox/comments/{postId}.
+ *
+ * The `{adId}` path segment accepts any identifier dialect Zernio indexes for the ad:
+ * Zernio internal `_id` (24-char hex), Meta's numeric `platformAdId` (the value shipped in
+ * `comment.received` webhooks as `comment.ad.id`), or the creative's
+ * `effective_object_story_id` / `effective_instagram_media_id`. Caller doesn't need a
+ * translation step.
  *
  */
 export const getAdComments = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<GetAdCommentsData, ThrowOnError>) => {
