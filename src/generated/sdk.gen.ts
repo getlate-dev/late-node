@@ -3757,51 +3757,43 @@ export const addUsersToAdAudience = <ThrowOnError extends boolean = false>(optio
 
 /**
  * Send conversion events to an ad platform
- * Relay one or more conversion events to the target ad platform's native
- * Conversions API. Supported platforms: Meta (metaads) via Graph API,
- * Google Ads (googleads) via Data Manager API `ingestEvents`, LinkedIn
- * (linkedinads) via `/rest/conversionEvents`.
+ * Relay one or more conversion events to the target ad platform's native Conversions API.
+ * Platform is inferred from the provided `accountId`. Requires the Ads add-on.
  *
- * Platform is inferred from the provided `accountId`. `destinationId`
- * semantics differ per platform:
- * - Meta: pixel (dataset) ID, e.g. "123456789012345"
- * - Google: conversion action resource name, e.g.
- * "customers/1234567890/conversionActions/987654321"
- * - LinkedIn: conversion rule ID or URN, e.g. "104012" or
- * "urn:lla:llaPartnerConversion:104012"
+ * Supported platforms:
  *
- * Callers can list valid destinations via
- * `GET /v1/accounts/{accountId}/conversion-destinations`.
+ * - Meta (`metaads`) via Graph API
+ * - Google Ads (`googleads`) via Data Manager API `ingestEvents`
+ * - LinkedIn (`linkedinads`) via `/rest/conversionEvents`
  *
- * All PII (email, phone, names, external IDs) is hashed with SHA-256
- * server-side per each platform's normalization spec (including Google's
- * Gmail-specific dot/plus-suffix stripping). Send plaintext. Note:
- * LinkedIn `externalIds` are passed through as plaintext per LinkedIn's
- * spec — only emails and phones are hashed.
+ * `destinationId` semantics differ per platform:
  *
- * Requires the Ads add-on. For LinkedIn, the connected account must
- * have been authorized after the Conversions API rollout (i.e. the
- * OAuth grant must include `rw_conversions`); older accounts must
- * reconnect.
+ * - Meta: pixel (dataset) ID, e.g. `123456789012345`
+ * - Google: conversion action resource name, e.g. `customers/1234567890/conversionActions/987654321`
+ * - LinkedIn: conversion rule ID or URN, e.g. `104012` or `urn:lla:llaPartnerConversion:104012`
  *
- * Batching: Meta caps at 1000 events per request and rejects the entire
- * batch if any event is malformed. Google caps at 2000. LinkedIn caps
- * at 5000 and is also all-or-nothing per chunk. All three are handled
- * automatically.
+ * Callers can list valid destinations via `GET /v1/accounts/{accountId}/conversion-destinations`.
  *
- * Dedup: pass a stable `eventId` on every event. Meta and LinkedIn use
- * it to dedupe against browser-side pixel/Insight Tag events; Google
- * maps it to transactionId.
+ * All PII (email, phone, names, external IDs) is hashed with SHA-256 server-side per each
+ * platform's normalization spec, including Google's Gmail-specific dot/plus-suffix stripping.
+ * Send plaintext. LinkedIn `externalIds` are passed through as plaintext per LinkedIn's spec;
+ * only emails and phones are hashed.
+ *
+ * For LinkedIn, the connected account must have been authorized after the Conversions API
+ * rollout (i.e. the OAuth grant must include `rw_conversions`). Older accounts must reconnect.
+ *
+ * Batching is handled automatically. Meta caps at 1000 events per request and rejects the
+ * entire batch if any event is malformed. Google caps at 2000. LinkedIn caps at 5000 and is
+ * also all-or-nothing per chunk.
+ *
+ * Dedup: pass a stable `eventId` on every event. Meta and LinkedIn use it to dedupe against
+ * browser-side pixel/Insight Tag events; Google maps it to `transactionId`.
  *
  * Per-platform `eventName` semantics:
- * - Meta: free-form. Standard names (Purchase, Lead, ...) match Meta's
- * built-in events; custom strings are accepted.
- * - Google: ignored — the conversion action's category determines the
- * event type. Send the standard name closest to your action for
- * documentation, but the platform will not branch on it.
- * - LinkedIn: ignored — the conversion rule's `type` (LEAD, PURCHASE,
- * etc.) is locked to the destination at rule-creation time. Send the
- * standard name for documentation; LinkedIn does not branch on it.
+ *
+ * - Meta: free-form. Standard names (Purchase, Lead, ...) match Meta's built-in events; custom strings are accepted.
+ * - Google: ignored. The conversion action's category determines the event type. Send the standard name closest to your action for documentation, but the platform will not branch on it.
+ * - LinkedIn: ignored. The conversion rule's `type` (LEAD, PURCHASE, etc.) is locked to the destination at rule-creation time. Send the standard name for documentation; LinkedIn does not branch on it.
  *
  */
 export const sendConversions = <ThrowOnError extends boolean = false>(options: OptionsLegacyParser<SendConversionsData, ThrowOnError>) => {
