@@ -8696,6 +8696,13 @@ export type GetFacebookPagesData = {
     path: {
         accountId: string;
     };
+    query?: {
+        /**
+         * When true, bypasses the page cache and fetches fresh pages from Meta. Rate-limited server-side to 1 refresh per 60s. Pages no longer accessible to the connected account will be removed from the list on refresh.
+         *
+         */
+        refresh?: boolean;
+    };
 };
 
 export type GetFacebookPagesResponse = ({
