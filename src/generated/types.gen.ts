@@ -14389,7 +14389,7 @@ export type GetAdTreeData = {
          */
         profileId?: string;
         /**
-         * Campaign-level sort order. `newest` (default) and `oldest` order by the campaign's newest-ad createdAt. `spend_desc` / `spend_asc` are accepted for forward compatibility but currently fall back to an adSetCount-based ordering (spend ranking via Tinybird is pending).
+         * Campaign-level sort order. `newest` (default) / `oldest` order by the campaign's newest-ad createdAt. `spend_desc` / `spend_asc` order by aggregated spend in the requested date range; campaigns with no spend land at the end.
          */
         sort?: 'newest' | 'oldest' | 'spend_desc' | 'spend_asc';
         /**
