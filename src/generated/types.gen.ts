@@ -14389,6 +14389,10 @@ export type GetAdTreeData = {
          */
         profileId?: string;
         /**
+         * Campaign-level sort order. `newest` (default) and `oldest` order by the campaign's newest-ad createdAt. `spend_desc` / `spend_asc` are accepted for forward compatibility but currently fall back to an adSetCount-based ordering (spend ranking via Tinybird is pending).
+         */
+        sort?: 'newest' | 'oldest' | 'spend_desc' | 'spend_asc';
+        /**
          * `all` (default) returns both Zernio-created ads and those discovered from the platform's ad manager — matches the web UI's default view. Pass `zernio` to restrict to isExternal=false only. Status is NOT filtered by default — use the `status` param for that.
          */
         source?: 'zernio' | 'all';
